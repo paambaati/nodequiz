@@ -1,0 +1,17 @@
+{
+  "name": "GA Quiz",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "swig": "*",
+    "mongoose": "*",
+    "crypto": "0.0.3",
+    "cryptr": "0.0.1",
+    "nodemailer": "*",
+    "winston": "*"
+  }
+}

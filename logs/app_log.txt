@@ -1,0 +1,42 @@
+2014-03-13T07:51:33.105Z - error: CRITICAL ERROR! EMAIL NOT SENT username=gp@global-analytics.com, new_password=nbrr9q8, ip=127.0.0.1, user_cookie=gp, stack=Error: 3074828032:error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol:../deps/openssl/openssl/ssl/s23_clnt.c:766:
+
+    at SlabBuffer.use (tls.js:232:18)
+    at CleartextStream.read [as _read] (tls.js:452:29)
+    at CleartextStream.Readable.read (_stream_readable.js:320:10)
+    at EncryptedStream.write [as _write] (tls.js:366:25)
+    at doWrite (_stream_writable.js:226:10)
+    at writeOrBuffer (_stream_writable.js:216:5)
+    at EncryptedStream.Writable.write (_stream_writable.js:183:11)
+    at write (_stream_readable.js:583:24)
+    at flow (_stream_readable.js:592:7)
+    at Socket.pipeOnReadable (_stream_readable.js:624:5)
+2014-03-13T07:58:03.200Z - error: uncaughtException: req is not defined date=Thu Mar 13 2014 13:28:03 GMT+0530 (IST), pid=22787, uid=1000, gid=1000, cwd=/home/gp/nodeJS/example, execPath=/usr/bin/nodejs, version=v0.10.26, argv=[node, /home/gp/nodeJS/example/app.js], rss=27308032, heapTotal=28908416, heapUsed=11171608, loadavg=[0.1494140625, 0.3994140625, 0.46923828125], uptime=5338.465622783, trace=[column=21, file=/home/gp/nodeJS/example/app.js, function=, line=264, method=null, native=false, column=16, file=/home/gp/nodeJS/example/node_modules/mongoose/node_modules/mquery/lib/utils.js, function=Object._onImmediate, line=126, method=_onImmediate, native=false, column=15, file=[as _immediateCallback] (timers.js, function=processImmediate, line=330, method=null, native=false], stack=[ReferenceError: req is not defined,     at Object.<anonymous> (/home/gp/nodeJS/example/app.js:264:21),     at Object._onImmediate (/home/gp/nodeJS/example/node_modules/mongoose/node_modules/mquery/lib/utils.js:126:16),     at processImmediate [as _immediateCallback] (timers.js:330:15)]
+2014-03-13T07:58:03.202Z - error: UNCAUGHT EXCEPTION ReferenceError: req is not defined
+    at Object.<anonymous> (/home/gp/nodeJS/example/app.js:264:21)
+    at Object._onImmediate (/home/gp/nodeJS/example/node_modules/mongoose/node_modules/mquery/lib/utils.js:126:16)
+    at processImmediate [as _immediateCallback] (timers.js:330:15)
+2014-03-13T08:02:50.827Z - error: CRITICAL ERROR! EMAIL NOT SENT username=gp@global-analytics.com, new_password=kar6gu, ip=127.0.0.1, user_cookie=gp, stack=Error: 3074541312:error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol:../deps/openssl/openssl/ssl/s23_clnt.c:766:
+
+    at SlabBuffer.use (tls.js:232:18)
+    at CleartextStream.read [as _read] (tls.js:452:29)
+    at CleartextStream.Readable.read (_stream_readable.js:320:10)
+    at EncryptedStream.write [as _write] (tls.js:366:25)
+    at doWrite (_stream_writable.js:226:10)
+    at writeOrBuffer (_stream_writable.js:216:5)
+    at EncryptedStream.Writable.write (_stream_writable.js:183:11)
+    at write (_stream_readable.js:583:24)
+    at flow (_stream_readable.js:592:7)
+    at Socket.pipeOnReadable (_stream_readable.js:624:5)
+2014-03-13T08:23:44.941Z - error: uncaughtException: Router#get() requires a path date=Thu Mar 13 2014 13:53:44 GMT+0530 (IST), pid=16959, uid=1000, gid=1000, cwd=/home/gp/nodeJS/example, execPath=/usr/bin/nodejs, version=v0.10.26, argv=[node, /home/gp/nodeJS/example/app.js], rss=25001984, heapTotal=17484928, heapUsed=11443272, loadavg=[0.591796875, 0.587890625, 0.51220703125], uptime=6880.206282539, trace=[column=20, file=/home/gp/nodeJS/example/node_modules/express/lib/router/index.js, function=Router.route, line=283, method=route, native=false, column=16, file=function) [as get] (/home/gp/nodeJS/example/node_modules/express/lib/router/index.js, function=Router.(anonymous, line=308, method=(anonymous, native=false, column=26, file=function) [as get] (/home/gp/nodeJS/example/node_modules/express/lib/application.js, function=Function.app.(anonymous, line=412, method=app.(anonymous, native=false, column=5, file=/home/gp/nodeJS/example/app.js, function=, line=450, method=null, native=false, column=26, file=module.js, function=Module._compile, line=456, method=_compile, native=false, column=10, file=module.js, function=Object.Module._extensions..js, line=474, method=Module._extensions..js, native=false, column=32, file=module.js, function=Module.load, line=356, method=load, native=false, column=12, file=module.js, function=Function.Module._load, line=312, method=Module._load, native=false, column=10, file=module.js, function=Function.Module.runMain, line=497, method=Module.runMain, native=false, column=16, file=node.js, function=startup, line=119, method=null, native=false], stack=[Error: Router#get() requires a path,     at Router.route (/home/gp/nodeJS/example/node_modules/express/lib/router/index.js:283:20),     at Router.(anonymous function) [as get] (/home/gp/nodeJS/example/node_modules/express/lib/router/index.js:308:16),     at Function.app.(anonymous function) [as get] (/home/gp/nodeJS/example/node_modules/express/lib/application.js:412:26),     at Object.<anonymous> (/home/gp/nodeJS/example/app.js:450:5),     at Module._compile (module.js:456:26),     at Object.Module._extensions..js (module.js:474:10),     at Module.load (module.js:356:32),     at Function.Module._load (module.js:312:12),     at Function.Module.runMain (module.js:497:10),     at startup (node.js:119:16)]
+2014-03-16T01:17:38.256Z - error: CRITICAL ERROR! EMAIL NOT SENT username=gp@global-analytics.com, new_password=lm3c3f, ip=127.0.0.1, user_cookie=undefined, stack=Error: 3074705152:error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol:../deps/openssl/openssl/ssl/s23_clnt.c:766:
+
+    at SlabBuffer.use (tls.js:232:18)
+    at CleartextStream.read [as _read] (tls.js:452:29)
+    at CleartextStream.Readable.read (_stream_readable.js:320:10)
+    at EncryptedStream.write [as _write] (tls.js:366:25)
+    at doWrite (_stream_writable.js:226:10)
+    at writeOrBuffer (_stream_writable.js:216:5)
+    at EncryptedStream.Writable.write (_stream_writable.js:183:11)
+    at write (_stream_readable.js:583:24)
+    at flow (_stream_readable.js:592:7)
+    at Socket.pipeOnReadable (_stream_readable.js:624:5)
