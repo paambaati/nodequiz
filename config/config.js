@@ -48,7 +48,15 @@ logger.add(logger.transports.File, {
     colorize: false,
     timestamp: true
 });
-//logger.add(logger.transports.Console, { handleExceptions: true, exitOnError: false });
+
+//Error messages.
+config.ERR_AUTH_INVALID_USERNAME = 'Username is invalid!';
+config.ERR_AUTH_INVALID_PASSWORD = 'Invalid password!';
+config.ERR_AUTH_NOT_LOGGED_IN = 'You must be logged in to view that page!';
+config.ERR_SIGNUP_ALREADY_EXISTS = 'Username already exists!';
+config.ERR_ACTIVATION_INVALID_KEY = 'Username mapped to activation key is invalid!';
+config.ERR_RESET_INVALID_DETAILS = 'One of the values entered is incorrect!';
+config.ERR_RESET_INVALID_USERNAME = 'Username not valid. Looks like you forgot your username as well :-D'
 
 //Crypto configuration.
 config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';

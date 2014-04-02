@@ -66,7 +66,6 @@
                                     <input type="password" class="form-control" id="password" name="password" required >
                                   </div>
                                   <div class="form-actions">
-                                    <label class="checkbox"> <input type="checkbox" class="uniform" value=""> Remember me</label>
                                     <button type="submit" class="btn btn-danger">Submit</button>
                                   </div>
                                 </form>
@@ -108,6 +107,22 @@
                                     <i class="fa fa-check-square-o"></i>
                                     <input type="password" class="form-control" id="password1" name="password1" required >
                                   </div>
+                                  <div class="form-group"> 
+                                    <label for="security_question">Security Question</label>
+                                    <select class="form-control" id="security_question" name="security_question" required >
+                                        <option>What is your mother's maiden name?</option>
+                                        <option>What is the name of your first pet?</option>
+                                        <option>What is the name of your first boyfriend/girlfriend?</option>
+                                        <option>What is the meaning of life?</option>
+                                        <option>What is the average velocity of an unladen swallow?</option>
+                                        <option>You talkin' to me? You talkin' to me? You talkin' to me?</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="security_answer">Security Answer</label>
+                                    <i class="fa fa-check-square-o"></i>
+                                    <input type="text" class="form-control" id="security_answer" name="security_answer" required >
+                                  </div>
                                   <div class="form-actions">
                                     <button type="submit" class="btn btn-success">Sign Up</button>
                                   </div>
@@ -138,6 +153,22 @@
                                     <label for="username">Enter your username</label>
                                     <i class="fa fa-envelope"></i>
                                     <input type="text" class="form-control" id="username" name="username" maxlength="40" required >
+                                  </div>
+                                  <div class="form-group"> 
+                                    <label for="security_question">Security Question</label>
+                                    <select class="form-control" id="security_question" name="security_question" required >
+                                        <option>What is your mother's maiden name?</option>
+                                        <option>What is the name of your first pet?</option>
+                                        <option>What is the name of your first boyfriend/girlfriend?</option>
+                                        <option>What is the meaning of life?</option>
+                                        <option>What is the average velocity of an unladen swallow?</option>
+                                        <option>You talkin' to me? You talkin' to me? You talkin' to me?</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="security_answer">Security Answer</label>
+                                    <i class="fa fa-check-square-o"></i>
+                                    <input type="text" class="form-control" id="security_answer" name="security_answer" required >
                                   </div>
                                   <div class="form-actions">
                                     <button type="submit" class="btn btn-info">Send Me My New Password</button>
@@ -171,7 +202,8 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var page = 'login';
+            var hash = window.location.hash.slice(1);
+            var page = (hash == '') ? 'login' : hash;
             App.setPage(page);  //Set current page
             App.init(); //Initialise plugins and elements
 

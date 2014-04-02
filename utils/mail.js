@@ -85,7 +85,7 @@ var sendNewPassword = function(domain, ip, user_cookie, username, new_password, 
 				'new_password': new_password,
 				'ip': ip,
 				'user_cookie': user_cookie,
-				'stack': err.stack});
+				'stack': err.stack });
 		} else {
 			console.log('Message sent!');
 		}

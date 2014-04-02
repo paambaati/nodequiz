@@ -32,6 +32,8 @@ var UserSchema = new mongoose.Schema({
     password: String,
     salt: String,
     hash: String,
+    security_question: String,
+    security_answer: String,
     activated: { type: Boolean, default: false },
     admin: { type: Boolean, default: false }
 });
@@ -129,14 +131,14 @@ function authenticate(name, pass, fn) {
         username: name
     }, function (err, user) {
         if (user) {
-            if (err) return fn(new Error('Username is invalid!'));
+            if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
             hash(pass, user.salt, function (err, hash) {
                 if (err) return fn(err);
                 if (hash == user.hash) return fn(null, user);
-                fn(new Error('invalid password'));
+                fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
             });
         } else {
-            return fn(new Error('Username is invalid!'));
+            return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
         }
     });
 }
@@ -154,7 +156,7 @@ function isUsernameValid(name, fn) {
         username: name
     }, function (err, user) {
         if (user) {
-            if (err) return fn(new Error('Username is invalid!'));
+            if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
             return fn(null, true);
         } else {
             return fn(null, false);
@@ -176,7 +178,7 @@ function requiredAuthentication(req, res, next) {
     if (req.session.user) {
         next();
     } else {
-        req.session.error = 'You must be logged in to view that page!';
+        req.session.error = config.ERR_AUTH_NOT_LOGGED_IN;
         res.redirect(config.URL_LOGIN);
     }
 }
@@ -199,7 +201,7 @@ function userExist(req, res, next) {
         if (count === 0) {
             next();
         } else {
-            req.session.error = 'User already exists!';
+            req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
             res.render(config.TEMPL_LOGIN, { tab: 'signup' });
         }
     });
@@ -227,7 +229,7 @@ function activateUser(name, fn) {
                 return fn(null, count);
             });
         } else {
-            return fn(new Error('Username mapped to activation key is invalid!'));
+            return fn(new Error(config.ERR_ACTIVATION_INVALID_KEY));
         }
     });
 }
@@ -237,18 +239,22 @@ function activateUser(name, fn) {
  * to the user's registered email ID.
  *
  * @param {String} username.
+ * @param {String} security question.
+ * @param {String} security answer.
  * @param {String} domain that the app is running on.
  * @param {String} request's origin IP address.
  * @param {String} value of last_user cookie.
  * @param {Function} callback.
  */
 
-function resetPassword(name, domain, ip, user_cookie, fn) {
+function resetPassword(name, security_question, security_answer, domain, ip, user_cookie, fn) {
     //Better use a new instance because mongoose behaves
     //weirdly when doing an UPDATE on an existing instance.
     var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);
     User.findOne({
-        username: name
+        username: name,
+        security_question: security_question,
+        security_answer: security_answer
     }, function (err, user) {
         if (user) {
             console.log('user found! proceeding to reset password...');
@@ -265,7 +271,7 @@ function resetPassword(name, domain, ip, user_cookie, fn) {
                 });
             });
         } else {
-            return fn(new Error('Username is invalid!'));
+            return fn(new Error(config.ERR_RESET_INVALID_DETAILS));
         }
     });
 }
@@ -295,6 +301,8 @@ app.post(config.URL_SIGNUP, userExist, function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var password1 = req.body.password1;
+    var security_question = req.body.security_question;
+    var security_answer = req.body.security_answer;
     console.log('in URL_SIGNUP POST NOW...');
     console.log(username, '----', password, '----', password1);
     //TO-DO: validate all these^^^ fields first
@@ -307,7 +315,9 @@ app.post(config.URL_SIGNUP, userExist, function (req, res) {
                 var user = new User({
                     username: username,
                     salt: salt,
-                    hash: hash
+                    hash: hash,
+                    security_question: security_question,
+                    security_answer: security_answer
                 }).save(function (err, newUser) {
                     if (err) throw err;
                     console.log('calling encrypt now...');
@@ -338,7 +348,8 @@ app.post(config.URL_SIGNUP, userExist, function (req, res) {
                 });
             });
         } else {
-            req.session.error = 'Username already exists!';
+            console.log('dei you\'re already registered');
+            req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
             res.redirect(config.URL_SIGNUP);
         }
     });
@@ -346,6 +357,8 @@ app.post(config.URL_SIGNUP, userExist, function (req, res) {
 
 app.post(config.URL_FORGOT, function (req, res) {
     var username = req.body.username;
+    var security_question = req.body.security_question;
+    var security_answer = req.body.security_answer;
     console.log('in POST of /forgot now... for user - ', username);
     isUsernameValid(username, function (err, valid) {
         if (err) throw err;
@@ -357,8 +370,13 @@ app.post(config.URL_FORGOT, function (req, res) {
                         req.socket.remoteAddress ||
                         req.connection.socket.remoteAddress;
             var user_cookie = req.cookies.last_user;
-            resetPassword(username, domain, ip, user_cookie, function (err, new_password) {
-                if (err) throw err;
+            resetPassword(username, security_question, security_answer, domain, ip, user_cookie, function (err, new_password) {
+                if (err && err.message == config.ERR_RESET_INVALID_DETAILS) {
+                    req.session.error = err.message;
+                    res.redirect(config.URL_FORGOT);
+                } else if (err) {
+                    throw err;
+                }
                 console.log('reset done in DB. new password = ', new_password);
                 res.render(config.TEMPL_200, {
                         message_title: 'Done!',
@@ -368,7 +386,7 @@ app.post(config.URL_FORGOT, function (req, res) {
             });
 
         } else {
-            req.session.error = 'Username not valid. Looks like you forgot your username as well :-D';
+            req.session.error = config.ERR_RESET_INVALID_USERNAME;
             res.redirect(config.URL_FORGOT);
         }
     });
