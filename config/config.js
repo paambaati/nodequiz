@@ -6,6 +6,7 @@
 var config = {};
 
 //App configuration.
+config.APP_TITLE = 'TheQuiz';
 config.APP_PORT = 3000;
 
 //Basic URL configuration.

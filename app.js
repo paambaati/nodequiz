@@ -1,6 +1,6 @@
 
 /**
- * GA Quiz
+ * TheQuiz
  * Authors: GP.
  * Version: 1.0
  * Release Date: XX-XXX-2014
@@ -48,7 +48,7 @@ app.configure(function () {
     app.use(express.logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded());
-    app.use(express.cookieParser('QuizJS'));
+    app.use(express.cookieParser(config.APP_TITLE));
     app.use(express.session({ secret: config.MASTER_SALT }));
     //app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
@@ -63,16 +63,13 @@ app.configure(function () {
 // If a user is resetting password for someone else, this cookie value
 // is sent for shaming.
 app.use(function (req, res, next) {
-    //console.log('--> ', req.originalUrl);
+    //var original_url = req.originalUrl;
     var cookie = req.cookies.last_user;
     if (cookie === undefined) {
         if (req.session.user) {
             //2-day cookie.
             res.cookie('last_user', req.session.user.username, { maxAge: 172800000, httpOnly: true });
-            //console.log('cookie created successfully');
         }
-    } else {
-        //console.log('cookie exists already!', cookie);
     }
     next();
 });
@@ -92,6 +89,7 @@ app.use(function (req, res, next) {
         res.locals.message = msg;
         res.locals.message_type = 'success';
     }
+    res.locals.app_title = config.APP_TITLE;
     //maybe set tab name here as well, which can be passed from other functions.
     next();
 });
