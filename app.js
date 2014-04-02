@@ -292,7 +292,7 @@ app.get(config.URL_SIGNUP, function (req, res) {
     if (req.session.user) {
         res.redirect(config.URL_MAIN);
     } else {
-        res.redirect('/#signup');
+        res.render(config.TEMPL_LOGIN, { tab: 'signup' });
     }
 });
 

@@ -56,7 +56,7 @@ config.ERR_AUTH_NOT_LOGGED_IN = 'You must be logged in to view that page!';
 config.ERR_SIGNUP_ALREADY_EXISTS = 'Username already exists!';
 config.ERR_ACTIVATION_INVALID_KEY = 'Username mapped to activation key is invalid!';
 config.ERR_RESET_INVALID_DETAILS = 'One of the values entered is incorrect!';
-config.ERR_RESET_INVALID_USERNAME = 'Username not valid. Looks like you forgot your username as well :-D'
+config.ERR_RESET_INVALID_USERNAME = 'Username not valid. Looks like you forgot your username as well!';
 
 //Crypto configuration.
 config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';
