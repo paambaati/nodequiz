@@ -1,12 +1,12 @@
 {
-  "name": "GA Quiz",
+  "name": "GAQuiz",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "3.4.4",
+    "express": "3.5.1",
     "swig": "*",
     "mongoose": "*",
     "crypto": "0.0.3",
