@@ -16,6 +16,7 @@ var express = require('express'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
+    async = require('async'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
     mailer = require('./utils/mail');
@@ -178,40 +179,68 @@ function isUsernameValid(name, fn) {
 }
 
 /**
+ * Finds all the questions in the quiz history collection for the user.
+ * Returns an object with all matching quiz history items.
+ *
+ * @param {String} username.
+ * @param {Function} callback.
+ */
+
+ function findUserQuestions(user, fn) {
+    var query = QuizHistory.find({ user_id: user._id });
+    query.sort({ date: -1 });
+    query.exec(function (err, user_questions) {
+        if (err) throw err;
+        return fn(null, user_questions);
+    });
+ }
+
+/**
+ * TO-DO: docs
+ */
+
+function findQuestionForToday(question_id, fn) {
+    var d = new Date(),
+        year = d.getFullYear(),
+        month = d.getMonth(),
+        day = d.getDate();
+    var query = Question.find({
+                    question_id: question_id,
+                    date: { $lt: new Date(), $gt: new Date(year + ',' + month + ',' + day) } //Get results from start of current day to current time.
+                });
+    query.sort({ date: -1});
+    query.exec(function (err, question){
+        if (err) throw err;
+        console.log('matching question..');
+        console.log(question);
+        return fn(null, question);
+    });
+}
+
+/**
  * TO-DO: docs
  */
 
 function findLastQuestion(user, fn) {
-    var question_count = 0;
-    var result = QuizHistory.find({
-        user_id: user._id,
-    }).sort({ date: -1 }).exec(function(err, user_questions){
+    var matching_questions = [];
+    findUserQuestions(user, function (err, user_questions) {
         if (err) throw err;
-        //console.log(user_questions);
-        //console.log('booyakasha');
         if (user_questions !== undefined) {
-            //Questions found in history for user
-            var d = new Date(),
-                year = d.getFullYear(),
-                month = d.getMonth(),
-                day = d.getDate();
-            for (user_question in user_questions) {
-                Question.find({
-                    question_id: user_question.question_id,
-                    date: { $lt: new Date(), $gt: new Date(year + ',' + month + ',' + day) } //Get results from start of current day to current time.
-                }).sort({date: -1}).exec(function(err, docs){
-                    //console.log('showing matching questions for today...');
-                    //console.log(docs);
-                    question_count++;
-                    console.log('----------' + question_count);
+            console.log('user questions found...');
+            console.log(user_questions);
+            console.log('now trying to find if those questions were answered today...');
+            for(var i = 0; i < user_questions.length; i++) {
+                findQuestionForToday(user_questions[i].question_id, function(err, question) {
+                    if (err) throw err;
+                    matching_questions[i] = question;
                 });
             }
-        console.log('user has taken ' + question_count + ' questions today!');
         } else {
-            //no history of questions in db
+            //no history of questions in db for this user
         }
+        console.log('done now!');
+        return fn(null, matching_questions);
     });
-    return question_count;
 }
 
 /**
@@ -357,10 +386,10 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
  */
 
 //DEBUG
-app.get('/dummy', requiredAuthentication, timeCheck, function(req, res) {
-    var new_question = {
-        "date" : "2014/04/03",
-        "title" : "first question?",
+app.get('/dummy', function(req, res) {
+    /*var new_question = {
+        "date" : "2013/12/01",
+        "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
         "choices" : {
                 1 : {
@@ -374,16 +403,17 @@ app.get('/dummy', requiredAuthentication, timeCheck, function(req, res) {
                     "choice_text" : "hahhaahhahahha"
                 }
             }
-    };
+    };*/
 
     var history = {
-        "user_id" : "533d051f2566971015a8eb0f",
-        "question_id" : "533d4214bb4dc234408e0057",
+        "user_id" : "529231a32cf795b844000001",
+        "question_id" : "533d83509c60e4037fd2c059",
         "choice_id" : "1"
     };
 
     /*Question.create(new_question, function(err, count){
-        if (err) throw err;*/
+        if (err) throw err;
+        res.send('updated ' + count + ' records.');*/
         QuizHistory.create(history, function(err, count){
             if (err) throw err;
             res.send('updated ' + count + ' records.');
