@@ -6,6 +6,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "date": "*",
     "express": "3.5.1",
     "swig": "*",
     "mongoose": "*",

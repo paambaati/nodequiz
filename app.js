@@ -13,6 +13,7 @@
 var express = require('express'),
     http = require('http'),
     path = require('path'),
+    date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
     hash = require('./utils/pass').hash,
@@ -28,17 +29,32 @@ var app = express();
 mongoose.connect(config.DB_MONGO_CONNECT_STRING);
 
 var UserSchema = new mongoose.Schema({
-    username: { type: String, unique: true },
-    password: String,
-    salt: String,
-    hash: String,
-    security_question: String,
-    security_answer: String,
+    username: { type: String, unique: true, trim: true, required: true },
+    password: { type: String, required: true },
+    salt: { type: String, required: true },
+    hash: { type: String, required: true },
+    security_question: { type: String, required: true },
+    security_answer: { type: String, required: true },
     activated: { type: Boolean, default: false },
     admin: { type: Boolean, default: false }
 });
 
+var QuestionSchema = new mongoose.Schema({
+    date: { type: Date, required: true },
+    title : { type: String, trim: true, required: true },
+    image : { type: String, default: null},
+    choices: {}
+});
+
+var QuizHistorySchema = new mongoose.Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    question_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    choice_id: {type: String, required: true}
+});
+
 var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);
+var Question = mongoose.model(config.DB_QUESTIONS_TABLE, QuestionSchema);
+var QuizHistory = mongoose.model(config.DB_QUIZ_HISTORY, QuizHistorySchema);
 
 /**
  * Middlewares.
@@ -124,7 +140,6 @@ function errorHandler(err, req, res, next) {
  */
 
 function authenticate(name, pass, fn) {
-    if (!module.parent) console.log('authenticating %s:%s', name, pass);
     User.findOne({
         username: name
     }, function (err, user) {
@@ -163,6 +178,43 @@ function isUsernameValid(name, fn) {
 }
 
 /**
+ * TO-DO: docs
+ */
+
+function findLastQuestion(user, fn) {
+    var question_count = 0;
+    var result = QuizHistory.find({
+        user_id: user._id,
+    }).sort({ date: -1 }).exec(function(err, user_questions){
+        if (err) throw err;
+        //console.log(user_questions);
+        //console.log('booyakasha');
+        if (user_questions !== undefined) {
+            //Questions found in history for user
+            var d = new Date(),
+                year = d.getFullYear(),
+                month = d.getMonth(),
+                day = d.getDate();
+            for (user_question in user_questions) {
+                Question.find({
+                    question_id: user_question.question_id,
+                    date: { $lt: new Date(), $gt: new Date(year + ',' + month + ',' + day) } //Get results from start of current day to current time.
+                }).sort({date: -1}).exec(function(err, docs){
+                    //console.log('showing matching questions for today...');
+                    //console.log(docs);
+                    question_count++;
+                    console.log('----------' + question_count);
+                });
+            }
+        console.log('user has taken ' + question_count + ' questions today!');
+        } else {
+            //no history of questions in db
+        }
+    });
+    return question_count;
+}
+
+/**
  * Checks if user is logged in.
  * If yes, move to next middleware.
  * If no, redirect user to login page.
@@ -178,6 +230,33 @@ function requiredAuthentication(req, res, next) {
     } else {
         req.session.error = config.ERR_AUTH_NOT_LOGGED_IN;
         res.redirect(config.URL_LOGIN);
+    }
+}
+
+/**
+ * Checks if quiz can be accessed at server time.
+ * If yes, pick question to show.
+ * If no, redirect user to `quiz not available at this time` page.
+ *
+ * @param {String} request.
+ * @param {String} response.
+ * @param {Boolean} allow to move to next middleware.
+ */
+
+function timeCheck(req, res, next) {
+    var now = new Date();
+    var start_time = new Date();
+    start_time.setHours(config.QUIZ_START_TIME[0]);
+    start_time.setMinutes(config.QUIZ_START_TIME[1]);
+    start_time.setSeconds(0);
+    var stop_time = new Date();
+    stop_time.setHours(config.QUIZ_STOP_TIME[0]);
+    stop_time.setMinutes(config.QUIZ_STOP_TIME[1]);
+    stop_time.setSeconds(0);
+    if(start_time.getTime() < now.getTime() < stop_time.getTime()) {
+        next();
+    } else {
+        res.redirect(config.URL_TIMECLOSED);
     }
 }
 
@@ -277,9 +356,49 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
  * Routes
  */
 
+//DEBUG
+app.get('/dummy', requiredAuthentication, timeCheck, function(req, res) {
+    var new_question = {
+        "date" : "2014/04/03",
+        "title" : "first question?",
+        "image" : "/tmp/xsadsa.png",
+        "choices" : {
+                1 : {
+                    "choice_text" : "h121aha",
+                    "is_answer" : true
+                },
+                2 : {
+                    "choice_text" : "he1212he"
+                },
+                3 : {
+                    "choice_text" : "hahhaahhahahha"
+                }
+            }
+    };
+
+    var history = {
+        "user_id" : "533d051f2566971015a8eb0f",
+        "question_id" : "533d4214bb4dc234408e0057",
+        "choice_id" : "1"
+    };
+
+    /*Question.create(new_question, function(err, count){
+        if (err) throw err;*/
+        QuizHistory.create(history, function(err, count){
+            if (err) throw err;
+            res.send('updated ' + count + ' records.');
+        });
+    /*});*/
+});
+
+app.get(config.URL_QUIZ_START, requiredAuthentication, timeCheck, function(req, res) {
+    var question_count = findLastQuestion(req.session.user, function (err, result) {console.log('FINAL RESULT = ' + result)});
+    res.send('quiz started. question count today = ' + question_count);
+});
+
 app.get(config.URL_MAIN, function (req, res) {
     if (req.session.user) {
-        res.send('Welcome ' + req.session.user.username + '<br>' + "<a href='/logout'>logout</a>");
+        res.redirect(config.URL_QUIZ_MAIN);
     } else {
         res.render(config.TEMPL_LOGIN, { tab: 'login' });
     }
@@ -394,19 +513,21 @@ app.get(config.URL_FORGOT, function (req, res) {
     res.render(config.TEMPL_LOGIN, { tab: 'forgot' });
 });
 
+app.get(config.URL_TIMECLOSED, function (req, res) {
+    res.render(config.TEMPL_TIMECLOSED, { start_hour: config.QUIZ_START_TIME[0], stop_hour: config.QUIZ_STOP_TIME[0]});
+});
+
 app.get(config.URL_LOGIN, function (req, res) {
      res.render(config.TEMPL_LOGIN, { tab: 'login' });
 });
 
 app.post(config.URL_LOGIN, function (req, res) {
-    console.log('LOG IN POST METHOD!', req.body);
     authenticate(req.body.username, req.body.password, function (err, user) {
         if (user) {
             req.session.regenerate(function () {
                 req.session.user = user;
                 req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' +
                                       ' You may now access <a href="/restricted">/restricted</a>.';
-                //res.redirect(config.URL_MAIN);
                 res.redirect(config.URL_QUIZ_MAIN);
             });
         } else {
