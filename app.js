@@ -16,7 +16,6 @@ var express = require('express'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
-    async = require('async'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
     mailer = require('./utils/mail');
@@ -31,7 +30,6 @@ mongoose.connect(config.DB_MONGO_CONNECT_STRING);
 
 var UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, trim: true, required: true },
-    password: { type: String, required: true },
     salt: { type: String, required: true },
     hash: { type: String, required: true },
     security_question: { type: String, required: true },
@@ -184,7 +182,7 @@ function isUsernameValid(name, fn) {
 
 /**
  * Finds all the questions in the quiz history collection for the user for today.
- * Returns an object with all matching quiz history items.
+ * Returns a count of all matching quiz history items.
  *
  * @param {String} user object.
  * @param {Function} callback.
@@ -193,20 +191,40 @@ function isUsernameValid(name, fn) {
  function findUserQuestionsForToday(user, fn) {
     var start_day = new Date();
     start_day.setHours(0, 0, 0, 0);
-    var query = QuizHistory.find({
-                    user_id: user._id,
-                    date: { $lt: new Date(), $gte: start_day } //Start of current day to current time.
+    QuizHistory.count({
+        user_id: user._id,
+        date: { $gte: start_day }
+    }, function (err, count) {
+        if (err) throw err;
+        console.log('number of questions user has taken today =' + count);
+        return fn(null, count);
+    });
+ }
+
+ /**
+  * Finds next question to display to user.
+  * Returns the full Question document.
+  *
+  * @param {String} nth question to display sorted by date.
+  * @param {Function} callback.
+  */
+
+ function findNextQuestion(index, fn) {
+    var start_day = new Date();
+    start_day.setHours(0, 0, 0, 0);
+    var query = Question.find({
+                    date: { $gte: start_day }
                 });
     query.sort({ date: -1 });
-    query.exec(function (err, user_questions) {
+    query.exec(function (err, questions) {
         if (err) throw err;
-        return fn(null, user_questions);
+        return fn(null, questions[index]);
     });
  }
 
 /**
  * Checks if user is logged in.
- * If yes, move to next middleware.
+ * If yes, proceed to next middleware.
  * If no, redirect user to login page.
  *
  * @param {String} request.
@@ -225,7 +243,7 @@ function requiredAuthentication(req, res, next) {
 
 /**
  * Checks if quiz can be accessed at server time.
- * If yes, pick question to show.
+ * If yes, proceed to next middleware.
  * If no, redirect user to `quiz not available at this time` page.
  *
  * @param {String} request.
@@ -349,6 +367,12 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
+    res.render(config.TEMPL_QUIZ_START, {
+        allowed_time:15,
+        question_index: 1,
+        question_total: 10,
+        question: {"date" : Date("2013-04-04T10:30:00.000Z"),"title" : "first question?","choices" : {"1" : {"is_answer" : true, "choice_text" : "h121aha"},"2" : {"choice_text" : "he1212he"},"3" : {"choice_text" : "hahhaahhahahha"}}}
+    });
     /*var new_question = {
         "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
@@ -366,25 +390,34 @@ app.get('/dummy', function(req, res) {
             }
     };*/
 
-    var history = {
-        "user_id" : "529231a32cf795b844000001",
-        "question_id" : "533d83509c60e4037fd2c059",
+    /*var history = {
+        "user_id" : "533d051f2566971015a8eb0f",
+        "question_id" : "533d4214bb4dc234408e0057",
         "choice_id" : "1"
-    };
+    };*/
 
     /*Question.create(new_question, function(err, count){
         if (err) throw err;
         res.send('updated ' + count + ' records.');*/
-        QuizHistory.create(history, function(err, count){
+        /*QuizHistory.create(history, function(err, count){
             if (err) throw err;
             res.send('updated ' + count + ' records.');
-        });
+        });*/
     /*});*/
 });
 
 app.get(config.URL_QUIZ_START, requiredAuthentication, timeCheck, function(req, res) {
-    findUserQuestionsForToday(req.session.user, function (err, result) {
-        res.send('quiz started. questions already taken today = ' + result + ' ||| so no. of q\'s taken = ' + result.length);
+    findUserQuestionsForToday(req.session.user, function (err, count) {
+        findNextQuestion(count - 1, function (err, question) {
+            res.render(config.TEMPL_QUIZ_START, {
+                question: question,
+                question_index: count,
+                question_total: 10,
+                allowed_time: 15 //seconds
+            });
+            //TO-DO: now once question is rendered, mark this in questionhistory (and set choice to default -1).
+            //TO-DO: next write POST for this url, and there update questionhistory with choice selected.
+        });
     });
 });
 

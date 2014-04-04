@@ -26,6 +26,7 @@ config.TEMPL_400 = '404.html';
 config.TEMPL_200 = '200.html';
 config.TEMPL_TIMECLOSED = 'timeclosed.html';
 config.TEMPL_QUIZ_MAIN = 'quiz.html';
+config.TEMPL_QUIZ_START = 'question.html';
 
 //Quiz configuration.
 config.QUIZ_START_TIME = [1, 0];
