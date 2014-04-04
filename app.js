@@ -41,17 +41,22 @@ var UserSchema = new mongoose.Schema({
 });
 
 var QuestionSchema = new mongoose.Schema({
-    date: { type: Date, required: true },
+    date: { type: Date, required: true, default: new Date() },
     title : { type: String, trim: true, required: true },
     image : { type: String, default: null},
     choices: {}
 });
 
+QuestionSchema.index({ date: -1});
+
 var QuizHistorySchema = new mongoose.Schema({
+    date: { type: Date, required: true, default: new Date() },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     question_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     choice_id: {type: String, required: true}
 });
+
+QuizHistorySchema.index({ date: -1});
 
 var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);
 var Question = mongoose.model(config.DB_QUESTIONS_TABLE, QuestionSchema);
@@ -84,8 +89,7 @@ app.use(function (req, res, next) {
     var cookie = req.cookies.last_user;
     if (cookie === undefined) {
         if (req.session.user) {
-            //2-day cookie.
-            res.cookie('last_user', req.session.user.username, { maxAge: 172800000, httpOnly: true });
+            res.cookie('last_user', req.session.user.username, { maxAge: 172800000, httpOnly: true }); //2-day cookie.
         }
     }
     next();
@@ -179,69 +183,26 @@ function isUsernameValid(name, fn) {
 }
 
 /**
- * Finds all the questions in the quiz history collection for the user.
+ * Finds all the questions in the quiz history collection for the user for today.
  * Returns an object with all matching quiz history items.
  *
- * @param {String} username.
+ * @param {String} user object.
  * @param {Function} callback.
  */
 
- function findUserQuestions(user, fn) {
-    var query = QuizHistory.find({ user_id: user._id });
+ function findUserQuestionsForToday(user, fn) {
+    var start_day = new Date();
+    start_day.setHours(0, 0, 0, 0);
+    var query = QuizHistory.find({
+                    user_id: user._id,
+                    date: { $lt: new Date(), $gte: start_day } //Start of current day to current time.
+                });
     query.sort({ date: -1 });
     query.exec(function (err, user_questions) {
         if (err) throw err;
         return fn(null, user_questions);
     });
  }
-
-/**
- * TO-DO: docs
- */
-
-function findQuestionForToday(question_id, fn) {
-    var d = new Date(),
-        year = d.getFullYear(),
-        month = d.getMonth(),
-        day = d.getDate();
-    var query = Question.find({
-                    question_id: question_id,
-                    date: { $lt: new Date(), $gt: new Date(year + ',' + month + ',' + day) } //Get results from start of current day to current time.
-                });
-    query.sort({ date: -1});
-    query.exec(function (err, question){
-        if (err) throw err;
-        console.log('matching question..');
-        console.log(question);
-        return fn(null, question);
-    });
-}
-
-/**
- * TO-DO: docs
- */
-
-function findLastQuestion(user, fn) {
-    var matching_questions = [];
-    findUserQuestions(user, function (err, user_questions) {
-        if (err) throw err;
-        if (user_questions !== undefined) {
-            console.log('user questions found...');
-            console.log(user_questions);
-            console.log('now trying to find if those questions were answered today...');
-            for(var i = 0; i < user_questions.length; i++) {
-                findQuestionForToday(user_questions[i].question_id, function(err, question) {
-                    if (err) throw err;
-                    matching_questions[i] = question;
-                });
-            }
-        } else {
-            //no history of questions in db for this user
-        }
-        console.log('done now!');
-        return fn(null, matching_questions);
-    });
-}
 
 /**
  * Checks if user is logged in.
@@ -386,9 +347,9 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
  */
 
 //DEBUG
+//GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
     /*var new_question = {
-        "date" : "2013/12/01",
         "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
         "choices" : {
@@ -422,8 +383,9 @@ app.get('/dummy', function(req, res) {
 });
 
 app.get(config.URL_QUIZ_START, requiredAuthentication, timeCheck, function(req, res) {
-    var question_count = findLastQuestion(req.session.user, function (err, result) {console.log('FINAL RESULT = ' + result)});
-    res.send('quiz started. question count today = ' + question_count);
+    findUserQuestionsForToday(req.session.user, function (err, result) {
+        res.send('quiz started. questions already taken today = ' + result + ' ||| so no. of q\'s taken = ' + result.length);
+    });
 });
 
 app.get(config.URL_MAIN, function (req, res) {
