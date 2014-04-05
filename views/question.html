@@ -2,11 +2,11 @@
 <html lang="en">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title>{{ app_title }} | Question {{ question_index }} of {{question_total }}</title>
+	<title>{{ app_title }} | Question {{ question_index }} of {{ question_total }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-	<meta name="description" content="{{ app_title }} - Main Page">
+	<meta name="description" content="{{ app_title }} - Quiz Question">
 	<meta name="author" content="GP">
-	<!--meta http-equiv="refresh" content="{{ allowed_time }}"-->
+	<meta http-equiv="refresh" content="{{ allowed_time }}">
 	<!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
     <script src="/javascripts/excanvas.min.js"></script>
@@ -803,39 +803,57 @@
 									<!-- BREADCRUMBS -->
 									<ul class="breadcrumb">
 										<li>
-											<i class="fa fa-info-circle"></i>
-											You have {{ allowed_time }} seconds to answer this question.
+											<i class="fa fa-home"></i>
 										</li>
+										<li>Welcome</li>
+										<li>Today's Quiz</li>
 									</ul>
 									<!-- /BREADCRUMBS -->
-									<div class="progress progress-striped active">
-										<div id="time_progress" style="width: 0%" aria-valuemax="{{ allowed_time }}" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar">
-											<span class="sr-only">45% Complete</span>
-										</div>
+									<div class="clearfix">
+										<h3 class="content-title pull-left">Question <strong>{{ question_index }}</strong> of {{ question_total }}</h3>
 									</div>
+									<div class="description">Question expires in <span class="badge badge-red">{{ allowed_time }}</span> seconds.</div>
 								</div>
 							</div>
 						</div>
 						<!-- /PAGE HEADER -->
 						<div class="row">
-							<div class="col-md-12 not-found text-center">
-							   <div class="error-500">
-								  Question!
-							   </div>
+							<div class="col-md-12">
+								<!-- BOX -->
+								<div class="box border blue">
+									<div class="box-title">
+										<h4><i class="fa fa-bars"></i> <span class="hidden-inline-mobile">Question #{{ question_index }}</span></h4>
+										<div class="items">
+											<div class="progress active">
+												<div id="time_progress" style="width: 0%" aria-valuemax="{{ allowed_time }}" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info"></div>
+										</div>
+										</div>
+									</div>
+									<div class="box-body">
+										<blockquote><p>{{ question.title }}</p></blockquote>
+										<form method="POST" action="#" class="form-horizontal">
+											<div class="form-group">
+											 <div class="col-md-8">
+											 	<!-- OPTION -->
+											 	{% for choice in question.choices %}
+											 	<label class="radio">
+													<div class="radio">
+														<span style="vertical-align: middle">
+															<input type="radio" value="{{ loop.index }}" name="choice" class="uniform">
+															{{ choice.choice_text }}
+														</span>
+													</div>
+												</label>
+												{% endfor %}
+											 	<!-- /OPTION -->
+											 </div>
+										  </div>
+										</form>
+									</div>
+								</div>
+								<!-- /BOX -->
 							</div>
-							<div class="col-md-4 col-md-offset-4 not-found text-center">
-							   <div class="content">
-								  <h3>{{ question }}</h3>
-								  <p>
-									HAHAHA
-								  </p>
-								  <div class="btn-group">
-									<a href="/" class="btn btn-default">Submit</a>
-								  </div>
-							   </div>
-							</div>
-						 </div>
-					</div>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -853,7 +871,7 @@
 	<script type="text/javascript" src="/javascripts/script.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function() {		
-			App.setPage("widgets_box");  //Set current page
+			App.setPage('widgets_box');  //Set current page
 			App.init(); //Initialise plugins and elements
 
 			var count = {{ allowed_time }};
@@ -863,12 +881,18 @@
 				count = count - 1;
 				if (count <= 0)
 				{
+					$('#time_progress').css('width', '100%').attr('aria-valuenow', '100');
 					clearInterval(counter);
 					return;
 				}
 				$('#time_progress').css('width', progress_percent + '%').attr('aria-valuenow', progress_percent);
-				progress_percent = progress_percent + 100 / count;
+				progress_percent = progress_percent + 100 / {{ allowed_time }};
 			}
+
+			$('input.uniform').on('click', function() {
+				$('div.radio').addClass('disabled');
+				$('form').submit();
+			});
 		});
 	</script>
 	<!-- /JAVASCRIPTS -->

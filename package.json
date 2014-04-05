@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "date": "*",
+    "date-format-lite": "*",
     "express": "3.5.1",
     "swig": "*",
     "mongoose": "*",
