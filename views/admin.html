@@ -2,9 +2,9 @@
 <html lang="en">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>{{ app_title }} | Quiz completed!</title>
+    <title>{{ app_title }} | Quiz Administration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="{{ app_title }} - Quiz Finished">
+    <meta name="description" content="{{ app_title }} - Quiz Administration">
     <meta name="author" content="GP">
     <!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
@@ -804,84 +804,143 @@
                                         <li>
                                             <i class="fa fa-home"></i>
                                         </li>
-                                        <li>Welcome</li>
-                                        <li>Today's Quiz</li>
-                                        <li>Completed</li>
+                                        <li>Administration</li>
                                     </ul>
                                     <!-- /BREADCRUMBS -->
                                     <div class="clearfix">
-                                        <h3 class="content-title pull-left">Congratulations</h3>
+                                        <h3 class="content-title pull-left">Admin Section</h3>
                                     </div>
-                                    <div class="description">There, there. It's over.</div>
+                                    <div class="description">With great power comes great responsibility.</div>
                                 </div>
                             </div>
                         </div>
                         <!-- /PAGE HEADER -->
                         <div class="row">
-                            <!-- BOX - QUIZ COMPLETED -->
                             <div class="col-md-12 box-container">
-                                <div class="box solid blue">
+                                <!-- BOX WITH INFO -->
+                                <div class="box solid grey">
                                     <div class="box-title">
-                                        <h4><i class="fa fa-check-square-o"></i> Quiz Completed</h4>
+                                        <h4><i class="fa fa-exclamation-triangle"></i>Things to remember!</h4>
                                         <div class="tools">
+                                            <span class="badge badge-red">IMPORTANT </span>
                                             <a class="collapse" href="javascript:;">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        <p>You've completed today's quiz, and all your answers have been recorded.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /BOX - QUIZ COMPLETED -->
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- BOX -->
-                                <div class="box border red">
-                                    <div class="box-title">
-                                        <h4><i class="fa fa-bar-chart-o"></i>Results</h4>
-                                        <div class="tools">
-                                            <a class="collapse" href="javascript:;">
-                                                <i class="fa fa-chevron-up"></i>
+                                            <a class="remove" href="javascript:;">
+                                                <i class="fa fa-times"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="box-body">
                                         <p>
-                                            <span class="label label-primary arrow-in arrow-in-right">Your score <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> point{% if results.total_points > 1 %}s{% endif %} for <strong>{{ results.total_questions }}</strong> question{% if results.total_questions > 1 %}s{% endif %} today! Check out the full results.
+                                            <ul>
+                                                <li><strong>Please use a modern browser!</strong> That includes the latest version of Firefox, Chrome or Opera. If you're using Internet Explorer, <abbr title="You should be ashamed of yourself.">please use version 10 or above.</abbr></li>
+                                                <li>Try to save <strong>at least 5 </strong> questions for a day's quiz.</li>
+                                                <li>Make sure the image you upload is small in size and dimensions. We recommend a file size of <code> &lt; 100 KB</code> and dimensions of <code>400px or less</code> on the longest side.</li>
+                                            </ul>
                                         </p>
-                                        <table class="table table-hover" style="margin-bottom: 0">
-                                            <thead>
-                                              <tr>
-                                                <th>#</th>
-                                                <th>Question</th>
-                                                <th>Correct Answer</th>
-                                                <th>Response Time</th>
-                                                <th>Result</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for result in results %}
-                                              <tr>
-                                                <td>{{ loop.index }}</td>
-                                                <td>{{ result.question_title }}</td>
-                                                <td>{{ result.answer_title }}</td>
-                                                <td>{{ result.response_time }}</td>
-                                                {% if result.correct_answer %}
-                                                <td><span class="label label-success"><i class="fa fa-check-square"></i></span></td>
-                                                {% else %}
-                                                <td><span class="label label-danger"><i class="fa fa-times"></i></span></td>
-                                                {% endif %}
-                                              </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                          </table>
                                     </div>
                                 </div>
-                                <!-- /BOX -->
+                                <!-- /BOX WITH INFO -->
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button title="Click to add another question. You can rearrange questions by dragging around the boxes." type="button" class="btn btn-primary tip-right"><i class="fa fa-plus" data-original-title="Click to add another question. You can rearrange questions by dragging around the boxes."></i> Add Question</button>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-6 box-container ui-sortable">
+                                <!-- BOX COLLAPSED-->
+                                <div class="box border purple">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-bars"></i>Question</h4>
+                                        <span class="label label-right label-success question-status">Saved</span>
+                                        <div class="tools">
+                                            <a class="expand" href="javascript:;">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div style="display:none" class="box-body">
+                                        <form role="form" class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Question</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea rows="3" class="form-control"></textarea>
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 1</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" name="choice">
+                                                        </span>
+                                                        <input type="text" class="form-control">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i class="fa fa-pencil-square-o"></i> <span class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right context">
+                                                                <li><a href="#">Add Choice</a></li>
+                                                                <li><a href="#">Remove</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 2</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" name="choice">
+                                                        </span>
+                                                        <input type="text" class="form-control">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i class="fa fa-pencil-square-o"></i> <span class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right context">
+                                                                <li><a href="#">Add Choice</a></li>
+                                                                <li><a href="#">Remove</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 3</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" name="choice">
+                                                        </span>
+                                                        <input type="text" class="form-control">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i class="fa fa-pencil-square-o"></i> <span class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right context">
+                                                                <li><a href="#">Add Choice</a></li>
+                                                                <li><a href="#">Remove</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-10">
+                                                    <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
+                                                    <button type="button" class="btn btn-danger btn-delete" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /BOX COLLAPSED-->
+                            </div>
+                        </div>
+                        <div class="footer-tools">
+                            <span class="go-top">
+                                <i class="fa fa-chevron-up"></i> Top
+                            </span>
                         </div>
                 </div>
             </div>
@@ -902,6 +961,25 @@
         jQuery(document).ready(function() {     
             App.setPage('widgets_box');  //Set current page
             App.init(); //Initialise plugins and elements
+
+            $(document).ready(function () {
+                $('.btn-save').on('click', function () {
+                    var e = $(this);
+                    console.log(e.parents('form').find('input,textarea'));
+                });
+                $('.btn-delete').on('click', function () {
+                    var e = $(this);
+                    e.button('loading'), setTimeout(function () {
+                        e.button('reset');
+                        var a = e.parents('.box');
+                        a.next().hasClass('box') || a.prev().hasClass('box') ? e.parents('.box').remove() : e.parents('.box').parent().remove();
+                    }, 1500);
+                });
+                $('form :input').change(function(){
+                    var e = $(this);
+                    e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
+                });
+            });
         });
     </script>
     <!-- /JAVASCRIPTS -->

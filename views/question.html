@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="{{ app_title }} - Quiz Question">
 	<meta name="author" content="GP">
-	<meta http-equiv="refresh" content="{{ allowed_time }}">
+	<!--meta http-equiv="refresh" content="{{ allowed_time }}"-->
 	<!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
     <script src="/javascripts/excanvas.min.js"></script>
@@ -831,6 +831,11 @@
 									</div>
 									<div class="box-body">
 										<blockquote><p>{{ question.title }}</p></blockquote>
+										{% if question.image %}
+										<div class="jumbotron">
+											<img src="{{ UPLOAD_DIR }}{{ question.image }}" class="thumbnail">
+										</div>
+										{% endif %}
 										<form method="POST" action="#" class="form-horizontal">
 											<div class="form-group">
 											 <div class="col-md-8">

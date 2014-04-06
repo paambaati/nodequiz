@@ -77,6 +77,7 @@ app.use(function (req, res, next) {
     }
     res.locals.app_title = config.APP_TITLE;
     res.locals.URL = config.URL;
+    res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
     //maybe set tab name here as well, which can be passed from other functions.
     next();
 });
@@ -266,21 +267,20 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    throw new Error('skdjaskdjasd');
+    res.render(config.TEMPL_QUIZ_ADMIN);
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');
         console.log(results);
         res.render(config.TEMPL_QUIZ_END, { results: results });
     });*/
-   /* quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count){
-        res.send('DUMMY -> quiz.findUserQuestionsForToday(529231a32cf795b844000001) = ' + count);
-        /*res.render(config.TEMPL_QUIZ_START, {
+    /*quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count){
+        res.render(config.TEMPL_QUIZ_START, {
             allowed_time: 15,
             question_index: 1,
             question_total: 10,
             question: {"date" : Date("2013-04-04T10:30:00.000Z"),"title" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","choices" : {"1" : {"choice_text" : "h121aha"},"2" : {"choice_text" : "he1212he"},"3" : {"choice_text" : "hahhaahhahahha"}}, "answer" : 1 }
-        });*/
-    //});
+        });
+    });*/
     /*var new_question = {
         "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
@@ -332,7 +332,8 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck, function(
                             question: question,
                             question_index: count + 1,
                             question_total: 10,//TO-DO: figure out how to get this from DB!!!
-                            allowed_time: allowed_time
+                            allowed_time: allowed_time,
+                            image: question.image
                         });
                     });
                 } else {
@@ -474,13 +475,14 @@ app.post(config.URL.LOGIN, function (req, res) {
         if (user) {
             req.session.regenerate(function () {
                 req.session.user = user;
+                req.session.is_admin = user.admin;
+                console.log(req.session.user);
                 req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' +
                                       ' You may now access <a href="/restricted">/restricted</a>.';
                 res.redirect(config.URL.QUIZ_MAIN);
             });
         } else {
             req.session.error = 'Authentication failed, please check your username and password.';
-            console.log('HEY! ', req.session.error);
             res.redirect(config.URL.LOGIN);
         }
     });
@@ -545,7 +547,8 @@ app.get(config.URL.LOGIN, function (req, res) {
 });
 
 app.get(config.URL.QUIZ_MAIN, requiredAuthentication, function (req, res) {
-    res.render(config.TEMPL_QUIZ_MAIN, {'username': req.session.user.username});
+    var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
+    res.render(template, {'username': req.session.user.username});
 });
 
 /**

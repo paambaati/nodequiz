@@ -6,8 +6,8 @@
 var config = {};
 
 //Logging configuration.
-config.LOG_FILENAME = './logs/app_log.txt'
-logger = require('winston');
+config.LOG_FILENAME = './logs/app_log.txt';
+var logger = require('winston');
 logger.add(logger.transports.File, {
     filename: config.LOG_FILENAME,
     handleExceptions: true,
@@ -44,6 +44,7 @@ config.TEMPL_QUIZ_MAIN = 'quiz.html';
 config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';
 config.TEMPL_QUIZ_NOQUIZ = 'noquiz.html';
+config.TEMPL_QUIZ_ADMIN = 'admin.html';
 
 //Quiz configuration.
 config.QUIZ_START_TIME = [1, 0];
@@ -81,5 +82,8 @@ config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';
 //Miscellaneous configuration.
 config.MISC_AVG_WORDS_PPM = 180;
 config.MISC_DEFAULT_ALLOWED_QUESTION_TIME = 10;
+
+//Uploads configuration.
+config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/
 
 module.exports = config;

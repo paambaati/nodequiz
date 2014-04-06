@@ -29,7 +29,6 @@ var config = require('../config/config'),
         date: { $gte: start_day }
     }, function (err, count) {
         if (err) throw err;
-        console.log('number of questions user has taken today = ' + count);
         return fn(null, count);
     });
  }
@@ -51,10 +50,6 @@ var config = require('../config/config'),
     query.sort({ date: -1 });
     query.exec(function (err, questions) {
         if (err) throw err;
-        console.log('questions today...');
-        console.log(questions);
-        console.log('required question index....');
-        console.log(index);
         if (questions === undefined) {
             //No quiz today!
             return fn(new Error(config.ERR_QUIZ_NOQUIZTODAY), null, null);
@@ -113,7 +108,6 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
     var answer = { date: new Date(), choice_id: answer_choice, response_time: response_time, question: question_id };
     models.QuizHistory.findOneAndUpdate(query, answer, { upsert: true }, function (err, upserted_record) {
         if (err) throw err;
-        console.log('done recording the answer!');
         return fn(null, upserted_record);
     });
 }
