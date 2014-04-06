@@ -327,7 +327,6 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck, function(
                     quiz.saveAnswer(req.session.user._id, question._id, '-1', '-1', function (err, record) {
                         req.session.question_id = question._id;
                         req.session.question_render_time = new Date();
-                        console.log('rendering question page...');
                         res.render(config.TEMPL_QUIZ_START, {
                             question: question,
                             question_index: count + 1,
@@ -337,9 +336,9 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck, function(
                         });
                     });
                 } else {
-                    console.log('no more questions for todays quiz!');
-                    //TO-DO: show a quiz completion page with results.
-                    res.render(config.TEMPL_QUIZ_END);
+                    quiz.getResults(req.session.user._id, function (err, results) {
+                        res.render(config.TEMPL_QUIZ_END, { results: results });
+                    });
                 }
             });
     });
@@ -349,10 +348,6 @@ app.post(config.URL.QUIZ_START, function (req, res) {
     var response_time = (new Date() - req.session.question_render_time.toString().date()) / 1000;
     var answer_choice = req.body.choice;
     quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function (err, record) {
-        console.log('answer saved on POST was...');
-        console.log(record);
-        console.log('redirecting back to original url, simulating a refresh...');
-        console.log(req.originalUrl);
         res.redirect(req.originalUrl);
     });
 });
@@ -366,7 +361,6 @@ app.get(config.URL.MAIN, function (req, res) {
 });
 
 app.get(config.URL.SIGNUP, function (req, res) {
-    console.log('in URL_SIGNUP GET NOW...');
     if (req.session.user) {
         res.redirect(config.URL.MAIN);
     } else {
@@ -375,7 +369,6 @@ app.get(config.URL.SIGNUP, function (req, res) {
 });
 
 app.post(config.URL.SIGNUP, userExist, function (req, res) {
-    console.log(req.body);
     var username = req.body.username;
     var password = req.body.password;
     var password1 = req.body.password1;
@@ -398,8 +391,6 @@ app.post(config.URL.SIGNUP, userExist, function (req, res) {
                     security_answer: security_answer
                 }).save(function (err, newUser) {
                     if (err) throw err;
-                    console.log('calling encrypt now...');
-
                     var encrypt = require('./utils/pass').encrypt;
                     encrypt(username, function (err, activate_key) {
                         if (err) throw err;
@@ -426,7 +417,6 @@ app.post(config.URL.SIGNUP, userExist, function (req, res) {
                 });
             });
         } else {
-            console.log('dei you\'re already registered');
             req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
             res.redirect(config.URL.SIGNUP);
         }
@@ -476,9 +466,7 @@ app.post(config.URL.LOGIN, function (req, res) {
             req.session.regenerate(function () {
                 req.session.user = user;
                 req.session.is_admin = user.admin;
-                console.log(req.session.user);
-                req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' +
-                                      ' You may now access <a href="/restricted">/restricted</a>.';
+                req.session.success = 'Authenticated as ' + user.username;
                 res.redirect(config.URL.QUIZ_MAIN);
             });
         } else {
@@ -547,6 +535,7 @@ app.get(config.URL.LOGIN, function (req, res) {
 });
 
 app.get(config.URL.QUIZ_MAIN, requiredAuthentication, function (req, res) {
+    //TO-DO: check time!!! can't have admin changing stuff during quiz window.
     var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
     res.render(template, {'username': req.session.user.username});
 });

@@ -850,7 +850,7 @@
                                     </div>
                                     <div class="box-body">
                                         <p>
-                                            <span class="label label-primary arrow-in arrow-in-right">Your score <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> point{% if results.total_points > 1 %}s{% endif %} for <strong>{{ results.total_questions }}</strong> question{% if results.total_questions > 1 %}s{% endif %} today! Check out the full results.
+                                            <span class="label label-primary arrow-in arrow-in-right">Your score <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> {% if results.total_points == 0 %} points{% else %} point{% endif %} for <strong>{{ results.total_questions }}</strong> {% if results.total_questions == 1 %}question{% else %}questions{% endif %} today! Check out the full results.
                                         </p>
                                         <table class="table table-hover" style="margin-bottom: 0">
                                             <thead>
@@ -867,13 +867,8 @@
                                               <tr>
                                                 <td>{{ loop.index }}</td>
                                                 <td>{{ result.question_title }}</td>
-                                                <td>{{ result.answer_title }}</td>
-                                                <td>{{ result.response_time }}</td>
-                                                {% if result.correct_answer %}
-                                                <td><span class="label label-success"><i class="fa fa-check-square"></i></span></td>
-                                                {% else %}
-                                                <td><span class="label label-danger"><i class="fa fa-times"></i></span></td>
-                                                {% endif %}
+                                                <td>{{ result.answer_title }}</td><td>{% if result.response_time == -1 %}<span data-content="No response time has been recorded. This means you did not choose an answer in time." data-title="Wait, what?" data-original-title="" title="" class="label label-danger pop-hover"><i class="fa fa-question"></i></span>{% else %}{{ result.response_time }}{% endif %}</td>
+                                                <td>{% if result.correct_answer %}<span class="label label-success"><i class="fa fa-check-square"></i></span>{% else %}<span class="label label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                               </tr>
                                             {% endfor %}
                                             </tbody>
