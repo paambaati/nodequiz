@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/daterangepicker-bs3.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/spinner.css">
 <style type="text/css"></style>
 </head>
 <body style="">
@@ -818,20 +819,70 @@
                         </div>
                         <!-- /PAGE HEADER -->
                         <div class="row">
-                            <!-- BOX WITH BADGES-->
+                            <!-- BOX - QUIZ COMPLETED -->
                             <div class="col-md-12 box-container ui-sortable">
-                                <div class="box border">
+                                <div class="box border blue">
                                     <div class="box-title">
                                         <h4><i class="fa fa-check-square-o"></i> Quiz Completed</h4>
+                                        <div class="tools">
+                                            <a class="collapse" href="javascript:;">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="box-body">
-                                        <div class="alert alert-info">You've just completed today's quiz, and all your answers have been recorded.</div>
-                                        What next here? Probably show answers? Summary? Standing?<br>
-                                        //TO-DO
+                                        <div class="alert alert-info">You've completed today's quiz, and all your answers have been recorded.</div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- /BOX WITH BADGES-->
+                            <!-- /BOX - QUIZ COMPLETED -->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- BOX -->
+                                <div class="box border red">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-bar-chart-o"></i>Results</h4>
+                                        <div class="tools">
+                                            <a class="collapse" href="javascript:;">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <p>
+                                            <span class="label label-primary arrow-in">You're awesome! <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> point{% if results.total_points > 1 %}s{% endif %} for <strong>{{ results.total_questions }}</strong> question{% if results.total_questions > 1 %}s{% endif %} today! Check out the full results.
+                                        </p>
+                                        <table class="table table-hover">
+                                            <thead>
+                                              <tr>
+                                                <th>#</th>
+                                                <th>Question</th>
+                                                <th>Correct Answer</th>
+                                                <th>Response Time</th>
+                                                <th>Result</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for result in results %}
+                                              <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ result.question_title }}</td>
+                                                <td>{{ result.answer_title }}</td>
+                                                <td>{{ result.response_time }}</td>
+                                                {% if result.correct_answer %}
+                                                <td><span class="label label-success"><i class="fa fa-check-square"></i></span></td>
+                                                {% else %}
+                                                <td><span class="label label-danger"><i class="fa fa-times"></i></span></td>
+                                                {% endif %}
+                                              </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                          </table>
+                                    </div>
+                                </div>
+                                <!-- /BOX -->
+                            </div>
                         </div>
                 </div>
             </div>

@@ -41,7 +41,8 @@ var QuizHistorySchema = new Schema({
     user_id: { type: ObjectId, required: true },
     question_id: { type: ObjectId, required: true },
     choice_id: { type: Number, required: true, default: -1 },
-    response_time: { type: Number, required: true, default: -1 }
+    response_time: { type: Number, required: true, default: -1 },
+    question: { type: ObjectId, ref: config.DB_QUESTIONS_TABLE }
 });
 
 QuizHistorySchema.index({ date: -1});

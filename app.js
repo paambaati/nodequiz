@@ -265,7 +265,11 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    res.render(config.TEMPL_QUIZ_END);
+    quiz.getResults('529231a32cf795b844000001', function (err, results) {
+        console.log('FINAL RESULTS...');
+        console.log(results);
+        res.render(config.TEMPL_QUIZ_END, { results: results });
+    });
    /* quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count){
         res.send('DUMMY -> quiz.findUserQuestionsForToday(529231a32cf795b844000001) = ' + count);
         /*res.render(config.TEMPL_QUIZ_START, {
