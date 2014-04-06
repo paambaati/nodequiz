@@ -38,6 +38,7 @@ app.configure(function () {
     app.use(express.session({ secret: config.MASTER_SALT }));
     //app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'public/stylesheets')));
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'swig');
     swig.setDefaults({ autoescape: false});
