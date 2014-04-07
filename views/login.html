@@ -56,12 +56,12 @@
                                 </div>
                                 <form role="form" id="form-login" method="POST" action="{{ URL.LOGIN }}">
                                   <div class="form-group">
-                                    <label for="username">GA Username</label>
+                                    <label class="control-label" for="username">GA Username</label>
                                     <i class="fa fa-envelope"></i>
                                     <input type="text" class="form-control" id="username" name="username" maxlength="40" autofocus="autofocus" required >
                                   </div>
                                   <div class="form-group"> 
-                                    <label for="password">Password</label>
+                                    <label class="control-label" for="password">Password</label>
                                     <i class="fa fa-lock"></i>
                                     <input type="password" class="form-control" id="password" name="password" required >
                                   </div>
@@ -93,22 +93,22 @@
                                 </div>
                                 <form name="signup" role="form" id="form-signup" method="POST" action="{{ URL.SIGNUP }}" autocomplete="off">
                                   <div class="form-group">
-                                    <label for="username">GA Username</label>
+                                    <label class="control-label" for="username">GA Username</label>
                                     <i class="fa fa-envelope"></i>
                                     <input type="text" class="form-control" id="username" name="username" maxlength="40" required >
                                   </div>
                                   <div class="form-group"> 
-                                    <label for="password">Password</label>
+                                    <label class="control-label" for="password">Password</label>
                                     <i class="fa fa-lock"></i>
                                     <input type="password" class="form-control" id="first_password" name="first_password" required >
                                   </div>
                                   <div class="form-group"> 
-                                    <label for="password1">Repeat Password</label>
+                                    <label class="control-label" for="password1">Repeat Password</label>
                                     <i class="fa fa-lock"></i>
                                     <input type="password" class="form-control" id="second_password" name="second_password" required >
                                   </div>
                                   <div class="form-group"> 
-                                    <label for="security_question">Security Question</label>
+                                    <label class="control-label" for="security_question">Security Question</label>
                                     <select class="form-control select2-field" id="security_question" name="security_question" required >
                                         <option>What is your mother's maiden name?</option>
                                         <option>What is the name of your first pet?</option>
@@ -119,7 +119,7 @@
                                     </select>
                                   </div>
                                   <div class="form-group">
-                                    <label for="security_answer">Answer</label>
+                                    <label class="control-label" for="security_answer">Answer</label>
                                     <i class="fa fa-quote-left"></i>
                                     <input type="text" class="form-control" id="security_answer" name="security_answer" required >
                                   </div>
@@ -150,12 +150,12 @@
                                 </div>
                                 <form role="form" id="form-forgot" method="POST" action="{{ URL.FORGOT }}" autocomplete="off">
                                   <div class="form-group">
-                                    <label for="username">Enter your username</label>
+                                    <label class="control-label" for="username">Enter your username</label>
                                     <i class="fa fa-envelope"></i>
                                     <input type="text" class="form-control" id="username" name="username" maxlength="40" required >
                                   </div>
                                   <div class="form-group"> 
-                                    <label for="security_question">Security Question</label>
+                                    <label class="control-label" for="security_question">Security Question</label>
                                     <select class="form-control select2-field" id="security_question" name="security_question" required >
                                         <option>What is your mother's maiden name?</option>
                                         <option>What is the name of your first pet?</option>
@@ -166,7 +166,7 @@
                                     </select>
                                   </div>
                                   <div class="form-group">
-                                    <label for="security_answer">Answer</label>
+                                    <label class="control-label" for="security_answer">Answer</label>
                                     <i class="fa fa-quote-left"></i>
                                     <input type="text" class="form-control" id="security_answer" name="security_answer" required >
                                   </div>
@@ -231,13 +231,13 @@
                     'second_password': 'Your passwords do not match'
                 },
                 errorElement: 'span',
-                errorClass: 'error-span',
+                errorClass: 'help-block',
                 highlight: function(element, errorClass) {
                     $(element).parents('div.form-group').addClass('has-error');
                 },
                 unhighlight: function(element, errorClass) {
                     $(element).parents('div.form-group').removeClass('has-error');
-                    $(element).next('span.error-span').remove();
+                    $(element).next('span.help-block').remove();
                 }
             });
         });
