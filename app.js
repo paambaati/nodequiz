@@ -1,4 +1,3 @@
-
 /**
  * TheQuiz
  * Authors: GP.
@@ -30,18 +29,22 @@ var app = express();
  * Middlewares.
  */
 
-app.configure(function () {
+app.configure(function() {
     app.use(express.logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(express.cookieParser(config.APP_TITLE));
-    app.use(express.session({ secret: config.MASTER_SALT }));
+    app.use(express.session({
+        secret: config.MASTER_SALT
+    }));
     //app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(__dirname, 'public/stylesheets')));
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'swig');
-    swig.setDefaults({ autoescape: false});
+    swig.setDefaults({
+        autoescape: false
+    });
     app.engine('.html', swig.renderFile);
 });
 
@@ -49,19 +52,22 @@ app.configure(function () {
 // Saves logged in username to cookie. This is used during reset password.
 // If a user is resetting password for someone else, this cookie value
 // is sent for shaming.
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     //var original_url = req.originalUrl;
     var cookie = req.cookies.last_user;
     if (cookie === undefined) {
         if (req.session.user) {
-            res.cookie('last_user', req.session.user.username, { maxAge: 172800000, httpOnly: true }); //2-day cookie.
+            res.cookie('last_user', req.session.user.username, {
+                maxAge: 172800000,
+                httpOnly: true
+            }); //2-day cookie.
         }
     }
     next();
 });
 
 // Messaging middleware.
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     var error = req.session.error,
         msg = req.session.success;
     delete req.session.error;
@@ -96,7 +102,10 @@ app.use(function (req, res, next) {
  */
 function errorHandler(err, req, res, next) {
     res.status(500);
-    var error_data = { error: err, stacktrace: err.stack };
+    var error_data = {
+        error: err,
+        stacktrace: err.stack
+    };
     if (req.session.error) {
         error_data.message = req.session.error;
     }
@@ -114,10 +123,10 @@ function errorHandler(err, req, res, next) {
 function authenticate(name, pass, fn) {
     models.User.findOne({
         username: name
-    }, function (err, user) {
+    }, function(err, user) {
         if (user) {
             if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
-            hash(pass, user.salt, function (err, hash) {
+            hash(pass, user.salt, function(err, hash) {
                 if (err) return fn(err);
                 if (hash == user.hash) return fn(null, user);
                 fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
@@ -158,7 +167,7 @@ function requiredAuthentication(req, res, next) {
 function isUsernameValid(name, fn) {
     models.User.findOne({
         username: name
-    }, function (err, user) {
+    }, function(err, user) {
         if (user) {
             if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
             return fn(null, true);
@@ -182,12 +191,14 @@ function isUsernameValid(name, fn) {
 function userExist(req, res, next) {
     models.User.count({
         username: req.body.username
-    }, function (err, count) {
+    }, function(err, count) {
         if (count === 0) {
             next();
         } else {
             req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
-            res.render(config.TEMPL_LOGIN, { tab: 'signup' });
+            res.render(config.TEMPL_LOGIN, {
+                tab: 'signup'
+            });
         }
     });
 }
@@ -205,11 +216,20 @@ function activateUser(name, fn) {
     var User = models.mongoose.model(config.DB_AUTH_TABLE, UserSchema);
     models.User.findOne({
         username: name
-    }, function (err, user) {
+    }, function(err, user) {
         if (user) {
             console.log('user found! proceeding to update...');
-            models.User.update({ username: name, activated: false }, { activated: true }, { multi: false }, function(err, count) {
-                if(err) { throw err; }
+            models.User.update({
+                username: name,
+                activated: false
+            }, {
+                activated: true
+            }, {
+                multi: false
+            }, function(err, count) {
+                if (err) {
+                    throw err;
+                }
                 console.log('DB UPDATED PHEW! count = ', count);
                 return fn(null, count);
             });
@@ -240,16 +260,23 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
         username: name,
         security_question: security_question,
         security_answer: security_answer
-    }, function (err, user) {
+    }, function(err, user) {
         if (user) {
             console.log('user found! proceeding to reset password...');
             console.log(user._id);
             var new_password = (Math.random() + 1).toString(32).slice(2);
-            hash(new_password, function (err, salt, hash) {
+            hash(new_password, function(err, salt, hash) {
                 if (err) throw err;
                 console.log('new password = ', new_password);
-                models.User.update({ username: name }, { salt: salt, hash: hash }, { multi: false }, function(err, count) {
-                    if(err) throw err;
+                models.User.update({
+                    username: name
+                }, {
+                    salt: salt,
+                    hash: hash
+                }, {
+                    multi: false
+                }, function(err, count) {
+                    if (err) throw err;
                     console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
                     mailer.sendNewPassword(domain, ip, user_cookie, name, new_password);
                     return fn(null, new_password);
@@ -309,66 +336,72 @@ app.get('/dummy', function(req, res) {
     /*Question.create(new_question, function(err, count){
         if (err) throw err;
         res.send('updated ' + count + ' records.');*/
-        /*QuizHistory.create(history, function(err, count){
+    /*QuizHistory.create(history, function(err, count){
             if (err) throw err;
             res.send('updated ' + count + ' records.');
         });*/
     /*});*/
 });
 
-app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck, function(req, res) {
-    quiz.findUserQuestionsForToday(req.session.user._id, function (err, count) {
-            quiz.findNextQuestion(count, function (err, question, allowed_time) {
-                if(err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
-                    res.redirect(config.URL.QUIZ_NOQUIZ);
-                }
-                if (question !== null) {
-                    //Save answer with answer -1 to mark that the user has seen this question
-                    quiz.saveAnswer(req.session.user._id, question._id, '-1', '-1', function (err, record) {
-                        req.session.question_id = question._id;
-                        req.session.question_render_time = new Date();
-                        res.render(config.TEMPL_QUIZ_START, {
-                            question: question,
-                            question_index: count + 1,
-                            question_total: 10,//TO-DO: figure out how to get this from DB!!!
-                            allowed_time: allowed_time,
-                            image: question.image
-                        });
+app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('inside'), function(req, res) {
+    quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
+        quiz.findNextQuestion(count, function(err, question, allowed_time) {
+            if (err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
+                res.redirect(config.URL.QUIZ_NOQUIZ);
+            }
+            if (question !== null) {
+                //Save answer with answer -1 to mark that the user has seen this question
+                quiz.saveAnswer(req.session.user._id, question._id, '-1', '-1', function(err, record) {
+                    req.session.question_id = question._id;
+                    req.session.question_render_time = new Date();
+                    res.render(config.TEMPL_QUIZ_START, {
+                        question: question,
+                        question_index: count + 1,
+                        question_total: 10, //TO-DO: figure out how to get this from DB!!!
+                        allowed_time: allowed_time,
+                        image: question.image
                     });
-                } else {
-                    quiz.getResults(req.session.user._id, function (err, results) {
-                        res.render(config.TEMPL_QUIZ_END, { results: results });
+                });
+            } else {
+                quiz.getResults(req.session.user._id, function(err, results) {
+                    res.render(config.TEMPL_QUIZ_END, {
+                        results: results
                     });
-                }
-            });
+                });
+            }
+        });
     });
 });
 
-app.post(config.URL.QUIZ_START, function (req, res) {
+app.post(config.URL.QUIZ_START, function(req, res) {
     var response_time = (new Date() - req.session.question_render_time.toString().date()) / 1000;
     var answer_choice = req.body.choice;
-    quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function (err, record) {
+    quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function(err, record) {
         res.redirect(req.originalUrl);
     });
 });
 
-app.get(config.URL.MAIN, function (req, res) {
+app.get(config.URL.MAIN, function(req, res) {
     if (req.session.user) {
         res.redirect(config.URL.QUIZ_MAIN);
     } else {
-        res.render(config.TEMPL_LOGIN, { tab: 'login' });
+        res.render(config.TEMPL_LOGIN, {
+            tab: 'login'
+        });
     }
 });
 
-app.get(config.URL.SIGNUP, function (req, res) {
+app.get(config.URL.SIGNUP, function(req, res) {
     if (req.session.user) {
         res.redirect(config.URL.MAIN);
     } else {
-        res.render(config.TEMPL_LOGIN, { tab: 'signup' });
+        res.render(config.TEMPL_LOGIN, {
+            tab: 'signup'
+        });
     }
 });
 
-app.post(config.URL.SIGNUP, userExist, function (req, res) {
+app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var password1 = req.body.password1;
@@ -378,10 +411,10 @@ app.post(config.URL.SIGNUP, userExist, function (req, res) {
     console.log(username, '----', password, '----', password1);
     //TO-DO: validate all these^^^ fields first
 
-    isUsernameValid(username, function (err, valid) {
+    isUsernameValid(username, function(err, valid) {
         if (err) throw err;
         if (!valid) {
-            hash(password, function (err, salt, hash) {
+            hash(password, function(err, salt, hash) {
                 if (err) throw err;
                 var user = new models.User({
                     username: username,
@@ -389,10 +422,10 @@ app.post(config.URL.SIGNUP, userExist, function (req, res) {
                     hash: hash,
                     security_question: security_question,
                     security_answer: security_answer
-                }).save(function (err, newUser) {
+                }).save(function(err, newUser) {
                     if (err) throw err;
                     var encrypt = require('./utils/pass').encrypt;
-                    encrypt(username, function (err, activate_key) {
+                    encrypt(username, function(err, activate_key) {
                         if (err) throw err;
                         var domain = req.protocol + '://' + req.get('host');
                         mailer.sendActivationLink(domain, username, activate_key);
@@ -423,22 +456,22 @@ app.post(config.URL.SIGNUP, userExist, function (req, res) {
     });
 });
 
-app.post(config.URL.FORGOT, function (req, res) {
+app.post(config.URL.FORGOT, function(req, res) {
     var username = req.body.username;
     var security_question = req.body.security_question;
     var security_answer = req.body.security_answer;
     console.log('in POST of /forgot now... for user - ', username);
-    isUsernameValid(username, function (err, valid) {
+    isUsernameValid(username, function(err, valid) {
         if (err) throw err;
         if (valid) {
             console.log('valid user alright. now to reset your password....');
             var domain = req.protocol + '://' + req.get('host');
             var ip = req.headers['x-forwarded-for'] ||
-                        req.connection.remoteAddress ||
-                        req.socket.remoteAddress ||
-                        req.connection.socket.remoteAddress;
+                req.connection.remoteAddress ||
+                req.socket.remoteAddress ||
+                req.connection.socket.remoteAddress;
             var user_cookie = req.cookies.last_user;
-            resetPassword(username, security_question, security_answer, domain, ip, user_cookie, function (err, new_password) {
+            resetPassword(username, security_question, security_answer, domain, ip, user_cookie, function(err, new_password) {
                 if (err && err.message == config.ERR_RESET_INVALID_DETAILS) {
                     req.session.error = err.message;
                     res.redirect(config.URL.FORGOT);
@@ -447,10 +480,10 @@ app.post(config.URL.FORGOT, function (req, res) {
                 }
                 console.log('reset done in DB. new password = ', new_password);
                 res.render(config.TEMPL_200, {
-                        message_title: 'Done!',
-                        message_1: 'We\'ve sent you an email with your new password!',
-                        message_2: 'Check your mailbox yo!'
-                    });
+                    message_title: 'Done!',
+                    message_1: 'We\'ve sent you an email with your new password!',
+                    message_2: 'Check your mailbox yo!'
+                });
             });
 
         } else {
@@ -460,10 +493,10 @@ app.post(config.URL.FORGOT, function (req, res) {
     });
 });
 
-app.post(config.URL.LOGIN, function (req, res) {
-    authenticate(req.body.username, req.body.password, function (err, user) {
+app.post(config.URL.LOGIN, function(req, res) {
+    authenticate(req.body.username, req.body.password, function(err, user) {
         if (user) {
-            req.session.regenerate(function () {
+            req.session.regenerate(function() {
                 req.session.user = user;
                 req.session.is_admin = user.admin;
                 req.session.success = 'Authenticated as ' + user.username;
@@ -476,68 +509,76 @@ app.post(config.URL.LOGIN, function (req, res) {
     });
 });
 
-app.get('/activate/:activate_key', function (req, res) {
+app.get('/activate/:activate_key', function(req, res) {
     console.log('in GET of /activate now...');
     var decrypt = require('./utils/pass').decrypt;
-    decrypt(req.params.activate_key, function (err, username) {
+    decrypt(req.params.activate_key, function(err, username) {
         if (err) {
             req.session.error = '... but not really. Looks like your activation key is invalid.' +
-                            'Either you\'re trying to break into someone else\'s account (which is really lame) ' +
-                            'or.. nope. You\'re lame.';
+                'Either you\'re trying to break into someone else\'s account (which is really lame) ' +
+                'or.. nope. You\'re lame.';
             throw err;
         }
         console.log('decrypted username - ', username);
-        activateUser(username, function (err, count) {
-                if (err) {
-                    console.log(err);
-                    console.log('activation -> error caught in activateUser() function!');
-                    req.session.error = 'User no longer exists!';
-                    throw err;
-                }
-                console.log('activateUser - return value - ', count);
-                if(count == 1){
-                    res.render(config.TEMPL_200, {
-                        message_title: 'Done!',
-                        message_1: 'Your account has been activated!',
-                        message_2: 'You can now login and start taking quizzes.'
-                    });
-                } else if (count == 0) {
-                     res.render(config.TEMPL_200, {
-                        message_title: 'WAITAMINIT!',
-                        message_1: 'Your account has already been activated!',
-                        message_2: 'Did you <a href="' + config.URL.FORGOT + '">forget</a> your password?'
-                    });
-                }//handle other cases, should I?
+        activateUser(username, function(err, count) {
+            if (err) {
+                console.log(err);
+                console.log('activation -> error caught in activateUser() function!');
+                req.session.error = 'User no longer exists!';
+                throw err;
+            }
+            console.log('activateUser - return value - ', count);
+            if (count == 1) {
+                res.render(config.TEMPL_200, {
+                    message_title: 'Done!',
+                    message_1: 'Your account has been activated!',
+                    message_2: 'You can now login and start taking quizzes.'
+                });
+            } else if (count == 0) {
+                res.render(config.TEMPL_200, {
+                    message_title: 'WAITAMINIT!',
+                    message_1: 'Your account has already been activated!',
+                    message_2: 'Did you <a href="' + config.URL.FORGOT + '">forget</a> your password?'
+                });
+            } //handle other cases, should I?
         });
     });
 });
 
-app.get(config.URL.LOGOUT, function (req, res) {
-    req.session.destroy(function () {
+app.get(config.URL.LOGOUT, function(req, res) {
+    req.session.destroy(function() {
         res.redirect(config.URL.MAIN);
     });
 });
 
-app.get(config.URL.FORGOT, function (req, res) {
-    res.render(config.TEMPL_LOGIN, { tab: 'forgot' });
+app.get(config.URL.FORGOT, function(req, res) {
+    res.render(config.TEMPL_LOGIN, {
+        tab: 'forgot'
+    });
 });
 
-app.get(config.URL.TIMECLOSED, requiredAuthentication, function (req, res) {
-    res.render(config.TEMPL_TIMECLOSED, { start_hour: config.QUIZ_START_TIME[0], stop_hour: config.QUIZ_STOP_TIME[0]});
+app.get(config.URL.TIMECLOSED, requiredAuthentication, function(req, res) {
+    res.render(config.TEMPL_TIMECLOSED, {
+        start_hour: config.QUIZ_START_TIME[0],
+        stop_hour: config.QUIZ_STOP_TIME[0]
+    });
 });
 
-app.get(config.URL.QUIZ_NOQUIZ, requiredAuthentication, function (req, res) {
+app.get(config.URL.QUIZ_NOQUIZ, requiredAuthentication, function(req, res) {
     res.render(config.TEMPL_QUIZ_NOQUIZ);
 });
 
-app.get(config.URL.LOGIN, function (req, res) {
-     res.render(config.TEMPL_LOGIN, { tab: 'login' });
+app.get(config.URL.LOGIN, function(req, res) {
+    res.render(config.TEMPL_LOGIN, {
+        tab: 'login'
+    });
 });
 
-app.get(config.URL.QUIZ_MAIN, requiredAuthentication, function (req, res) {
-    //TO-DO: check time!!! can't have admin changing stuff during quiz window.
+app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
-    res.render(template, {'username': req.session.user.username});
+    res.render(template, {
+        'username': req.session.user.username
+    });
 });
 
 /**
@@ -551,9 +592,11 @@ app.get(config.URL.QUIZ_MAIN, requiredAuthentication, function (req, res) {
 app.use(errorHandler);
 
 //404 handler.
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
     res.status(404);
-    res.render(config.TEMPL_400, { url: req.url });
+    res.render(config.TEMPL_400, {
+        url: req.url
+    });
     return;
 });
 
@@ -565,6 +608,6 @@ process.on('uncaughtException', function(err) {
  * Run the app!
  */
 
-http.createServer(app).listen(config.APP_PORT, function () {
-  console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
+http.createServer(app).listen(config.APP_PORT, function() {
+    console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
 });
