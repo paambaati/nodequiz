@@ -3,7 +3,7 @@
  * Miscellaneous utilities.
  * Authors: GP.
  * Version: 1.0
- * Release Date: XX-XXX-2014
+ * Release Date: 05-Apr-2014
  */
 
 /**
