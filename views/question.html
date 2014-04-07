@@ -7,6 +7,8 @@
 	<meta name="description" content="{{ app_title }} - Quiz Question">
 	<meta name="author" content="GP">
 	<meta http-equiv="refresh" content="{{ allowed_time }}">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache">
 	<!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
     <script src="/javascripts/excanvas.min.js"></script>
@@ -874,6 +876,17 @@
 	<script type="text/javascript" src="/javascripts/slimScrollHorizontal.min.js"></script>
 	<script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
 	<script type="text/javascript" src="/javascripts/script.js"></script>
+	<script type="text/javascript">
+		window.location.hash = 'no-back-button';
+		window.location.hash = 'again-no-back-button';
+		window.onhashchange = function(){
+			if (typeof history.pushState !== 'undefined') {
+				history.pushState(null, '', '#no-back-button');
+			} else {
+				window.location.hash='no-back-button';
+			}
+		}
+	</script>
 	<script type="text/javascript">
 		jQuery(document).ready(function() {		
 			App.setPage('widgets_box');  //Set current page

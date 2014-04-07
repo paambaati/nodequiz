@@ -1,4 +1,3 @@
-
 /**
  * Configuration.
  */
@@ -23,19 +22,22 @@ config.APP_PORT = 3000;
 
 //Basic URL configuration.
 config.URL = {
-    MAIN : '/',
-    LOGIN : '/login',
-    SIGNUP : '/signup',
-    FORGOT : '/forgot',
-    LOGOUT : '/logout',
-    TIMECLOSED : '/timeclosed',
-    QUIZ_MAIN : '/quiz',
-    QUIZ_START : '/quiz/start',
-    QUIZ_NOQUIZ : '/quiz/noquiz'
+    MAIN: '/',
+    LOGIN: '/login',
+    SIGNUP: '/signup',
+    FORGOT: '/forgot',
+    RESET: '/reset',
+    ACTIVATE: '/activate',
+    LOGOUT: '/logout',
+    TIMECLOSED: '/timeclosed',
+    QUIZ_MAIN: '/quiz',
+    QUIZ_START: '/quiz/start',
+    QUIZ_NOQUIZ: '/quiz/noquiz'
 };
 
 //Basic template configuration.
 config.TEMPL_LOGIN = 'login.html';
+config.TEMPL_RESET = 'reset.html';
 config.TEMPL_500 = '500.html';
 config.TEMPL_400 = '404.html';
 config.TEMPL_200 = '200.html';
@@ -55,6 +57,7 @@ config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
 config.DB_NAME = 'quiz_db';
 config.DB_AUTH_TABLE = 'quiz_users';
+config.DB_AUTH_PASSWORD_RESET = 'quiz_resets';
 config.DB_QUESTIONS_TABLE = 'quiz_questions';
 config.DB_QUIZ_HISTORY = 'quiz_history';
 config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
@@ -79,10 +82,12 @@ config.ERR_QUIZ_NOQUIZTODAY = 'No quiz found in database';
 
 //Crypto configuration.
 config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';
+config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.
+config.RESET_VALIDITY = 3; //Hours
 config.MISC_AVG_WORDS_PPM = 180;
-config.MISC_DEFAULT_ALLOWED_QUESTION_TIME = 10;
+config.MISC_DEFAULT_ALLOWED_QUESTION_TIME = 10; //Seconds
 
 //Uploads configuration.
 config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/

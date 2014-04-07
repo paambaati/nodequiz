@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Authors: GP.
- * Version: 1.1
- * Release Date: 06-Apr-2014
+ * Version: 1.2
+ * Release Date: 07-Apr-2014
  */
 
 /**
@@ -216,7 +216,7 @@ function activateUser(name, fn) {
     }, function(err, user) {
         if (user) {
             console.log('user found! proceeding to update...');
-            models.User.update({
+            User.update({
                 username: name,
                 activated: false
             }, {
@@ -237,6 +237,44 @@ function activateUser(name, fn) {
 }
 
 /**
+ * Validates reset password request, and if valid, generates a reset key & *saves* it
+ * to the database and then mails it to the user's registered email ID.
+ *
+ * @param {String} username.
+ * @param {String} security question.
+ * @param {String} security answer.
+ * @param {String} domain that the app is running on.
+ * @param {String} request's origin IP address.
+ * @param {String} value of last_user cookie.
+ * @param {Function} callback.
+ */
+
+function sendResetKey(name, security_question, security_answer, domain, ip, user_cookie, fn) {
+    models.User.findOne({
+        username: name,
+        security_question: security_question,
+        security_answer: security_answer
+    }, function(err, user) {
+        if (user) {
+            var generateResetKey = require('./utils/pass').generateResetKey;
+            generateResetKey(user._id, function(err, reset_key) {
+                var reset_entry = {
+                    'reset_key': reset_key,
+                    'user_id': user._id,
+                    'date': new Date()
+                }
+                models.PasswordReset.save(reset_entry, function(err, entry) {
+                    mailer.mailResetKey(domain, ip, user_cookie, name, reset_key);
+                    return fn(null, reset_key);
+                });
+            });
+        } else {
+            return fn(new Error(config.ERR_RESET_INVALID_DETAILS));
+        }
+    });
+}
+
+/**
  * Resets user password and sends an email with the new password
  * to the user's registered email ID.
  *
@@ -249,10 +287,12 @@ function activateUser(name, fn) {
  * @param {Function} callback.
  */
 
+//TO-DO: REMOVE THIS FUNCTION!?!???!?!?!
+//OR MOVE POST OF FORGOT HERE???
 function resetPassword(name, security_question, security_answer, domain, ip, user_cookie, fn) {
     //Better use a new instance because mongoose behaves
     //weirdly when doing an UPDATE on an existing instance.
-    var User = models.mongoose.model(config.DB_AUTH_TABLE, UserSchema);
+    var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
     models.User.findOne({
         username: name,
         security_question: security_question,
@@ -265,7 +305,7 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
             hash(new_password, function(err, salt, hash) {
                 if (err) throw err;
                 console.log('new password = ', new_password);
-                models.User.update({
+                User.update({
                     username: name
                 }, {
                     salt: salt,
@@ -297,14 +337,29 @@ app.get('/dummy', function(req, res) {
         console.log(results);
         res.render(config.TEMPL_QUIZ_END, { results: results });
     });*/
-    /*quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count){
+    quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count) {
         res.render(config.TEMPL_QUIZ_START, {
             allowed_time: 15,
             question_index: 1,
             question_total: 10,
-            question: {"date" : Date("2013-04-04T10:30:00.000Z"),"title" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","choices" : {"1" : {"choice_text" : "h121aha"},"2" : {"choice_text" : "he1212he"},"3" : {"choice_text" : "hahhaahhahahha"}}, "answer" : 1 }
+            question: {
+                "date": Date("2013-04-04T10:30:00.000Z"),
+                "title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                "choices": {
+                    "1": {
+                        "choice_text": "h121aha"
+                    },
+                    "2": {
+                        "choice_text": "he1212he"
+                    },
+                    "3": {
+                        "choice_text": "hahhaahhahahha"
+                    }
+                },
+                "answer": 1
+            }
         });
-    });*/
+    });
     /*var new_question = {
         "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
@@ -434,16 +489,6 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
                         message_1: 'We\'ve sent you an email with the activation link!',
                         message_2: 'Check your mailbox yo!'
                     });
-
-                    /*authenticate(newUser.username, password, function (err, user) {
-                        if(user) {
-                            req.session.regenerate(function () {
-                                req.session.user = user;
-                                req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' + ' You may now access <a href="/restricted">/restricted</a>.';
-                                res.redirect(config.URL.MAIN);
-                            });
-                        }
-                    });*/
                 });
             });
         } else {
@@ -468,17 +513,17 @@ app.post(config.URL.FORGOT, function(req, res) {
                 req.socket.remoteAddress ||
                 req.connection.socket.remoteAddress;
             var user_cookie = req.cookies.last_user;
-            resetPassword(username, security_question, security_answer, domain, ip, user_cookie, function(err, new_password) {
+            sendResetKey(username, security_question, security_answer, domain, ip, user_cookie, function(err, reset_key) {
                 if (err && err.message == config.ERR_RESET_INVALID_DETAILS) {
                     req.session.error = err.message;
                     res.redirect(config.URL.FORGOT);
                 } else if (err) {
                     throw err;
                 }
-                console.log('reset done in DB. new password = ', new_password);
+                console.log('key generated. reset key = ', reset_key);
                 res.render(config.TEMPL_200, {
                     message_title: 'Done!',
-                    message_1: 'We\'ve sent you an email with your new password!',
+                    message_1: 'We\'ve sent you an email with your reset key that is valid for <strong>' + config.RESET_VALIDITY + '</strong> hours!',
                     message_2: 'Check your mailbox yo!'
                 });
             });
@@ -487,6 +532,72 @@ app.post(config.URL.FORGOT, function(req, res) {
             req.session.error = config.ERR_RESET_INVALID_USERNAME;
             res.redirect(config.URL.FORGOT);
         }
+    });
+});
+
+app.get(config.URL.RESET + '/:reset_key', function(req, res) {
+    var reset_key = req.params.reset_key;
+    models.PasswordReset.findOne({
+        reset_key: reset_key,
+        used: false
+    }, function(err, reset_entry) {
+        if (reset_entry != null) {
+            console.log(reset_entry.date);
+            var time_diff = Math.abs(new Date() - reset_entry.date) / 36e5;
+            if (time_diff <= config.RESET_VALIDITY) {
+                res.render(config.TEMPL_RESET, {
+                    'reset_key': reset_key
+                });
+            } else {
+                res.render(config.TEMPL_RESET, {
+                    status: 'failure'
+                });
+            }
+        } else {
+            res.render(config.TEMPL_RESET, {
+                status: 'invalid_key'
+            });
+        }
+    });
+});
+
+app.post(config.URL.RESET, function(req, res) {
+    var reset_key = req.body.reset_key;
+    var new_password = req.body.new_password1;
+    var decrypt = require('./utils/pass').decryptResetKey;
+    var user_id = null;
+    decrypt(reset_key, function(err, user_id) {
+        hash(new_password, function(err, salt, hash) {
+            if (err) throw err;
+            console.log('new password = ', new_password);
+            var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
+            User.update({
+                _id: user_id
+            }, {
+                salt: salt,
+                hash: hash
+            }, {
+                multi: false
+            }, function(err, count) {
+                if (err) throw err;
+                console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
+                var PasswordReset = models.mongoose.model(config.DB_AUTH_PASSWORD_RESET, models.PasswordResetSchema);
+                var query = {
+                    reset_key: reset_key
+                };
+                var to_update = {
+                    used: true
+                }
+                PasswordReset.findOneAndUpdate(query, to_update, {}, function(err, updated_record) {
+                    if (err) throw err;
+                    console.log('reset key entry updated..');
+                    //DO THIS ONE BELOW, OR SHOW 200 TEMPLATE????
+                    res.render(config.TEMPL_RESET, {
+                        status: 'success'
+                    });
+                });
+            });
+        });
     });
 });
 
@@ -506,7 +617,7 @@ app.post(config.URL.LOGIN, function(req, res) {
     });
 });
 
-app.get('/activate/:activate_key', function(req, res) {
+app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
     console.log('in GET of /activate now...');
     var decrypt = require('./utils/pass').decrypt;
     decrypt(req.params.activate_key, function(err, username) {
@@ -597,9 +708,9 @@ app.use(function(req, res, next) {
     return;
 });
 
-process.on('uncaughtException', function(err) {
-    logger.log('error', 'UNCAUGHT EXCEPTION! ', err.stack);
-});
+/*process.on('uncaughtException', function(err) {
+    config.logger.log('error', 'UNCAUGHT EXCEPTION! ', err.stack);
+});*/
 
 /**
  * Run the app!

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{{ app_title }} | Reset Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="{{ app_title }} Reset Password">
+    <meta name="author" content="GP">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <!-- JAVASCRIPTS -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/excanvas.min.js"></script>
+    <script src="/javascripts/html5.js"></script>
+    <script src="/javascripts/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <!-- /JAVASCRIPTS -->
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/daterangepicker-bs3.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/animate.min.css" />
+    <link rel="stylesheet" type="text/css"  href="/stylesheets/opensans.css" />
+    <!-- /STYLESHEETS -->
+</head>
+<body class="login">    
+    <!-- PAGE -->
+    <section id="page">
+            <!-- HEADER -->
+            <header>
+                <!-- NAV-BAR -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+                            <div id="logo">
+                                <a href="{{ URL.MAIN }}"><img src="/images/logo-alt.png" height="40" alt="GA Quiz" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/NAV-BAR -->
+            </header>
+            <!--/HEADER -->
+            <!-- RESET PASSWORD -->
+            <section id="reset">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+                            <div class="login-box-plain">
+                                <h2 class="bigintro">Reset Password</h2>
+                                <div class="divide-40"></div>
+                                {% if status == 'failure' %}
+                                <div class="alert alert-danger">
+                                    <h4><i class="fa fa-times"></i> Oh snap!</h4>
+                                    <p id="reset-message">The reset link has expired. You might want to fill up &amp; submit the <a href="{{ URL.FORGOT }}">Forgot Password</a> page again.</p>
+                                </div>
+                                {% elseif status == 'success' %}
+                                <div class="alert alert-success">
+                                    <h4><i class="fa fa-check-square-o"></i> Done!</h4>
+                                    <p id="reset-message">Your password has been reset successfully. You can now <a href="{{ URL.LOGIN }}">login</a> with your new password.</p>
+                                </div>
+                                {% elseif status == 'invalid_key' %}
+                                <div class="alert alert-warning">
+                                    <h4><i class="fa fa-exclamation-triangle"></i> Whoa nelly!</h4>
+                                    <p id="reset-message">Looks like an invalid reset key. Where did you get this? WHERE DID YOU GET THIS?!?!?</p>
+                                </div>
+                                {% else %}
+                                <form role="form" id="form-reset" method="POST" action="{{ URL.RESET }}" autocomplete="off">
+                                  <div class="form-group">
+                                    <label class="control-label" for="new_password1">Enter Your New Password</label>
+                                    <i class="fa fa-lock"></i>
+                                    <input type="password" class="form-control" id="new_password1" name="new_password1" required >
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label" for="new_password2">Enter Password Again</label>
+                                    <i class="fa fa-lock"></i>
+                                    <input type="password" class="form-control" id="new_password2" name="new_password2" required >
+                                  </div>
+                                  <input type="hidden" name="reset_key" value="{{ reset_key }}">
+                                  <div class="form-actions">
+                                    <button type="submit" class="btn btn-info">Reset My Password</button>
+                                  </div>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- RESET PASSWORD -->
+    </section>
+    <!--/PAGE -->
+    <!-- JAVASCRIPTS -->
+    <script type="text/javascript" src="/javascripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/javascripts/script.js"></script>
+    <script type="text/javascript">
+        function swapScreen(id) {
+            $('.visible').removeClass('visible animated fadeInUp');
+            $('#' + id).addClass('visible animated fadeInUp');
+            return false;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var page = 'login';
+            App.setPage(page);
+            App.init();
+            
+            //Validations
+            $('#form-reset').validate({
+                rules: {
+                    'new_password2': { equalTo: '#new_password1' }
+                },
+                messages: {
+                    'new_password2': 'Your passwords do not match'
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                highlight: function(element, errorClass) {
+                    $(element).parents('div.form-group').addClass('has-error');
+                },
+                unhighlight: function(element, errorClass) {
+                    $(element).parents('div.form-group').removeClass('has-error');
+                    $(element).next('span.help-block').remove();
+                }
+            });
+        });
+    </script>
+    <!-- /JAVASCRIPTS -->
+</body>
+</html>
