@@ -34,7 +34,7 @@
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4">
                             <div id="logo">
-                                <a href="/"><img src="/images/logo-alt.png" height="40" alt="GA Quiz" /></a>
+                                <a href="{{ URL.MAIN }}"><img src="/images/logo-alt.png" height="40" alt="GA Quiz" /></a>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                                     <a class="close" aria-hidden="true" href="#" data-dismiss="alert">×</a>
                                     <p id="login-message"></p>
                                 </div>
-                                <form role="form" id="form-login" method="POST" action="/login">
+                                <form role="form" id="form-login" method="POST" action="{{ URL.LOGIN }}">
                                   <div class="form-group">
                                     <label for="username">GA Username</label>
                                     <i class="fa fa-envelope"></i>
@@ -91,7 +91,7 @@
                                     <a class="close" aria-hidden="true" href="#" data-dismiss="alert">×</a>
                                     <p id="signup-message"></p>
                                 </div>
-                                <form name="signup" role="form" id="form-signup" method="POST" action="/signup" autocomplete="off">
+                                <form name="signup" role="form" id="form-signup" method="POST" action="{{ URL.SIGNUP }}" autocomplete="off">
                                   <div class="form-group">
                                     <label for="username">GA Username</label>
                                     <i class="fa fa-envelope"></i>
@@ -148,7 +148,7 @@
                                     <a class="close" aria-hidden="true" href="#" data-dismiss="alert">×</a>
                                     <p id="forgot-message"></p>
                                 </div>
-                                <form role="form" id="form-forgot" method="POST" action="/forgot" autocomplete="off">
+                                <form role="form" id="form-forgot" method="POST" action="{{ URL.FORGOT }}" autocomplete="off">
                                   <div class="form-group">
                                     <label for="username">Enter your username</label>
                                     <i class="fa fa-envelope"></i>

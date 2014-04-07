@@ -84,7 +84,6 @@ app.use(function(req, res, next) {
     res.locals.app_title = config.APP_TITLE;
     res.locals.URL = config.URL;
     res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
-    //maybe set tab name here as well, which can be passed from other functions.
     next();
 });
 
@@ -196,9 +195,7 @@ function userExist(req, res, next) {
             next();
         } else {
             req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
-            res.render(config.TEMPL_LOGIN, {
-                tab: 'signup'
-            });
+            res.redirect(config.URL.SIGNUP);
         }
     });
 }
@@ -213,7 +210,7 @@ function userExist(req, res, next) {
 function activateUser(name, fn) {
     //Better use a new instance because mongoose behaves
     //weirdly when doing an UPDATE on an existing instance.
-    var User = models.mongoose.model(config.DB_AUTH_TABLE, UserSchema);
+    var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
     models.User.findOne({
         username: name
     }, function(err, user) {
@@ -294,7 +291,7 @@ function resetPassword(name, security_question, security_answer, domain, ip, use
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    res.render(config.TEMPL_QUIZ_ADMIN);
+    //res.render(config.TEMPL_QUIZ_ADMIN);
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');
         console.log(results);
@@ -343,7 +340,7 @@ app.get('/dummy', function(req, res) {
     /*});*/
 });
 
-app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('inside'), function(req, res) {
+app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
         quiz.findNextQuestion(count, function(err, question, allowed_time) {
             if (err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
@@ -503,7 +500,7 @@ app.post(config.URL.LOGIN, function(req, res) {
                 res.redirect(config.URL.QUIZ_MAIN);
             });
         } else {
-            req.session.error = 'Authentication failed, please check your username and password.';
+            req.session.error = config.ERR_AUTH_FAILED;
             res.redirect(config.URL.LOGIN);
         }
     });
@@ -601,7 +598,7 @@ app.use(function(req, res, next) {
 });
 
 process.on('uncaughtException', function(err) {
-    logger.log('error', 'UNCAUGHT EXCEPTION', err.stack);
+    logger.log('error', 'UNCAUGHT EXCEPTION! ', err.stack);
 });
 
 /**

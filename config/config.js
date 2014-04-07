@@ -67,6 +67,7 @@ config.MAIL_USERNAME = 'postmaster@inversekarma.in';
 config.MAIL_PASWORD = '1t0p-nn-yw17';
 
 //Error messages.
+config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';
 config.ERR_AUTH_INVALID_USERNAME = 'Username is invalid!';
 config.ERR_AUTH_INVALID_PASSWORD = 'Invalid password!';
 config.ERR_AUTH_NOT_LOGGED_IN = 'You must be logged in to view that page!';

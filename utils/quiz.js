@@ -56,7 +56,7 @@ function findNextQuestion(index, fn) {
     });
     query.exec(function(err, questions) {
         if (err) throw err;
-        if (questions === undefined) {
+        if (questions.length == 0) {
             //No quiz today!
             return fn(new Error(config.ERR_QUIZ_NOQUIZTODAY), null, null);
         }
@@ -92,9 +92,9 @@ function timeCheck(time_window) {
         stop_time.setMinutes(config.QUIZ_STOP_TIME[1]);
         stop_time.setSeconds(0);
         if (time_window == 'inside') {
-            result = start_time.getTime() < now.getTime() < stop_time.getTime();
-        } else {
             result = start_time.getTime() > now.getTime() > stop_time.getTime();
+        } else {
+            result = start_time.getTime() < now.getTime() < stop_time.getTime();
         }
         (result) ? next() : res.redirect(config.URL.TIMECLOSED);
     });
