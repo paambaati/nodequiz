@@ -400,8 +400,8 @@ app.get(config.URL.SIGNUP, function(req, res) {
 
 app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var username = req.body.username;
-    var password = req.body.password;
-    var password1 = req.body.password1;
+    var password = req.body.first_password;
+    var password1 = req.body.second_password;
     var security_question = req.body.security_question;
     var security_answer = req.body.security_answer;
     console.log('in URL_SIGNUP POST NOW...');
