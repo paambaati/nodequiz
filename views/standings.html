@@ -843,7 +843,7 @@
                                            </div>
                                            <div class="panel-right">
                                                 <div class="number">7</div>
-                                                <div class="title">Average Score</div>
+                                                <div class="title">Average Score Today</div>
                                                 <span class="label label-success">
                                                     26% <i class="fa fa-arrow-up"></i>
                                                 </span>
@@ -859,7 +859,7 @@
                                            </div>
                                            <div class="panel-right">
                                                 <div class="number">2</div>
-                                                <div class="title">Perfect Scores</div>
+                                                <div class="title">Perfect Scores Today</div>
                                                 <span class="label label-warning">
                                                     5% <i class="fa fa-arrow-down"></i>
                                                 </span>
@@ -871,11 +871,11 @@
                                      <div class="dashbox panel panel-default">
                                         <div class="panel-body">
                                            <div class="panel-left red">
-                                                <i class="fa fa-question-circle fa-3x"></i>
+                                                <i class="fa fa-clock-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">?</div>
-                                                <div class="title">???</div>
+                                                <div class="number">5 sec</div>
+                                                <div class="title">Quickest Quiz Today</div>
                                            </div>
                                         </div>
                                      </div>
@@ -957,16 +957,24 @@
                                 <!-- /BOX -->
                             </div>
                              <div class="col-md-6 box-container ui-sortable">
-                                <div class="quick-pie panel panel-default">
-                                    <div class="panel-body">
-                                        <div class="col-md-4 text-center">
-                                            <div data-percent="59" class="piechart" id="dash_pie_1">
-                                                <span class="percent">59%</span>
-                                            <canvas height="110" width="110"></canvas></div>
-                                            <a class="title" href="#">Users Today <i class="fa fa-angle-right"></i></a>
+                                <!-- BOX -->
+                                <div class="box border orange">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-bar-chart-o"></i><span class="hidden-inline-mobile">More Stats</span></h4>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="quick-pie panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="col-md-4 text-center">
+                                                    <div data-percent="59" class="piechart" id="dash_pie_1" style="height:70px; width: 70px;">
+                                                        <span class="percent" style="line-height: 70px"></span>
+                                                    <a class="title" href="#">Users Today <i class="fa fa-angle-right"></i></a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- /BOX -->
                             </div>
                         </div>
                         </div>
@@ -994,7 +1002,7 @@
             App.init(); //Initialise plugins and elements
 
             $('#dash_pie_1').easyPieChart({
-                easing: "easeOutBounce",
+                easing: 'easeOutBounce',
                 onStep: function(e, t, a) {
                     $(this.el).find('.percent').text(Math.round(a) + '%')
                 },
