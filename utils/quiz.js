@@ -52,7 +52,7 @@ function findNextQuestion(index, fn) {
         }
     });
     query.sort({
-        date: -1
+        date: 1
     });
     query.exec(function(err, questions) {
         if (err) throw err;
