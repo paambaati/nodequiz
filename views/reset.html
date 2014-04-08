@@ -65,6 +65,11 @@
                                     <h4><i class="fa fa-exclamation-triangle"></i> Whoa nelly!</h4>
                                     <p id="reset-message">Looks like an invalid reset key. Where did you get this? WHERE DID YOU GET THIS?!?!?</p>
                                 </div>
+                                {% elseif status == 'used' %}
+                                <div class="alert alert-warning">
+                                    <h4><i class="fa fa-exclamation-triangle"></i> Y U DO DIS? STAHP.</h4>
+                                    <p id="reset-message">You've already used this reset key, man.</p>
+                                </div>
                                 {% else %}
                                 <form role="form" id="form-reset" method="POST" action="{{ URL.RESET }}" autocomplete="off">
                                   <div class="form-group">

@@ -237,6 +237,34 @@ function activateUser(name, fn) {
 }
 
 /**
+ * Validates reset key and it's expiry time and returns
+ * an appropriate status.
+ *
+ * @param {String} reset key.
+ * @param {Function} callback.
+ */
+
+function validateResetKey(reset_key, fn) {
+    models.PasswordReset.findOne({
+        reset_key: reset_key
+    }, function(err, reset_entry) {
+        if (reset_entry != null) {
+            if(reset_entry.used) {
+                return fn(null, 'used');
+            }
+            var time_diff = Math.abs(new Date() - reset_entry.date) / 36e5;
+            if (time_diff <= config.RESET_VALIDITY) {
+                return fn(null, 'success');
+            } else {
+                return fn(null, 'failure');
+            }
+        } else {
+            return fn(null, 'invalid_key');
+        }
+    });
+}
+
+/**
  * Validates reset password request, and if valid, generates a reset key & *saves* it
  * to the database and then mails it to the user's registered email ID.
  *
@@ -258,12 +286,11 @@ function sendResetKey(name, security_question, security_answer, domain, ip, user
         if (user) {
             var generateResetKey = require('./utils/pass').generateResetKey;
             generateResetKey(user._id, function(err, reset_key) {
-                var reset_entry = {
-                    'reset_key': reset_key,
-                    'user_id': user._id,
-                    'date': new Date()
-                }
-                models.PasswordReset.save(reset_entry, function(err, entry) {
+                var resetPass = new models.PasswordReset({
+                    reset_key: reset_key,
+                    user_id: user._id,
+                    date: new Date()
+                }).save(function(err, entry) {
                     mailer.mailResetKey(domain, ip, user_cookie, name, reset_key);
                     return fn(null, reset_key);
                 });
@@ -275,55 +302,52 @@ function sendResetKey(name, security_question, security_answer, domain, ip, user
 }
 
 /**
- * Resets user password and sends an email with the new password
+ * Decrypts reset key and then updates password & reset key used status.
  * to the user's registered email ID.
  *
- * @param {String} username.
- * @param {String} security question.
- * @param {String} security answer.
- * @param {String} domain that the app is running on.
- * @param {String} request's origin IP address.
- * @param {String} value of last_user cookie.
+ * @param {String} encrypted reset key.
+ * @param {String} new password input by user.
  * @param {Function} callback.
  */
 
-//TO-DO: REMOVE THIS FUNCTION!?!???!?!?!
-//OR MOVE POST OF FORGOT HERE???
-function resetPassword(name, security_question, security_answer, domain, ip, user_cookie, fn) {
-    //Better use a new instance because mongoose behaves
-    //weirdly when doing an UPDATE on an existing instance.
-    var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
-    models.User.findOne({
-        username: name,
-        security_question: security_question,
-        security_answer: security_answer
-    }, function(err, user) {
-        if (user) {
-            console.log('user found! proceeding to reset password...');
-            console.log(user._id);
-            var new_password = (Math.random() + 1).toString(32).slice(2);
-            hash(new_password, function(err, salt, hash) {
+function resetPassword(reset_key, new_password, fn) {
+    var decryptResetKey = require('./utils/pass').decryptResetKey;
+    var user_id = null;
+    decryptResetKey(reset_key, function(err, user_id) {
+        hash(new_password, function(err, salt, hash) {
+            if (err) throw err;
+            console.log('new password = ', new_password);
+            var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
+            var query = {
+                _id: user_id
+            };
+            var update_to = {
+                salt: salt,
+                hash: hash
+            };
+            var query_options = {
+                multi: false
+            };
+            User.update(query, update_to, query_options, function(err, count) {
                 if (err) throw err;
-                console.log('new password = ', new_password);
-                User.update({
-                    username: name
-                }, {
-                    salt: salt,
-                    hash: hash
-                }, {
-                    multi: false
-                }, function(err, count) {
+                console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
+                var PasswordReset = models.mongoose.model(config.DB_AUTH_PASSWORD_RESET, models.PasswordResetSchema);
+                var query = {
+                    reset_key: reset_key
+                };
+                var to_update = {
+                    used: true
+                }
+                PasswordReset.findOneAndUpdate(query, to_update, {}, function(err, updated_record) {
                     if (err) throw err;
-                    console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
-                    mailer.sendNewPassword(domain, ip, user_cookie, name, new_password);
-                    return fn(null, new_password);
+                    console.log('reset key entry updated..');
+                    return fn(null, true);
                 });
             });
-        } else {
-            return fn(new Error(config.ERR_RESET_INVALID_DETAILS));
-        }
+        });
     });
 }
+
 /**
  * Routes
  */
@@ -461,7 +485,6 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var security_answer = req.body.security_answer;
     console.log('in URL_SIGNUP POST NOW...');
     console.log(username, '----', password, '----', password1);
-    //TO-DO: validate all these^^^ fields first
 
     isUsernameValid(username, function(err, valid) {
         if (err) throw err;
@@ -537,68 +560,24 @@ app.post(config.URL.FORGOT, function(req, res) {
 
 app.get(config.URL.RESET + '/:reset_key', function(req, res) {
     var reset_key = req.params.reset_key;
-    models.PasswordReset.findOne({
-        reset_key: reset_key,
-        used: false
-    }, function(err, reset_entry) {
-        if (reset_entry != null) {
-            console.log(reset_entry.date);
-            var time_diff = Math.abs(new Date() - reset_entry.date) / 36e5;
-            if (time_diff <= config.RESET_VALIDITY) {
-                res.render(config.TEMPL_RESET, {
-                    'reset_key': reset_key
-                });
-            } else {
-                res.render(config.TEMPL_RESET, {
-                    status: 'failure'
-                });
-            }
-        } else {
-            res.render(config.TEMPL_RESET, {
-                status: 'invalid_key'
-            });
-        }
+    validateResetKey(reset_key, function(err, status){
+        if (err) throw err;
+        res.render(config.TEMPL_RESET, {'reset_key': reset_key});
     });
 });
 
 app.post(config.URL.RESET, function(req, res) {
     var reset_key = req.body.reset_key;
     var new_password = req.body.new_password1;
-    var decrypt = require('./utils/pass').decryptResetKey;
-    var user_id = null;
-    decrypt(reset_key, function(err, user_id) {
-        hash(new_password, function(err, salt, hash) {
-            if (err) throw err;
-            console.log('new password = ', new_password);
-            var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
-            User.update({
-                _id: user_id
-            }, {
-                salt: salt,
-                hash: hash
-            }, {
-                multi: false
-            }, function(err, count) {
-                if (err) throw err;
-                console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
-                var PasswordReset = models.mongoose.model(config.DB_AUTH_PASSWORD_RESET, models.PasswordResetSchema);
-                var query = {
-                    reset_key: reset_key
-                };
-                var to_update = {
-                    used: true
-                }
-                PasswordReset.findOneAndUpdate(query, to_update, {}, function(err, updated_record) {
-                    if (err) throw err;
-                    console.log('reset key entry updated..');
-                    //DO THIS ONE BELOW, OR SHOW 200 TEMPLATE????
-                    res.render(config.TEMPL_RESET, {
-                        status: 'success'
-                    });
-                });
+    resetPassword(reset_key, new_password, function(err, succeeded) {
+        if (succeeded) {
+            res.render(config.TEMPL_200, {
+                message_title: 'Done!',
+                message_1: 'Your password has been reset!',
+                message_2: 'You can now login and start taking quizzes again.'
             });
-        });
-    });
+        }
+    })
 });
 
 app.post(config.URL.LOGIN, function(req, res) {
