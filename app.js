@@ -238,7 +238,7 @@ function activateUser(name, fn) {
 
 /**
  * Validates reset key and it's expiry time and returns
- * an appropriate status.
+ * an appropriate status string.
  *
  * @param {String} reset key.
  * @param {Function} callback.
@@ -569,15 +569,22 @@ app.get(config.URL.RESET + '/:reset_key', function(req, res) {
 app.post(config.URL.RESET, function(req, res) {
     var reset_key = req.body.reset_key;
     var new_password = req.body.new_password1;
-    resetPassword(reset_key, new_password, function(err, succeeded) {
-        if (succeeded) {
-            res.render(config.TEMPL_200, {
-                message_title: 'Done!',
-                message_1: 'Your password has been reset!',
-                message_2: 'You can now login and start taking quizzes again.'
+    validateResetKey(reset_key, function(err, status){
+        if (err) throw err;
+        if (status == 'success') {
+            resetPassword(reset_key, new_password, function(err, succeeded) {
+                if (succeeded) {
+                    res.render(config.TEMPL_200, {
+                        message_title: 'Done!',
+                        message_1: 'Your password has been reset!',
+                        message_2: 'You can now login and start taking quizzes again.'
+                    });
+                }
             });
+        } else {
+            res.render(config.TEMPL_RESET, {'reset_key': reset_key, 'status': status});
         }
-    })
+    });
 });
 
 app.post(config.URL.LOGIN, function(req, res) {
