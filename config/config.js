@@ -32,7 +32,8 @@ config.URL = {
     TIMECLOSED: '/timeclosed',
     QUIZ_MAIN: '/quiz',
     QUIZ_START: '/quiz/start',
-    QUIZ_NOQUIZ: '/quiz/noquiz'
+    QUIZ_NOQUIZ: '/quiz/noquiz',
+    QUIZ_STANDINGS: '/quiz/standings'
 };
 
 //Basic template configuration.
@@ -47,6 +48,7 @@ config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';
 config.TEMPL_QUIZ_NOQUIZ = 'noquiz.html';
 config.TEMPL_QUIZ_ADMIN = 'admin.html';
+config.TEMPL_QUIZ_STANDINGS = 'standings.html';
 
 //Quiz configuration.
 config.QUIZ_START_TIME = [1, 0];

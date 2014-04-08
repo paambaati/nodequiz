@@ -97,7 +97,7 @@ var QuestionSchema = new Schema({
 });
 
 QuestionSchema.index({
-    date: -1
+    date: 1
 });
 
 var QuizHistorySchema = new Schema({

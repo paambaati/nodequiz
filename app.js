@@ -355,13 +355,13 @@ function resetPassword(reset_key, new_password, fn) {
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    //res.render(config.TEMPL_QUIZ_ADMIN);
+    res.render(config.TEMPL_QUIZ_STANDINGS);
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');
         console.log(results);
         res.render(config.TEMPL_QUIZ_END, { results: results });
     });*/
-    quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count) {
+    /*quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count) {
         res.render(config.TEMPL_QUIZ_START, {
             allowed_time: 15,
             question_index: 1,
@@ -383,7 +383,7 @@ app.get('/dummy', function(req, res) {
                 "answer": 1
             }
         });
-    });
+    });*/
     /*var new_question = {
         "title" : "and old question?",
         "image" : "/tmp/xsadsa.png",
@@ -673,6 +673,10 @@ app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'),
     res.render(template, {
         'username': req.session.user.username
     });
+});
+
+app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
+    res.render(config.TEMPL_QUIZ_STANDINGS);
 });
 
 /**
