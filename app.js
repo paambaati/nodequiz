@@ -20,6 +20,7 @@ var express = require('express'),
     config = require('./config/config'),
     models = require('./models'),
     quiz = require('./utils/quiz'),
+    stats = require('./utils/stats'),
     mailer = require('./utils/mail'),
     misc = require('./utils/misc');
 
@@ -249,7 +250,7 @@ function validateResetKey(reset_key, fn) {
         reset_key: reset_key
     }, function(err, reset_entry) {
         if (reset_entry != null) {
-            if(reset_entry.used) {
+            if (reset_entry.used) {
                 return fn(null, 'used');
             }
             var time_diff = Math.abs(new Date() - reset_entry.date) / 36e5;
@@ -355,6 +356,14 @@ function resetPassword(reset_key, new_password, fn) {
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
+    /*stats.getDailyAttendees(function(err, result) {
+        res.json({
+            'result': result
+        });
+    });*/
+    stats.getDailyAverageScore(function(err, result) {
+        //console.log(result);
+    })
     res.render(config.TEMPL_QUIZ_STANDINGS);
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');
@@ -560,16 +569,18 @@ app.post(config.URL.FORGOT, function(req, res) {
 
 app.get(config.URL.RESET + '/:reset_key', function(req, res) {
     var reset_key = req.params.reset_key;
-    validateResetKey(reset_key, function(err, status){
+    validateResetKey(reset_key, function(err, status) {
         if (err) throw err;
-        res.render(config.TEMPL_RESET, {'reset_key': reset_key});
+        res.render(config.TEMPL_RESET, {
+            'reset_key': reset_key
+        });
     });
 });
 
 app.post(config.URL.RESET, function(req, res) {
     var reset_key = req.body.reset_key;
     var new_password = req.body.new_password1;
-    validateResetKey(reset_key, function(err, status){
+    validateResetKey(reset_key, function(err, status) {
         if (err) throw err;
         if (status == 'success') {
             resetPassword(reset_key, new_password, function(err, succeeded) {
@@ -582,7 +593,10 @@ app.post(config.URL.RESET, function(req, res) {
                 }
             });
         } else {
-            res.render(config.TEMPL_RESET, {'reset_key': reset_key, 'status': status});
+            res.render(config.TEMPL_RESET, {
+                'reset_key': reset_key,
+                'status': status
+            });
         }
     });
 });

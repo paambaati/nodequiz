@@ -19,6 +19,7 @@ var config = require('../config/config'),
  *
  * @param {String} user ID.
  * @param {Function} callback.
+ * @api public
  */
 
 function findUserQuestionsForToday(user_id, fn) {
@@ -41,6 +42,7 @@ function findUserQuestionsForToday(user_id, fn) {
  *
  * @param {String} nth question to display sorted by date.
  * @param {Function} callback.
+ * @api public
  */
 
 function findNextQuestion(index, fn) {
@@ -77,6 +79,7 @@ function findNextQuestion(index, fn) {
  * If no, redirect user to `quiz not available at this time` page.
  *
  * @param {String} time_window - Allowed values = 'inside', 'outside'
+ * @api public
  */
 
 function timeCheck(time_window) {
@@ -109,6 +112,7 @@ function timeCheck(time_window) {
  * @param {String} question ID.
  * @param {String} answer chosen.
  * @param {Number} response time.
+ * @api public
  */
 
 function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
@@ -134,6 +138,7 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
  * Returns a user's final results as a JSON object.
  *
  * @param {String} user ID.
+ * @api public
  */
 
 function getResults(user_id, fn) {

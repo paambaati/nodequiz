@@ -1,19 +1,20 @@
 {
-  "name": "TheQuiz",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "date": "*",
-    "date-format-lite": "*",
-    "express": "3.5.1",
-    "swig": "*",
-    "mongoose": "*",
-    "crypto": "0.0.3",
-    "cryptr": "0.0.1",
-    "nodemailer": "*",
-    "winston": "*"
-  }
+    "name": "TheQuiz",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "date": "*",
+        "date-format-lite": "*",
+        "express": "3.5.1",
+        "swig": "*",
+        "mongoose": "*",
+        "async": "*",
+        "crypto": "0.0.3",
+        "cryptr": "0.0.1",
+        "nodemailer": "*",
+        "winston": "*"
+    }
 }
