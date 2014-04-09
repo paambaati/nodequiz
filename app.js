@@ -356,6 +356,10 @@ function resetPassword(reset_key, new_password, fn) {
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
+    stats.getTop5('alltime', function(err, results) {
+        console.log(results);
+        res.render(config.TEMPL_QUIZ_STANDINGS);
+    });
     /*stats.getDailyAttendees(function(err, result) {
         res.json({
             'result': result
@@ -364,10 +368,10 @@ app.get('/dummy', function(req, res) {
     /*stats.getDailyAverageScore(function(err, result) {
         console.log('DAILY AVERAGE == ', result);
     });*/
-    stats.getDailyQuickestQuiz(function(err, result) {
+    /*stats.getDailyQuickestQuiz(function(err, result) {
         console.log('DAILY QUICKEST QUIZ  == ', result);
     });
-    res.render(config.TEMPL_QUIZ_STANDINGS);
+    res.render(config.TEMPL_QUIZ_STANDINGS);*/
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');
         console.log(results);

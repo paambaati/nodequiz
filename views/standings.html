@@ -874,8 +874,9 @@
                                                 <i class="fa fa-clock-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">5 sec</div>
+                                                <div class="number">5</div>
                                                 <div class="title">Quickest Quiz Today</div>
+                                                <span class="label label-success">seconds</span>
                                            </div>
                                         </div>
                                      </div>
@@ -994,6 +995,7 @@
     <script type="text/javascript" src="/javascripts/slimScrollHorizontal.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.easing.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.easypiechart.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.animateNumber.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
     <script type="text/javascript">
@@ -1001,10 +1003,14 @@
             App.setPage('widgets_box');  //Set current page
             App.init(); //Initialise plugins and elements
 
+            $.each($('div.number'), function(k, v) {
+                $(v).animateNumber($(v).html(), {duration: 700, easing: 'easeOutBounce'});
+            });
+
             $('#dash_pie_1').easyPieChart({
                 easing: 'easeOutBounce',
                 onStep: function(e, t, a) {
-                    $(this.el).find('.percent').text(Math.round(a) + '%')
+                    $(this.el).find('.percent').text(Math.round(a) + '%');
                 },
                 lineWidth: 6,
                 size: 70,

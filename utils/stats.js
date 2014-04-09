@@ -131,6 +131,54 @@ function getDailyQuickestQuiz(fn) {
 }
 
 /**
+ * Gets the top 5 scorers for the specified time period.
+ *
+ * @param {String} time period for which the data is required. Allowed values are 'weekly', 'monthly', 'alltime'.
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getTop5(time_period, fn) {
+    var start_day = new Date(),
+        userscore_map = {},
+        final_ranking = [];
+    switch(time_period) {
+        case 'weekly':
+            misc.getMonday(function(err, result) {
+                start_day = result;
+            });
+            break;
+        case 'monthly':
+            start_day = new Date(start_day.getFullYear(), start_day.getMonth(), 1);
+            break;
+        case 'alltime':
+            start_day = null;
+            break;
+        default:
+            start_day = null;
+            break;
+    }
+    if (start_day) { start_day.setHours(0, 0, 0, 0); }
+    var query = (start_day) ? { date: { $gte: start_day } } : {};
+    models.QuizHistory.find(query).distinct('user_id', function(err, results) {
+        async.eachSeries(results, function(item, callback) {
+            quiz.getResults(item, function(err, results) {
+                (userscore_map[results['total_points']]) ? userscore_map[results['total_points']].push(item) : userscore_map[results['total_points']] = [item];
+                return callback();
+            });
+        }, function() {
+            //TO-DO: sort userscore_map by keys
+            //and return first 5 entries
+            for(var key in userscore_map) {
+                console.log('key   = ', key);
+                console.log('value = ', userscore_map[key]);
+            }
+            return fn(null, userscore_map);
+        });
+    });
+}
+
+/**
  * Module exports.
  */
 
@@ -138,5 +186,6 @@ module.exports = {
     getDailyAttendees: getDailyAttendees,
     getDailyAverageScore: getDailyAverageScore,
     getDailyPerfectScoresCount: getDailyPerfectScoresCount,
-    getDailyQuickestQuiz: getDailyQuickestQuiz
+    getDailyQuickestQuiz: getDailyQuickestQuiz,
+    getTop5: getTop5
 }

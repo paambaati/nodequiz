@@ -38,9 +38,24 @@ var getAllowedTime = function(text, fn) {
 }
 
 /**
+ * Gets starting day of this week and returns a Date() object for that day.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getMonday(fn) {
+    var today = new Date();
+    var day = today.getDay(),
+        diff = today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    return fn(null, new Date(today.setDate(diff)));
+}
+
+/**
  * Module exports.
  */
 
 module.exports = {
-  getAllowedTime: getAllowedTime
+  getAllowedTime: getAllowedTime,
+  getMonday: getMonday
 }
