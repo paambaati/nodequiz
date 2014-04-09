@@ -131,7 +131,7 @@ var QuizHistorySchema = new Schema({
 });
 
 QuizHistorySchema.index({
-    date: -1
+    date: 1
 });
 
 var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);

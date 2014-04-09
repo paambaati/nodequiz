@@ -55,78 +55,80 @@ function getDailyAttendees(fn) {
     });
 };
 
+/**
+ * Gets the day's average score.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
 function getDailyAverageScore(fn) {
-    var user_points = 0,
-        scores_count = 0;
+    var user_points = 0;
     getDailyQuestionsCount(function(err, count) {
-        console.log('total questions today = ', count);
         getDailyAttendees(function(err, results) {
-            console.log('total attendees today = ', results.length);
             async.eachSeries(results, function(item, callback) {
                 quiz.getResults(item, function(err, results) {
-                    console.log('getResults returned...');
-                    console.log(results);
-                    scores_count++;
                     user_points += results.total_points;
-                    console.log('user points so far = ', user_points);
                     return callback();
                 });
             }, function() {
-                console.log('final total points = ', user_points);
-                console.log('so average = ', user_points / scores_count);
-                //callback();
-                //return fn(null, user_points / scores_count);
+                return fn(null, user_points / results.length);
             });
         });
     });
 };
 
-//TO-DO: WIP
-/*function getDailyAverageScore(fn) {
-    var total_entries = 0,
-        correct_entries = 0,
-        avg_score = 0,
-        qa_map = {};
-    var selector = {
-        date: {
-            $gte: start_day
-        }
-    };
-    var start_day = new Date();
-    start_day.setHours(0, 0, 0, 0);
+/**
+ * Gets the day's total number of perfect scores.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
 
-    //First, pick all questions with their corresponding choices.
-    var query = models.Question.find(selector);
-    query.select('_id answer');
-    query.exec(function(err, qa_results) {
-        if (qa_results === undefined) {
-            return fn(null, null);
-        } else {
-            //console.log('actual question-answer map...');
-            qa_results.forEach(function(item, index, array) {
-                qa_map[item['_id']] = item['answer'];
+function getDailyPerfectScoresCount(fn) {
+    var result_count = 0;
+    getDailyAttendees(function(err, results) {
+        async.eachSeries(results, function(item, callback) {
+            quiz.getResults(item, function(err, results) {
+                if (results['total_points'] == results['total_questions']) {
+                    result_count++;
+                }
+                return callback();
             });
-            //console.log(qa_map);
-            //Second, take all user answers and match them with the actual answers.
-            query = models.QuizHistory.find(selector);
-            query.select('question_id choice_id');
-            query.exec(function(err, results) {
-                results.forEach(function(item, index, array) {
-                    total_entries++;
-                    //console.log('from quiz history...');
-                    //console.log(item);
-                    if (item['choice_id'] == qa_map[item['question_id']]) {
-                        correct_entries++;
+        }, function() {
+            return fn(null, result_count);
+        });
+    });
+}
+
+/**
+ * Gets the day's quickest quiz.
+ * This function makes sure we pick a user's record for calculating total response time only
+ * when the user has taken all questions.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getDailyQuickestQuiz(fn) {
+    var final_result = 0;
+    getDailyAttendees(function(err, results) {
+        async.eachSeries(results, function(item, callback) {
+                quiz.getResults(item, function(err, results) {
+                    if (results['total_points'] == results['total_questions']) {
+                        async.eachSeries(results, function(time_item, callback) {
+                            final_result += time_item['response_time'];
+                            callback();
+                        });
                     }
+                    return callback();
                 });
-                //Third, calculate average.
-                console.log('total entries = ', total_entries);
-                console.log('correct entries = ', correct_entries);
-                return fn(null, results);
+            },
+            function() {
+                return fn(null, final_result);
             });
-        }
-    })
-};*/
+    });
+}
 
 /**
  * Module exports.
@@ -134,5 +136,7 @@ function getDailyAverageScore(fn) {
 
 module.exports = {
     getDailyAttendees: getDailyAttendees,
-    getDailyAverageScore: getDailyAverageScore
+    getDailyAverageScore: getDailyAverageScore,
+    getDailyPerfectScoresCount: getDailyPerfectScoresCount,
+    getDailyQuickestQuiz: getDailyQuickestQuiz
 }

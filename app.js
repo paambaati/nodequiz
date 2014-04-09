@@ -361,9 +361,12 @@ app.get('/dummy', function(req, res) {
             'result': result
         });
     });*/
-    stats.getDailyAverageScore(function(err, result) {
-        //console.log(result);
-    })
+    /*stats.getDailyAverageScore(function(err, result) {
+        console.log('DAILY AVERAGE == ', result);
+    });*/
+    stats.getDailyQuickestQuiz(function(err, result) {
+        console.log('DAILY QUICKEST QUIZ  == ', result);
+    });
     res.render(config.TEMPL_QUIZ_STANDINGS);
     /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
         console.log('FINAL RESULTS...');

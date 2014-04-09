@@ -154,7 +154,7 @@ function getResults(user_id, fn) {
         }
     });
     history_query.sort({
-        date: -1
+        date: 1
     });
     history_query.populate('question'); //Mongo equivalent of a RDBMS JOIN. Isn't she beautiful?!
     history_query.select('question choice_id response_time');
