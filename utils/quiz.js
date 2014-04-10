@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Authors: GP.
- * Version: 1.0
- * Release Date: 06-Apr-2014
+ * Version: 1.1
+ * Release Date: 10-Apr-2014
  */
 
 /**
@@ -138,21 +138,25 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
  * Returns a user's final results as a JSON object.
  *
  * @param {String} user ID.
+ * @param {Date} starting day from which data needs to be fetched. If null, all data is fetched.
  * @api public
  */
 
-function getResults(user_id, fn) {
+function getResults(user_id, start_day, fn) {
     var results = [],
         total_points = 0,
         total_questions = 0,
-        start_day = new Date();
-    start_day.setHours(0, 0, 0, 0);
-    var history_query = models.QuizHistory.find({
+        total_response_time = 0;
+    var to_find = {
         user_id: user_id,
         date: {
             $gte: start_day
         }
-    });
+    };
+    if (!start_day) {
+        delete to_find.date;
+    }
+    var history_query = models.QuizHistory.find(to_find);
     history_query.sort({
         date: 1
     });
@@ -160,25 +164,31 @@ function getResults(user_id, fn) {
     history_query.select('question choice_id response_time');
     history_query.exec(function(err, questions) {
         var correct_answer = false;
-        questions.forEach(function(item, index, array) {
-            total_questions++;
-            if (item.question.answer == item.choice_id) {
-                correct_answer = true;
-                total_points++;
-            } else {
-                correct_answer = false;
-            }
-            results[index] = {
-                'question_title': item.question.title,
-                'answer_title': item.question.choices[item.question.answer].choice_text,
-                'correct_answer': correct_answer,
-                'answer': item.question.answer,
-                'answer_chosen': item.choice_id,
-                'response_time': item.response_time
-            };
-        });
+        if (questions !== undefined) {
+            questions.forEach(function(item, index, array) {
+                total_questions++;
+                if (item.question.answer == item.choice_id) {
+                    correct_answer = true;
+                    total_points++;
+                } else {
+                    correct_answer = false;
+                }
+                results[index] = {
+                    'question_title': item.question.title,
+                    'answer_title': item.question.choices[item.question.answer].choice_text,
+                    'correct_answer': correct_answer,
+                    'answer': item.question.answer,
+                    'answer_chosen': item.choice_id,
+                    'response_time': item.response_time
+                };
+                total_response_time += item.response_time;
+            });
+        } else {
+            return fn(null, null);
+        }
         results['total_points'] = total_points;
         results['total_questions'] = total_questions;
+        results['avg_response_time'] = (total_response_time / total_questions).toFixed(3); //Round off to 3 decimals.
         return fn(null, results);
     });
 }

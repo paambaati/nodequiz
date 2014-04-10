@@ -826,7 +826,7 @@
                                                 <i class="fa fa-smile-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">100</div>
+                                                <div class="number">{{ daily_attendees }}</div>
                                                 <div class="title">Attendees Today</div>
                                                 <span class="label label-success">
                                                     26% <i class="fa fa-arrow-up"></i>
@@ -842,7 +842,7 @@
                                                 <i class="fa fa-flag-checkered fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">7</div>
+                                                <div class="number">{{ daily_average }}</div>
                                                 <div class="title">Average Score Today</div>
                                                 <span class="label label-success">
                                                     26% <i class="fa fa-arrow-up"></i>
@@ -858,7 +858,7 @@
                                                 <i class="fa fa-thumbs-o-up fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">2</div>
+                                                <div class="number">{{ daily_perfect_scores }}</div>
                                                 <div class="title">Perfect Scores Today</div>
                                                 <span class="label label-warning">
                                                     5% <i class="fa fa-arrow-down"></i>
@@ -874,7 +874,7 @@
                                                 <i class="fa fa-clock-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">5</div>
+                                                <div class="number">{{ daily_quickest_quiz }}</div>
                                                 <div class="title">Quickest Quiz Today</div>
                                                 <span class="label label-success">seconds</span>
                                            </div>
@@ -900,7 +900,7 @@
                                           </ul>
                                           <div class="tab-content">
                                              <div id="box_tab1" class="tab-pane active">
-                                                <table class="table table-hover" style="margin-bottom: 0">
+                                                <table id="table_top5" class="table table-hover" style="margin-bottom: 0">
                                                     <thead>
                                                       <tr>
                                                         <th>Rank</th>
@@ -1002,6 +1002,13 @@
         jQuery(document).ready(function() {     
             App.setPage('widgets_box');  //Set current page
             App.init(); //Initialise plugins and elements
+
+            $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5', function(data) {
+                console.log(data);
+                //TO-DO: parse this and put this in $('table#table_top5')
+                //TO-DO: maybe we don't need to group same rank people at all
+                //TO-DO: what if we just keep a track of ranks and pass top 5 ranks instead of groups of people?
+            });
 
             $.each($('div.number'), function(k, v) {
                 $(v).animateNumber($(v).html(), {duration: 700, easing: 'easeOutBounce'});

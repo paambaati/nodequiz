@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Authors: GP.
- * Version: 1.0
- * Release Date: 08-Apr-2014
+ * Version: 1.1
+ * Release Date: 10-Apr-2014
  */
 
 /**
@@ -14,6 +14,21 @@ var async = require('async'),
     models = require('../models'),
     misc = require('../utils/misc'),
     quiz = require('../utils/quiz');
+
+/**
+ * Gets the username from the user's unique _id.
+ *
+ * @param {Function} callback.
+ * @api private
+ */
+
+function getUsernameFromId(user_id, fn) {
+    models.User.findOne({
+        _id: user_id
+    }, function(err, user) {
+        return fn(null, user.username);
+    });
+}
 
 /**
  * Gets the total number of questions in today's quiz.
@@ -63,11 +78,12 @@ function getDailyAttendees(fn) {
  */
 
 function getDailyAverageScore(fn) {
-    var user_points = 0;
+    var user_points = 0,
+        today = new Date().setHours(0, 0, 0, 0);
     getDailyQuestionsCount(function(err, count) {
         getDailyAttendees(function(err, results) {
             async.eachSeries(results, function(item, callback) {
-                quiz.getResults(item, function(err, results) {
+                quiz.getResults(item, today, function(err, results) {
                     user_points += results.total_points;
                     return callback();
                 });
@@ -86,10 +102,11 @@ function getDailyAverageScore(fn) {
  */
 
 function getDailyPerfectScoresCount(fn) {
-    var result_count = 0;
+    var result_count = 0,
+        today = new Date().setHours(0, 0, 0, 0);;
     getDailyAttendees(function(err, results) {
         async.eachSeries(results, function(item, callback) {
-            quiz.getResults(item, function(err, results) {
+            quiz.getResults(item, today, function(err, results) {
                 if (results['total_points'] == results['total_questions']) {
                     result_count++;
                 }
@@ -111,10 +128,11 @@ function getDailyPerfectScoresCount(fn) {
  */
 
 function getDailyQuickestQuiz(fn) {
-    var final_result = 0;
+    var final_result = 0,
+        today = new Date().setHours(0, 0, 0, 0);
     getDailyAttendees(function(err, results) {
         async.eachSeries(results, function(item, callback) {
-                quiz.getResults(item, function(err, results) {
+                quiz.getResults(item, today, function(err, results) {
                     if (results['total_points'] == results['total_questions']) {
                         async.eachSeries(results, function(time_item, callback) {
                             final_result += time_item['response_time'];
@@ -141,8 +159,9 @@ function getDailyQuickestQuiz(fn) {
 function getTop5(time_period, fn) {
     var start_day = new Date(),
         userscore_map = {},
-        final_ranking = [];
-    switch(time_period) {
+        final_rankings = [],
+        sorted_ranks = [];
+    switch (time_period) {
         case 'weekly':
             misc.getMonday(function(err, result) {
                 start_day = result;
@@ -158,23 +177,49 @@ function getTop5(time_period, fn) {
             start_day = null;
             break;
     }
-    if (start_day) { start_day.setHours(0, 0, 0, 0); }
-    var query = (start_day) ? { date: { $gte: start_day } } : {};
+    if (start_day) {
+        start_day.setHours(0, 0, 0, 0);
+    }
+    var query = (start_day) ? {
+        date: {
+            $gte: start_day
+        }
+    } : {};
     models.QuizHistory.find(query).distinct('user_id', function(err, results) {
         async.eachSeries(results, function(item, callback) {
-            quiz.getResults(item, function(err, results) {
-                (userscore_map[results['total_points']]) ? userscore_map[results['total_points']].push(item) : userscore_map[results['total_points']] = [item];
-                return callback();
+                quiz.getResults(item, start_day, function(err, results) {
+                    if (results != null) {
+                        getUsernameFromId(item, function(err, username) {
+                            var points = results['total_points'];
+                            var rtime = results['avg_response_time'];
+                            if (userscore_map[points]) {
+                                userscore_map[points] = [userscore_map[points],
+                                    [username, rtime]
+                                ];
+                            } else {
+                                userscore_map[points] = [username, rtime]
+                            }
+                            return callback();
+                        });
+                    } else {
+                        return callback();
+                    }
+                });
+            },
+            function() {
+                console.log(userscore_map);
+                //Fookin' ugly dict-sorting logic.
+                for (var key in userscore_map) {
+                    sorted_ranks[sorted_ranks.length] = key;
+                }
+                sorted_ranks.sort();
+                sorted_ranks.reverse();
+                sorted_ranks = sorted_ranks.slice(0, 5);
+                for (var i = 0; i < sorted_ranks.length; i++) {
+                    final_rankings.push([sorted_ranks[i], userscore_map[sorted_ranks[i]]]);
+                }
+                return fn(null, final_rankings);
             });
-        }, function() {
-            //TO-DO: sort userscore_map by keys
-            //and return first 5 entries
-            for(var key in userscore_map) {
-                console.log('key   = ', key);
-                console.log('value = ', userscore_map[key]);
-            }
-            return fn(null, userscore_map);
-        });
     });
 }
 

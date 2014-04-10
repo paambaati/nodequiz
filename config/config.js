@@ -33,7 +33,8 @@ config.URL = {
     QUIZ_MAIN: '/quiz',
     QUIZ_START: '/quiz/start',
     QUIZ_NOQUIZ: '/quiz/noquiz',
-    QUIZ_STANDINGS: '/quiz/standings'
+    QUIZ_STANDINGS: '/quiz/standings',
+    QUIZ_STAT_AJAX: '/quiz/get'
 };
 
 //Basic template configuration.

@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Authors: GP.
- * Version: 1.1
- * Release Date: 07-Apr-2014
+ * Version: 1.3
+ * Release Date: 09-Apr-2014
  */
 
 /**
@@ -49,9 +49,14 @@ var UserSchema = new Schema({
     }
 });
 
+UserSchema.index({
+    username: -1
+});
+
 var PasswordResetSchema = new Schema({
     reset_key: {
         type: String,
+        unique: true,
         required: true
     },
     user_id: {

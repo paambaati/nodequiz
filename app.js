@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Authors: GP.
- * Version: 1.2
- * Release Date: 07-Apr-2014
+ * Version: 1.4
+ * Release Date: 10-Apr-2014
  */
 
 /**
@@ -15,6 +15,7 @@ var express = require('express'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
+    async = require('async'),
     date_format = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
@@ -356,10 +357,6 @@ function resetPassword(reset_key, new_password, fn) {
 //DEBUG
 //GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    stats.getTop5('alltime', function(err, results) {
-        console.log(results);
-        res.render(config.TEMPL_QUIZ_STANDINGS);
-    });
     /*stats.getDailyAttendees(function(err, result) {
         res.json({
             'result': result
@@ -370,69 +367,8 @@ app.get('/dummy', function(req, res) {
     });*/
     /*stats.getDailyQuickestQuiz(function(err, result) {
         console.log('DAILY QUICKEST QUIZ  == ', result);
-    });
-    res.render(config.TEMPL_QUIZ_STANDINGS);*/
-    /*quiz.getResults('529231a32cf795b844000001', function (err, results) {
-        console.log('FINAL RESULTS...');
-        console.log(results);
-        res.render(config.TEMPL_QUIZ_END, { results: results });
     });*/
-    /*quiz.findUserQuestionsForToday('529231a32cf795b844000001', function(err, count) {
-        res.render(config.TEMPL_QUIZ_START, {
-            allowed_time: 15,
-            question_index: 1,
-            question_total: 10,
-            question: {
-                "date": Date("2013-04-04T10:30:00.000Z"),
-                "title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                "choices": {
-                    "1": {
-                        "choice_text": "h121aha"
-                    },
-                    "2": {
-                        "choice_text": "he1212he"
-                    },
-                    "3": {
-                        "choice_text": "hahhaahhahahha"
-                    }
-                },
-                "answer": 1
-            }
-        });
-    });*/
-    /*var new_question = {
-        "title" : "and old question?",
-        "image" : "/tmp/xsadsa.png",
-        "choices" : {
-                1 : {
-                    "choice_text" : "h121aha"
-                },
-                2 : {
-                    "choice_text" : "he1212he"
-                },
-                3 : {
-                    "choice_text" : "hahhaahhahahha"
-                }
-            },
-        "answer": 1
-    };*/
-
-    /*var history = {
-        "date" : new Date(),
-        "user_id" : "533d051f2566971015a8eb0f",
-        "question_id" : "533d4214bb4dc234408e0057",
-        "choice_id" : 1,
-        "response_time" : 5
-    };*/
-
-    /*Question.create(new_question, function(err, count){
-        if (err) throw err;
-        res.send('updated ' + count + ' records.');*/
-    /*QuizHistory.create(history, function(err, count){
-            if (err) throw err;
-            res.send('updated ' + count + ' records.');
-        });*/
-    /*});*/
+    res.render(config.TEMPL_QUIZ_STANDINGS);
 });
 
 app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
@@ -455,7 +391,9 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
                     });
                 });
             } else {
-                quiz.getResults(req.session.user._id, function(err, results) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+                quiz.getResults(req.session.user._id, today, function(err, results) {
                     res.render(config.TEMPL_QUIZ_END, {
                         results: results
                     });
@@ -660,6 +598,20 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
     });
 });
 
+//Ajax URLs
+
+app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res) {
+
+    if (req.query.stat == 'top5') {
+        //TO-DO: also add another query for time period
+        stats.getTop5('alltime', function(err, top5rankers) {
+            res.json(top5rankers);
+        });
+    }
+});
+
+//General URLs
+
 app.get(config.URL.LOGOUT, function(req, res) {
     req.session.destroy(function() {
         res.redirect(config.URL.MAIN);
@@ -697,7 +649,31 @@ app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'),
 });
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
-    res.render(config.TEMPL_QUIZ_STANDINGS);
+    async.series({
+            daily_attendees: function(callback) {
+                stats.getDailyAttendees(function(err, daily_attendees) {
+                    callback(null, daily_attendees.length);
+                });
+            },
+            daily_average: function(callback) {
+                stats.getDailyAverageScore(function(err, daily_average) {
+                    callback(null, daily_average.toFixed(2));
+                });
+            },
+            daily_perfect_scores: function(callback) {
+                stats.getDailyPerfectScoresCount(function(err, daily_perfect_scores) {
+                    callback(null, daily_perfect_scores);
+                });
+            },
+            daily_quickest_quiz: function(callback) {
+                stats.getDailyQuickestQuiz(function(err, daily_quickest_quiz) {
+                    callback(null, daily_quickest_quiz);
+                });
+            }
+        },
+        function(err, results) {
+            res.render(config.TEMPL_QUIZ_STANDINGS, results);
+        });
 });
 
 /**
