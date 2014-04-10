@@ -51,6 +51,19 @@ function getDailyQuestionsCount(fn) {
 }
 
 /**
+ * Gets the total number of users registered.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getTotalUserCount(fn) {
+    models.User.count(function(err, count) {
+        return fn(null, count);
+    })
+}
+
+/**
  * Gets all unique users who've attended today's quiz.
  *
  * @param {Function} callback.
@@ -232,5 +245,6 @@ module.exports = {
     getDailyAverageScore: getDailyAverageScore,
     getDailyPerfectScoresCount: getDailyPerfectScoresCount,
     getDailyQuickestQuiz: getDailyQuickestQuiz,
-    getTop5: getTop5
+    getTop5: getTop5,
+    getTotalUserCount: getTotalUserCount
 }

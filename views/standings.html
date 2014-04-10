@@ -826,11 +826,9 @@
                                                 <i class="fa fa-smile-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">{{ daily_attendees }}</div>
+                                                <div class="number" id="daily_attendees">...</div>
                                                 <div class="title">Attendees Today</div>
-                                                <span class="label label-success">
-                                                    26% <i class="fa fa-arrow-up"></i>
-                                                </span>
+                                                <span class="label label-success" id="attendee_percentage">...<span>%</span></span>
                                            </div>
                                         </div>
                                      </div>
@@ -842,11 +840,8 @@
                                                 <i class="fa fa-flag-checkered fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">{{ daily_average }}</div>
+                                                <div class="number" id="daily_average">...</div>
                                                 <div class="title">Average Score Today</div>
-                                                <span class="label label-success">
-                                                    26% <i class="fa fa-arrow-up"></i>
-                                                </span>
                                            </div>
                                         </div>
                                      </div>
@@ -858,11 +853,8 @@
                                                 <i class="fa fa-thumbs-o-up fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">{{ daily_perfect_scores }}</div>
+                                                <div class="number" id="daily_perfect_scores">...</div>
                                                 <div class="title">Perfect Scores Today</div>
-                                                <span class="label label-warning">
-                                                    5% <i class="fa fa-arrow-down"></i>
-                                                </span>
                                            </div>
                                         </div>
                                      </div>
@@ -874,7 +866,7 @@
                                                 <i class="fa fa-clock-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
-                                                <div class="number">{{ daily_quickest_quiz }}</div>
+                                                <div class="number" id="daily_quickest_quiz">...</div>
                                                 <div class="title">Quickest Quiz Today</div>
                                                 <span class="label label-success">seconds</span>
                                            </div>
@@ -995,7 +987,7 @@
     <script type="text/javascript" src="/javascripts/slimScrollHorizontal.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.easing.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.easypiechart.min.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.animateNumber.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.animateNumber.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
     <script type="text/javascript">
@@ -1003,15 +995,17 @@
             App.setPage('widgets_box');  //Set current page
             App.init(); //Initialise plugins and elements
 
+            $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=daily', function(data) {
+                $.each(data, function(k, v) {
+                    $('#' + k).prop('number', 0).animateNumber({ number: v });
+                });
+            });
+
             $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5', function(data) {
                 console.log(data);
                 //TO-DO: parse this and put this in $('table#table_top5')
                 //TO-DO: maybe we don't need to group same rank people at all
                 //TO-DO: what if we just keep a track of ranks and pass top 5 ranks instead of groups of people?
-            });
-
-            $.each($('div.number'), function(k, v) {
-                $(v).animateNumber($(v).html(), {duration: 700, easing: 'easeOutBounce'});
             });
 
             $('#dash_pie_1').easyPieChart({

@@ -601,8 +601,39 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
 //Ajax URLs
 
 app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res) {
-
-    if (req.query.stat == 'top5') {
+    if (req.query.stat == 'daily') {
+        async.series({
+                daily_attendees: function(callback) {
+                    stats.getDailyAttendees(function(err, daily_attendees) {
+                        callback(null, daily_attendees.length);
+                    });
+                },
+                total_users_count: function(callback) {
+                    stats.getTotalUserCount(function(err, total_users_count) {
+                        callback(null, total_users_count);
+                    });
+                },
+                daily_average: function(callback) {
+                    stats.getDailyAverageScore(function(err, daily_average) {
+                        callback(null, daily_average.toFixed(2));
+                    });
+                },
+                daily_perfect_scores: function(callback) {
+                    stats.getDailyPerfectScoresCount(function(err, daily_perfect_scores) {
+                        callback(null, daily_perfect_scores);
+                    });
+                },
+                daily_quickest_quiz: function(callback) {
+                    stats.getDailyQuickestQuiz(function(err, daily_quickest_quiz) {
+                        callback(null, daily_quickest_quiz);
+                    });
+                }
+            },
+            function(err, daily_stats) {
+                daily_stats['attendee_percentage'] = Math.round((100 * daily_stats.daily_attendees) / daily_stats.total_users_count) + '%';
+                res.json(daily_stats);
+            });
+    } else if (req.query.stat == 'top5') {
         //TO-DO: also add another query for time period
         stats.getTop5('alltime', function(err, top5rankers) {
             res.json(top5rankers);
@@ -649,31 +680,7 @@ app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'),
 });
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
-    async.series({
-            daily_attendees: function(callback) {
-                stats.getDailyAttendees(function(err, daily_attendees) {
-                    callback(null, daily_attendees.length);
-                });
-            },
-            daily_average: function(callback) {
-                stats.getDailyAverageScore(function(err, daily_average) {
-                    callback(null, daily_average.toFixed(2));
-                });
-            },
-            daily_perfect_scores: function(callback) {
-                stats.getDailyPerfectScoresCount(function(err, daily_perfect_scores) {
-                    callback(null, daily_perfect_scores);
-                });
-            },
-            daily_quickest_quiz: function(callback) {
-                stats.getDailyQuickestQuiz(function(err, daily_quickest_quiz) {
-                    callback(null, daily_quickest_quiz);
-                });
-            }
-        },
-        function(err, results) {
-            res.render(config.TEMPL_QUIZ_STANDINGS, results);
-        });
+    res.render(config.TEMPL_QUIZ_STANDINGS);
 });
 
 /**
