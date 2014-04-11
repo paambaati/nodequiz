@@ -1082,15 +1082,19 @@
             });
 
             function getTop5Stats() {
-                var top5_periods = ['weekly', 'monthly', 'alltime'];
-                for (var index = 0; index < top5_periods.length; index++) {
-                  (function(index){
-                    $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5&period=' + top5_periods[index], function(data) {
-                        $('#tbody_top5_' + top5_periods[index]).children().each(function(index){
-                            $(this).html('<td>' + (index + 1) + '</td><td>' + data[index][1] + '</td><td>' + data[index][0] + '</td><td>' + data[index][2]);
-                        });
+                var top5_periods = ['weekly', 'monthly', 'alltime'],
+                    length = top5_periods.length;
+                for (var i = 0; i < length; i++) {
+                  (function(i){
+                    $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5&period=' + top5_periods[i], function(data) {
+                        var length = data.length,
+                            table_html = '';
+                        for(var j = 0; j < length; j++) {
+                            table_html += '<tr><td>' + data[j][3] + '</td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
+                        }
+                        document.getElementById('tbody_top5_' + top5_periods[i]).innerHTML = table_html;
                     });
-                  })(index);
+                  })(i);
                 }
             }
 

@@ -165,6 +165,11 @@ function getDailyQuickestQuiz(fn) {
 
 /**
  * Gets the top 5 scorers for the specified time period.
+ * Returns a nested array of the form
+ * [
+ *    [score, username, avg response time, rank],
+ *    ["],...
+ * ]
  *
  * @param {String} time period for which the data is required. Allowed values are 'weekly', 'monthly', 'alltime'.
  * @param {Function} callback.
@@ -216,10 +221,16 @@ function getTop5(time_period, fn) {
                 //Then, we take a slice of the array with the top 5 rank, NOT top 5 items.
                 var rank_limit = 5,
                     counter = 1,
-                    break_at = 0;
+                    break_at = 0,
+                    rank = 1,
+                    rank_match = false;
                 userscore_array.sort().reverse();
+                userscore_array[0].splice(userscore_array[0].length, 0, rank);
                 for (var i = 1; i < userscore_array.length; i++) {
-                    counter = (userscore_array[i][0] == userscore_array[i - 1][0]) ? counter : counter + 1;
+                    rank_match = userscore_array[i][0] == userscore_array[i - 1][0];
+                    rank = (rank_match) ? rank : rank + 1;
+                    userscore_array[i].splice(userscore_array[i].length, 0, rank);
+                    counter = (rank_match) ? counter : counter + 1;
                     break_at = i + 1;
                     if (counter == rank_limit) break;
                 }
