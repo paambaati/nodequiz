@@ -15,7 +15,6 @@ var express = require('express'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
-    async = require('async'),
     date_format = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
@@ -601,41 +600,17 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
 //Ajax URLs
 
 app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res) {
-    if (req.query.stat == 'daily') {
-        async.series({
-                daily_attendees: function(callback) {
-                    stats.getDailyAttendees(function(err, daily_attendees) {
-                        callback(null, daily_attendees.length);
-                    });
-                },
-                total_users_count: function(callback) {
-                    stats.getTotalUserCount(function(err, total_users_count) {
-                        callback(null, total_users_count);
-                    });
-                },
-                daily_average: function(callback) {
-                    stats.getDailyAverageScore(function(err, daily_average) {
-                        callback(null, daily_average.toFixed(2));
-                    });
-                },
-                daily_perfect_scores: function(callback) {
-                    stats.getDailyPerfectScoresCount(function(err, daily_perfect_scores) {
-                        callback(null, daily_perfect_scores);
-                    });
-                },
-                daily_quickest_quiz: function(callback) {
-                    stats.getDailyQuickestQuiz(function(err, daily_quickest_quiz) {
-                        callback(null, daily_quickest_quiz);
-                    });
-                }
-            },
-            function(err, daily_stats) {
-                daily_stats['attendee_percentage'] = Math.round((100 * daily_stats.daily_attendees) / daily_stats.total_users_count) + '%';
-                res.json(daily_stats);
-            });
+    if (req.query.stat == 'basic') {
+        stats.getAllDailyBasicStats(function(err, daily_stats) {
+            res.json(daily_stats);
+        });
     } else if (req.query.stat == 'top5') {
-        //TO-DO: also add another query for time period
-        stats.getTop5('alltime', function(err, top5rankers) {
+        stats.getTop5(req.query.period, function(err, top5rankers) {
+            /*//Sleep for 2 seconds
+            var stop = new Date().getTime();
+            while (new Date().getTime() < stop + 2000) {;
+            }
+            //End sleep*/
             res.json(top5rankers);
         });
     }
