@@ -11,6 +11,7 @@
         "express": "3.5.1",
         "swig": "*",
         "mongoose": "*",
+        "connect-mongo": "*",
         "async": "*",
         "crypto": "0.0.3",
         "cryptr": "0.0.1",
