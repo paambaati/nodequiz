@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Authors: GP.
- * Version: 1.1
- * Release Date: 10-Apr-2014
+ * Version: 1.2
+ * Release Date: 11-Apr-2014
  */
 
 /**
@@ -67,7 +67,7 @@ function getTotalUserCount(fn) {
  * Gets all unique users who've attended today's quiz.
  *
  * @param {Function} callback.
- * @api public
+ * @api private
  */
 
 function getDailyAttendees(fn) {
@@ -87,7 +87,7 @@ function getDailyAttendees(fn) {
  * Gets the day's average score.
  *
  * @param {Function} callback.
- * @api public
+ * @api private
  */
 
 function getDailyAverageScore(fn) {
@@ -101,7 +101,9 @@ function getDailyAverageScore(fn) {
                     return callback();
                 });
             }, function() {
-                return fn(null, user_points / results.length);
+                var avg_score = user_points / results.length;
+                avg_score = isNaN(avg_score) ? 0 : avg_score;
+                return fn(null, avg_score);
             });
         });
     });
@@ -111,7 +113,7 @@ function getDailyAverageScore(fn) {
  * Gets the day's total number of perfect scores.
  *
  * @param {Function} callback.
- * @api public
+ * @api private
  */
 
 function getDailyPerfectScoresCount(fn) {
@@ -137,7 +139,7 @@ function getDailyPerfectScoresCount(fn) {
  * when the user has taken all questions.
  *
  * @param {Function} callback.
- * @api public
+ * @api private
  */
 
 function getDailyQuickestQuiz(fn) {
@@ -171,9 +173,7 @@ function getDailyQuickestQuiz(fn) {
 
 function getTop5(time_period, fn) {
     var start_day = new Date(),
-        userscore_map = {},
-        final_rankings = [],
-        sorted_ranks = [];
+        userscore_array = [];
     switch (time_period) {
         case 'weekly':
             misc.getMonday(function(err, result) {
@@ -203,15 +203,7 @@ function getTop5(time_period, fn) {
                 quiz.getResults(item, start_day, function(err, results) {
                     if (results != null) {
                         getUsernameFromId(item, function(err, username) {
-                            var points = results['total_points'];
-                            var rtime = results['avg_response_time'];
-                            if (userscore_map[points]) {
-                                userscore_map[points] = [userscore_map[points],
-                                    [username, rtime]
-                                ];
-                            } else {
-                                userscore_map[points] = [username, rtime]
-                            }
+                            userscore_array.push([results['total_points'], username, results['avg_response_time']]);
                             return callback();
                         });
                     } else {
@@ -220,20 +212,62 @@ function getTop5(time_period, fn) {
                 });
             },
             function() {
-                console.log(userscore_map);
-                //Fookin' ugly dict-sorting logic.
-                for (var key in userscore_map) {
-                    sorted_ranks[sorted_ranks.length] = key;
+                //First, we sort the rank by descending order of points.
+                //Then, we take a slice of the array with the top 5 rank, NOT top 5 items.
+                var rank_limit = 5,
+                    counter = 1,
+                    break_at = 0;
+                userscore_array.sort().reverse();
+                for (var i = 1; i < userscore_array.length; i++) {
+                    counter = (userscore_array[i][0] == userscore_array[i - 1][0]) ? counter : counter + 1;
+                    break_at = i + 1;
+                    if (counter == rank_limit) break;
                 }
-                sorted_ranks.sort();
-                sorted_ranks.reverse();
-                sorted_ranks = sorted_ranks.slice(0, 5);
-                for (var i = 0; i < sorted_ranks.length; i++) {
-                    final_rankings.push([sorted_ranks[i], userscore_map[sorted_ranks[i]]]);
-                }
-                return fn(null, final_rankings);
+                return fn(null, userscore_array.slice(0, break_at));
             });
     });
+}
+
+/**
+ * Gets all basic daily stats.
+ * Basically acts as a wrapper for these 5 methods.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getAllDailyBasicStats(fn) {
+    async.series({
+            daily_attendees: function(callback) {
+                getDailyAttendees(function(err, daily_attendees) {
+                    callback(null, daily_attendees.length);
+                });
+            },
+            total_users_count: function(callback) {
+                getTotalUserCount(function(err, total_users_count) {
+                    callback(null, total_users_count);
+                });
+            },
+            daily_average: function(callback) {
+                getDailyAverageScore(function(err, daily_average) {
+                    callback(null, daily_average.toFixed(2));
+                });
+            },
+            daily_perfect_scores: function(callback) {
+                getDailyPerfectScoresCount(function(err, daily_perfect_scores) {
+                    callback(null, daily_perfect_scores);
+                });
+            },
+            daily_quickest_quiz: function(callback) {
+                getDailyQuickestQuiz(function(err, daily_quickest_quiz) {
+                    callback(null, daily_quickest_quiz);
+                });
+            }
+        },
+        function(err, daily_stats) {
+            daily_stats['attendee_percentage'] = Math.round((100 * daily_stats.daily_attendees) / daily_stats.total_users_count) + '%';
+            return fn(null, daily_stats);
+        });
 }
 
 /**
@@ -241,10 +275,7 @@ function getTop5(time_period, fn) {
  */
 
 module.exports = {
-    getDailyAttendees: getDailyAttendees,
-    getDailyAverageScore: getDailyAverageScore,
-    getDailyPerfectScoresCount: getDailyPerfectScoresCount,
-    getDailyQuickestQuiz: getDailyQuickestQuiz,
     getTop5: getTop5,
-    getTotalUserCount: getTotalUserCount
+    getTotalUserCount: getTotalUserCount,
+    getAllDailyBasicStats: getAllDailyBasicStats
 }
