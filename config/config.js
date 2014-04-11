@@ -60,6 +60,7 @@ config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
 config.DB_NAME = 'quiz_db';
 config.DB_AUTH_TABLE = 'quiz_users';
+config.DB_AUTH_SESSIONS = 'quiz_sessions';
 config.DB_AUTH_PASSWORD_RESET = 'quiz_resets';
 config.DB_QUESTIONS_TABLE = 'quiz_questions';
 config.DB_QUIZ_HISTORY = 'quiz_history';

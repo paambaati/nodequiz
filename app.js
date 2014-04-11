@@ -15,6 +15,7 @@ var express = require('express'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
+    mongostore = require('connect-mongo')(express),
     date_format = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
@@ -35,6 +36,16 @@ app.configure(function() {
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(express.cookieParser(config.APP_TITLE));
+    app.use(express.session({
+        secret: config.MASTER_SALT,
+        store: new mongostore({
+            db: config.DB_NAME,
+            host: config.DB_HOST,
+            port: config.DB_PORT,
+            collection: config.DB_AUTH_SESSIONS,
+            auto_reconnect: true
+        })
+    }));
     app.use(express.session({
         secret: config.MASTER_SALT
     }));
