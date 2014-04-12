@@ -365,19 +365,7 @@ function resetPassword(reset_key, new_password, fn) {
  */
 
 //DEBUG
-//GENERATES TEST DATA
 app.get('/dummy', function(req, res) {
-    /*stats.getDailyAttendees(function(err, result) {
-        res.json({
-            'result': result
-        });
-    });*/
-    /*stats.getDailyAverageScore(function(err, result) {
-        console.log('DAILY AVERAGE == ', result);
-    });*/
-    /*stats.getDailyQuickestQuiz(function(err, result) {
-        console.log('DAILY QUICKEST QUIZ  == ', result);
-    });*/
     res.render(config.TEMPL_QUIZ_STANDINGS);
 });
 
@@ -623,6 +611,10 @@ app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res
             }
             //End sleep*/
             res.json(top5rankers);
+        });
+    } else if (req.query.stat = 'easytough') {
+        stats.getTodaysToughestAndEasiestQuestion(function(err, result) {
+            res.json(result);
         });
     }
 });

@@ -1029,24 +1029,42 @@
                                 </div>
                                 <!-- /BOX -->
                             </div>
-                             <div class="col-md-6 box-container ui-sortable">
+                            <div class="col-md-6 box-container ui-sortable">
                                 <!-- BOX -->
                                 <div class="box border orange">
                                     <div class="box-title">
-                                        <h4><i class="fa fa-bar-chart-o"></i><span class="hidden-inline-mobile">More Stats</span></h4>
+                                        <h4><i class="fa fa-bar-chart-o"></i><span class="hidden-inline-mobile">Today's Question Highlights</span></h4>
                                     </div>
                                     <div class="box-body">
-                                        <div class="quick-pie panel panel-default">
-                                            <div class="panel-body">
-                                                <div class="col-md-4 text-center">
-                                                    <div data-percent="59" class="piechart" id="dash_pie_1" style="height:70px; width: 70px;">
-                                                        <span class="percent" style="line-height: 70px"></span>
-                                                    <a class="title" href="#">Users Today <i class="fa fa-angle-right"></i></a>
+                                        <ul class="pricing_table row">
+                                            <li class="price_block col-md-6 col-xs-11">
+                                                <h3>Easiest</h3>
+                                                <div class="price orange">
+                                                    <div class="price_figure">
+                                                        <span class="price_number usercount_easiest">...</span>
+                                                        <span class="price_tenure">People got it right</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <ul class="features">
+                                                    <li><i class="fa fa-quote-left"></i> <span class="question_easiest">...</span></li>
+                                                    <li><strong><span class="responsetime_easiest">...</span></strong> seconds on average to answer</li>
+                                                </ul>
+                                            </li>
+                                            <li class="price_block col-md-6 col-xs-11">
+                                                <h3>Toughest</h3>
+                                                <div class="price orange">
+                                                    <div class="price_figure">
+                                                        <span class="price_number usercount_toughest">...</span>
+                                                        <span class="price_tenure">People got it wrong</span>
+                                                    </div>
+                                                </div>
+                                                <ul class="features">
+                                                    <li><i class="fa fa-quote-left"></i> <span class="question_toughest">...</li>
+                                                    <li><strong><span class="responsetime_toughest">...</span></strong> seconds on average to answer</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
                                     </div>
-                                </div>
                                 <!-- /BOX -->
                             </div>
                         </div>
@@ -1081,6 +1099,16 @@
                 });
             });
 
+            $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=easytough', function(data) {
+                $.each(data, function(k, v) {
+                    if(v.length > 0) {
+                        $('span.question_' + k).html(v[0][2]);
+                        $('span.usercount_' + k).html(v[0][0]).prop('number', 0).animateNumber({ number: v[0][0] });
+                        $('span.responsetime_' + k).html(v[0][1].toFixed(2)).prop('number', 0).animateNumber({ number: v[0][1] });
+                    }
+                });
+            });
+
             function getTop5Stats() {
                 var top5_periods = ['weekly', 'monthly', 'alltime'],
                     badge_colors = ['','red', 'blue', 'green', 'orange', ''],
@@ -1088,6 +1116,7 @@
                 for (var i = 0; i < length; i++) {
                   (function(i){
                     $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5&period=' + top5_periods[i], function(data) {
+                        if(!data) return;
                         var length = data.length,
                             table_html = '';
                         for(var j = 0; j < length; j++) {

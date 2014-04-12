@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Authors: GP.
- * Version: 1.2
- * Release Date: 11-Apr-2014
+ * Version: 1.3
+ * Release Date: 12-Apr-2014
  */
 
 /**
@@ -225,6 +225,9 @@ function getTop5(time_period, fn) {
                     rank = 1,
                     rank_match = false;
                 userscore_array.sort().reverse();
+                if (userscore_array.length < 1) {
+                    return fn(null, null);
+                }
                 userscore_array[0].splice(userscore_array[0].length, 0, rank);
                 for (var i = 1; i < userscore_array.length; i++) {
                     rank_match = userscore_array[i][0] == userscore_array[i - 1][0];
@@ -282,11 +285,75 @@ function getAllDailyBasicStats(fn) {
 }
 
 /**
+ * Gets today's toughest and easiest questions.
+ * Both are calculated by most number of wrong/correct answers and then
+ * sorted by maximum/minimum total response time.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getTodaysToughestAndEasiestQuestion(fn) {
+    var start_day = new Date(),
+        question_map = {
+            'easiest': {},
+            'toughest': {}
+        },
+        final_result = {};
+    start_day.setHours(0, 0, 0, 0)
+    var to_find = {
+        date: {
+            $gte: start_day
+        }
+    };
+    var history_query = models.QuizHistory.find(to_find);
+    history_query.sort({
+        _id: 1
+    });
+    history_query.populate('question'); //Mongo equivalent of a RDBMS JOIN. Isn't she beautiful?!
+    history_query.select('question choice_id response_time');
+    history_query.exec(function(err, questions) {
+        var correct_answer = false,
+            question_id = null;
+        if (questions !== undefined) {
+            questions.forEach(function(item, index, array) {
+                question_id = item.question._id;
+                if (item.question.answer != item.choice_id) {
+                    if (question_map.toughest[question_id]) {
+                        question_map.toughest[question_id][0]++;
+                        question_map.toughest[question_id][1] += item.response_time;
+                    } else {
+                        question_map.toughest[question_id] = [1, item.response_time, item.question.title];
+                    }
+                } else {
+                    if (question_map.easiest[question_id]) {
+                        question_map.easiest[question_id][0]++;
+                        question_map.easiest[question_id][1] += item.response_time;
+                    } else {
+                        question_map.easiest[question_id] = [1, item.response_time, item.question.title];
+                    }
+                }
+            });
+        } else {
+            return fn(null, null);
+        }
+        misc.getMaxOrMinofArray('max', question_map.toughest, 1, function(err, result) {
+            final_result['toughest'] = result;
+            misc.getMaxOrMinofArray('max', question_map.easiest, 1, function(err, result) {
+                final_result['easiest'] = result;
+            });
+        });
+        return fn(null, final_result);
+    });
+}
+
+/**
  * Module exports.
  */
 
 module.exports = {
     getTop5: getTop5,
     getTotalUserCount: getTotalUserCount,
-    getAllDailyBasicStats: getAllDailyBasicStats
+    getAllDailyBasicStats: getAllDailyBasicStats,
+    getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion
 }
