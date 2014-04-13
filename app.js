@@ -377,7 +377,7 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
             }
             if (question !== null) {
                 //Save answer with answer -1 to mark that the user has seen this question
-                quiz.saveAnswer(req.session.user._id, question._id, '-1', '-1', function(err, record) {
+                quiz.saveAnswer(req.session.user._id, question._id, '-1', '0', function(err, record) {
                     req.session.question_id = question._id;
                     req.session.question_render_time = new Date();
                     res.render(config.TEMPL_QUIZ_START, {
