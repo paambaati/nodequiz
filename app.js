@@ -65,9 +65,9 @@ app.configure(function() {
 // If a user is resetting password for someone else, this cookie value
 // is sent for shaming.
 app.use(function(req, res, next) {
-    //var original_url = req.originalUrl;
     var cookie = req.cookies.last_user;
-    if (cookie === undefined) {
+    var session_username = (req.session.user) ? req.session.user.username : null;
+    if (cookie === undefined || cookie != session_username) {
         if (req.session.user) {
             res.cookie('last_user', req.session.user.username, {
                 maxAge: 172800000,
@@ -612,9 +612,16 @@ app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res
             //End sleep*/
             res.json(top5rankers);
         });
-    } else if (req.query.stat = 'easytough') {
+    } else if (req.query.stat == 'easytough') {
         stats.getTodaysToughestAndEasiestQuestion(function(err, result) {
             res.json(result);
+        });
+    } else if (req.query.stat == 'myhistory') {
+        var start_day = new Date();
+        start_day.setDate(start_day.getDate() - 30);
+        console.log(start_day);
+        stats.getPersonalScoreHistory(req.session.user._id, start_day, function(err, results) {
+            res.json(results);
         });
     }
 });

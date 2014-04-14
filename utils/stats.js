@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Authors: GP.
- * Version: 1.3
- * Release Date: 12-Apr-2014
+ * Version: 1.4
+ * Release Date: 13-Apr-2014
  */
 
 /**
@@ -348,6 +348,69 @@ function getTodaysToughestAndEasiestQuestion(fn) {
 }
 
 /**
+ * Gets a user's score history (total points and average response time)
+ * starting from a particular date and returns a dictionary object of the form
+ * {
+ *  'scores': [[timestamp1, total score], [timestamp2, total score], ...],
+ *  'times':  [[timestamp1, average response time], [timestamp2, average response time], ...]
+ * }
+ *
+ * @param {String} user ID.
+ * @param {Date} starting day from when data needs to be collected.
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getPersonalScoreHistory(user_id, start_day, fn) {
+    var result_map = {
+        'scores': [],
+        'times': []
+    };
+    start_day.setHours(0, 0, 0, 0);
+    var to_find = {
+        /*date: {
+            $gte: start_day
+        },*/
+        user_id: user_id
+    };
+    var history_query = models.QuizHistory.find(to_find);
+    history_query.sort({
+        date: 1
+    });
+    history_query.populate('question');
+    history_query.select('question choice_id response_time date');
+    history_query.exec(function(err, questions) {
+        var correct_answer = false,
+            timestamp = null,
+            date_exists = null,
+            array_counter = -1,
+            map_length = 0;
+        if (questions !== undefined) {
+            questions.forEach(function(item, index, array) {
+                if (item.question.answer == item.choice_id) {
+                    timestamp = item.date;
+                    map_length = result_map.scores.length;
+                    timestamp.setHours(0, 0, 0, 0);
+                    timestamp = timestamp.getTime();
+                    date_exists = (map_length) ? (result_map.scores[map_length - 1][0] == timestamp) : false;
+                    if (date_exists) {
+                        result_map.scores[array_counter][1]++;
+                        result_map.times[array_counter][1] = (result_map.times[array_counter][1] + item.response_time) / 2;
+                    } else {
+                        result_map.scores.push([timestamp, 1]);
+                        result_map.times.push([timestamp, item.response_time]);
+                        array_counter++;
+                    }
+                }
+            });
+        } else {
+            return fn(null, null);
+        }
+        return fn(null, result_map);
+    });
+}
+
+/**
  * Module exports.
  */
 
@@ -355,5 +418,6 @@ module.exports = {
     getTop5: getTop5,
     getTotalUserCount: getTotalUserCount,
     getAllDailyBasicStats: getAllDailyBasicStats,
-    getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion
+    getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion,
+    getPersonalScoreHistory: getPersonalScoreHistory
 }

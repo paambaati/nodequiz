@@ -1069,6 +1069,29 @@
                             </div>
                         </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12 box-container ui-sortable">
+                                <!-- BOX -->
+                                <div class="box border purple" id="box_myhistory">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-signal"></i>Your History</h4>
+                                        <div class="tools">
+                                            <a class="collapse" href="javascript:;">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="remove" href="javascript:;">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="chart" id="chart_myhistory" style="padding: 0px; position: relative;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /BOX -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1079,12 +1102,13 @@
     <script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/javascripts/daterangepicker.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.slimscroll.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.blockUI.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.flot.time.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.flot.resize.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xdate.min.js"></script>
     <script type="text/javascript" src="/javascripts/slimScrollHorizontal.min.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.easing.min.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.easypiechart.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.animateNumber.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
@@ -1109,6 +1133,56 @@
                 });
             });
 
+            function showTooltip(x, y, contents, z) {
+                 $('<div id="tooltip">' + contents + '</div>').css({
+                        position: 'absolute',
+                        display: 'none',
+                        top: y + 5,
+                        left: x + 15,
+                        border: '1px solid #333',
+                        padding: '4px',
+                        color: '#fff',
+                        'border-radius': '3px',
+                        'background-color': '#333',
+                        opacity: .8
+                    }).appendTo('body').fadeIn(200);
+            }
+
+            function plotHistoryChart(scores, times) {
+                var dataset = [
+                            { label: 'Total Points', data: scores, color: '#DB5E8C' },
+                            { label: 'Average Response Time', data: times, color: '#F0AD4E' }
+                ];
+
+                var options = {
+                    xaxis: { mode: 'time', tickSize: [1, 'day'], axisLabelUseCanvas: !0, axisLabelFontSizePixels: 12 },
+                    yaxis: { axisLabelUseCanvas: !0, axisLabelFontSizePixels: 12 },
+                    series: { lines: { show: !0, lineWidth: 2, fill: !0, fillColor: { colors: [{ opacity: .05 }, { opacity: .01 }] } }, points: { show: !0 }, shadowSize: 2 },
+                    grid: { hoverable: !0, clickable: !0, tickColor: '#eee', borderWidth: 0 },
+                    legend: { show: 1 }
+                };
+
+                $.plot($('#chart_myhistory'), dataset, options);
+                $('#chart_myhistory').bind('plothover', function (event, pos, item) {
+                    if (item) {
+                        if ((previousPoint != item.dataIndex) || (previousLabel != item.series.label)) {
+                            previousPoint = item.dataIndex;
+                            previousLabel = item.series.label;
+             
+                            $('#tooltip').remove();
+             
+                            var x = new XDate(item.datapoint[0]).toString('MMM d'),
+                                y = item.datapoint[1];
+                            y = (y % 1 == 0) ? y : y.toFixed(2);
+                            showTooltip(item.pageX, item.pageY, '<b>' + item.series.label + '</b><br /> ' + y + ' on ' + x);
+                        }
+                    } else {
+                        $('#tooltip').remove();
+                        previousPoint = null;
+                    }
+                });
+            }
+
             function getTop5Stats() {
                 var top5_periods = ['weekly', 'monthly', 'alltime'],
                     badge_colors = ['','red', 'blue', 'green', 'orange', ''],
@@ -1128,21 +1202,23 @@
                 }
             }
 
-            var ajax_box = $('#box_top5');
-            App.blockUI(ajax_box), getTop5Stats();
+            function getMyHistory() {
+                $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=myhistory', function(data) {
+                    if(data != null) {
+                        plotHistoryChart(data['scores'], data['times']);
+                    }
+                });
+            }
+
+            var ajax_box1 = $('#box_top5');
+            App.blockUI(ajax_box1), getTop5Stats();
+
+            var ajax_box2 = $('#box_myhistory');
+            App.blockUI(ajax_box2), getMyHistory();            
 
             $(document).ajaxStop(function () {
-                App.unblockUI(ajax_box);
-            });
-
-            $('#dash_pie_1').easyPieChart({
-                easing: 'easeOutBounce',
-                onStep: function(e, t, a) {
-                    $(this.el).find('.percent').text(Math.round(a) + '%');
-                },
-                lineWidth: 6,
-                size: 70,
-                barColor: Theme.colors.purple
+                App.unblockUI(ajax_box1);
+                App.unblockUI(ajax_box2);
             });
         });
     </script>
