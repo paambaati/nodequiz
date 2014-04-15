@@ -72,6 +72,8 @@ config.MAIL_PORT = 587;
 config.MAIL_SECURE = true;
 config.MAIL_USERNAME = 'postmaster@inversekarma.in';
 config.MAIL_PASWORD = '1t0p-nn-yw17';
+config.MAIL_SENDER = 'Quiz Master <quiz@global-analytics.com>';
+config.MAIL_USER_DOMAIN = '@global-analytics.com';
 
 //Error messages.
 config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';

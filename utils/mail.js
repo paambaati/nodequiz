@@ -36,8 +36,8 @@ var transport = nodemailer.createTransport("SMTP", {
 
 var sendActivationLink = function(domain, username, activate_key, err) {
     var message = {
-        from: 'Quiz Master <quiz@global-analytics.com>',
-        to: username + '@global-analytics.com',
+        from: config.MAIL_SENDER,
+        to: username + config.MAIL_USER_DOMAIN,
         subject: '» Activate your GA Quiz Account',
         html: '<h1>jhasjd</h1>',
         text: 'Click to activate this link - ' + domain + '/activate/' + activate_key
@@ -68,8 +68,8 @@ var sendActivationLink = function(domain, username, activate_key, err) {
 var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
     var shame = (user_cookie === undefined) ? '' : ' by user ' + user_cookie;
     var message = {
-        from: 'Quiz Master <quiz@global-analytics.com>',
-        to: username + '@global-analytics.com',
+        from: config.MAIL_SENDER,
+        to: username + config.MAIL_USER_DOMAIN,
         subject: '» Your GA Quiz Account\'s New Password',
         html: 'Your password was reset from IP ' + ip + shame,
         text: 'Your reset key is - ' + reset_key +
