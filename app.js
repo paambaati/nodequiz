@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Authors: GP.
- * Version: 1.4
- * Release Date: 10-Apr-2014
+ * Version: 1.4.1
+ * Release Date: 15-Apr-2014
  */
 
 /**
@@ -40,6 +40,9 @@ app.configure(function() {
         secret: config.MASTER_SALT,
         store: new mongostore({
             db: config.DB_NAME,
+            cookie: {
+                maxAge: 86400
+            }, //1-day cookie.
             host: config.DB_HOST,
             port: config.DB_PORT,
             collection: config.DB_AUTH_SESSIONS,
