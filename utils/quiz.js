@@ -1,6 +1,6 @@
 /**
  * Quiz question/answer-related utilities.
- * Authors: GP.
+ * Author: GP.
  * Version: 1.1
  * Release Date: 10-Apr-2014
  */

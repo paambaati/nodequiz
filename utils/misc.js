@@ -1,6 +1,6 @@
 /**
  * Miscellaneous utilities.
- * Authors: GP.
+ * Author: GP.
  * Version: 1.1
  * Release Date: 12-Apr-2014
  */
@@ -74,16 +74,16 @@ var getAllowedTime = function(text, fn) {
  * @api public
  */
 
-function getMonday(fn) {
-    var today = new Date();
-    var day = today.getDay(),
-        diff = today.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-    return fn(null, new Date(today.setDate(diff)));
-}
+    function getMonday(fn) {
+        var today = new Date();
+        var day = today.getDay(),
+            diff = today.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+        return fn(null, new Date(today.setDate(diff)));
+    }
 
-/**
- * Module exports.
- */
+    /**
+     * Module exports.
+     */
 
 module.exports = {
     getMaxOrMinofArray: getMaxOrMinofArray,

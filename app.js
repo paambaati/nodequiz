@@ -1,6 +1,6 @@
 /**
  * TheQuiz
- * Authors: GP.
+ * Author: GP.
  * Version: 1.4.1
  * Release Date: 15-Apr-2014
  */

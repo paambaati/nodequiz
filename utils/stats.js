@@ -1,6 +1,6 @@
 /**
  * Quiz statistics & ranking utilities.
- * Authors: GP.
+ * Author: GP.
  * Version: 1.4
  * Release Date: 13-Apr-2014
  */

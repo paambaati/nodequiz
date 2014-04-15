@@ -1,6 +1,6 @@
 /**
  * Cryptography utilities.
- * Authors: GP.
+ * Author: GP.
  * Version: 1.0
  * Release Date: 06-Apr-2014
  */
