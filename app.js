@@ -369,7 +369,7 @@ function resetPassword(reset_key, new_password, fn) {
 
 //DEBUG
 app.get('/dummy', function(req, res) {
-    res.render(config.TEMPL_QUIZ_STANDINGS);
+    res.render(config.TEMPL_QUIZ_ADMIN);
 });
 
 app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
