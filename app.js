@@ -2,7 +2,7 @@
  * TheQuiz
  * Author: GP.
  * Version: 1.4.1
- * Release Date: 15-Apr-2014
+ * Release Date: 16-Apr-2014
  */
 
 /**
@@ -140,11 +140,15 @@ function authenticate(name, pass, fn) {
     }, function(err, user) {
         if (user) {
             if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
-            hash(pass, user.salt, function(err, hash) {
-                if (err) return fn(err);
-                if (hash == user.hash) return fn(null, user);
-                fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
-            });
+            if (!user.activated) {
+                return fn(new Error(config.ERR_AUTH_ACTIVATION_PENDING));
+            } else {
+                hash(pass, user.salt, function(err, hash) {
+                    if (err) return fn(err);
+                    if (hash == user.hash) return fn(null, user);
+                    fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
+                });
+            }
         } else {
             return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
         }
@@ -367,11 +371,6 @@ function resetPassword(reset_key, new_password, fn) {
  * Routes
  */
 
-//DEBUG
-app.get('/dummy', function(req, res) {
-    res.render(config.TEMPL_QUIZ_ADMIN);
-});
-
 app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
         quiz.findNextQuestion(count, function(err, question, allowed_time) {
@@ -557,7 +556,7 @@ app.post(config.URL.LOGIN, function(req, res) {
                 res.redirect(config.URL.QUIZ_MAIN);
             });
         } else {
-            req.session.error = config.ERR_AUTH_FAILED;
+            req.session.error = err.message;
             res.redirect(config.URL.LOGIN);
         }
     });
@@ -601,7 +600,7 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
 
 //Ajax URLs
 
-app.get(config.URL.QUIZ_STAT_AJAX, /*requiredAuthentication,*/ function(req, res) {
+app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
     if (req.query.stat == 'basic') {
         stats.getAllDailyBasicStats(function(err, daily_stats) {
             res.json(daily_stats);
