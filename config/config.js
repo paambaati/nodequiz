@@ -52,8 +52,8 @@ config.TEMPL_QUIZ_ADMIN = 'admin.html';
 config.TEMPL_QUIZ_STANDINGS = 'standings.html';
 
 //Quiz configuration.
-config.QUIZ_START_TIME = [1, 0];
-config.QUIZ_STOP_TIME = [23, 0];
+config.QUIZ_START_TIME = [14, 0];
+config.QUIZ_STOP_TIME = [16, 0];
 
 //Database configuration.
 config.DB_HOST = '127.0.0.1';
@@ -69,17 +69,21 @@ config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB
 //Mail configuration.
 config.MAIL_HOST = 'smtp.mailgun.org';
 config.MAIL_PORT = 587;
-config.MAIL_SECURE = true;
+config.MAIL_SECURE = false;
+config.MAIL_USE_TLS = true;
 config.MAIL_USERNAME = 'postmaster@inversekarma.in';
-config.MAIL_PASWORD = '1t0p-nn-yw17';
+config.MAIL_PASSWORD = '1t0p-nn-yw17';
 config.MAIL_SENDER = 'Quiz Master <quiz@global-analytics.com>';
 config.MAIL_USER_DOMAIN = '@global-analytics.com';
+config.MAIL_TEMPLATE = './views/mailer.html';
+config.MAIL_LOGO = './public/images/logo.png';
 
 //Error messages.
 config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';
 config.ERR_AUTH_INVALID_USERNAME = 'Username is invalid!';
 config.ERR_AUTH_INVALID_PASSWORD = 'Invalid password!';
 config.ERR_AUTH_NOT_LOGGED_IN = 'You must be logged in to view that page!';
+config.ERR_AUTH_ACTIVATION_PENDING = 'You still haven\'t activated this account. Please check your mail!';
 config.ERR_SIGNUP_ALREADY_EXISTS = 'Username already exists!';
 config.ERR_ACTIVATION_INVALID_KEY = 'Username mapped to activation key is invalid!';
 config.ERR_RESET_INVALID_DETAILS = 'One of the values entered is incorrect!';
