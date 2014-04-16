@@ -24,7 +24,7 @@
     -->
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title>{{ app_title }} | Question {{ question_index }} of {{ question_total }}</title>
+	<title>{{ app_title }} | Question {{ question_index }} of {{ total_questions }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="{{ app_title }} - Quiz Question">
 	<meta name="author" content="GP">
@@ -117,7 +117,7 @@
 									</ul>
 									<!-- /BREADCRUMBS -->
 									<div class="clearfix">
-										<h3 class="content-title pull-left">Question <strong>{{ question_index }}</strong> of {{ question_total }}</h3>
+										<h3 class="content-title pull-left">Question <strong>{{ question_index }}</strong> of {{ total_questions }}</h3>
 									</div>
 									<div class="description">Question expires in <span class="badge badge-red">{{ allowed_time }}</span> seconds.</div>
 								</div>

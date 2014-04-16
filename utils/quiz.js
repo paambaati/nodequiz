@@ -38,7 +38,8 @@ function findUserQuestionsForToday(user_id, fn) {
 
 /**
  * Finds next question to display to user.
- * Returns the full Question document and optimal allowed time to read the question text.
+ * Returns the full Question document, total number of questions today and
+ * the optimal allowed time to read the question text.
  *
  * @param {String} nth question to display sorted by date.
  * @param {Function} callback.
@@ -67,7 +68,7 @@ function findNextQuestion(index, fn) {
             return fn(null, null, null);
         } else {
             misc.getAllowedTime(questions[index].title, function(err, allowed_time) {
-                return fn(null, questions[index], allowed_time);
+                return fn(null, questions[index], questions.length, allowed_time);
             });
         }
     });

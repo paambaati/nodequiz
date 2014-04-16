@@ -16,7 +16,7 @@ var express = require('express'),
     swig = require('swig'),
     mongoose = require('mongoose'),
     mongostore = require('connect-mongo')(express),
-    date_format = require('date-format-lite'),
+    dateformat = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
     models = require('./models'),
@@ -373,7 +373,7 @@ function resetPassword(reset_key, new_password, fn) {
 
 app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
-        quiz.findNextQuestion(count, function(err, question, allowed_time) {
+        quiz.findNextQuestion(count, function(err, question, total_questions, allowed_time) {
             if (err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
                 res.redirect(config.URL.QUIZ_NOQUIZ);
             }
@@ -385,7 +385,7 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
                     res.render(config.TEMPL_QUIZ_START, {
                         question: question,
                         question_index: count + 1,
-                        question_total: 10, //TO-DO: figure out how to get this from DB!!!
+                        total_questions: total_questions,
                         allowed_time: allowed_time,
                         image: question.image
                     });
@@ -674,9 +674,6 @@ app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
  * Error handling.
  */
 
-//Use Express' built-in 500 handler.
-//app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
-
 //Use our custom 500 handler.
 app.use(errorHandler);
 
@@ -688,10 +685,6 @@ app.use(function(req, res, next) {
     });
     return;
 });
-
-/*process.on('uncaughtException', function(err) {
-    config.logger.log('error', 'UNCAUGHT EXCEPTION! ', err.stack);
-});*/
 
 /**
  * Run the app!
