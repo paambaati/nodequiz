@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="initial-scale=1.0" name="viewport">
+    <!-- So that mobile webkit will display zoomed in -->
+    <meta content="telephone=no" name="format-detection">
+    <!-- disable auto telephone linking in iOS -->
+
+    <title>{{app_title}} - {%if mail_mode == 'activation'%}Activation{% else %}Reset Password{% endif %}</title>
+    <style type="text/css">
+    /* Resets: see reset.css for details */
+    .ReadMsgBody {
+        width: 100%;
+        background-color: #ebebeb;
+    }
+    .ExternalClass {
+        width: 100%;
+        background-color: #ebebeb;
+    }
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+        line-height:100%;
+    }
+    body {
+        -webkit-text-size-adjust:none;
+        -ms-text-size-adjust:none;
+    }
+    body {
+        margin:0;
+        padding:0;
+    }
+    table {
+        border-spacing:0;
+    }
+    table td {
+        border-collapse:collapse;
+    }
+    .yshortcuts a {
+        border-bottom: none !important;
+    }
+    /* Constrain email width for small screens */
+    @media screen and (max-width: 600px) {
+        table[class="container"] {
+            width: 95% !important;
+        }
+    }
+    /* Give content more room on mobile */
+    @media screen and (max-width: 480px) {
+        td[class="container-padding"] {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+    }
+    </style>
+</head>
+<body marginwidth="0" marginheight="0" bgcolor="#ebebeb" topmargin="0" leftmargin="0" style="margin:0; padding:10px 0;">
+    <br>
+    <!-- 100% wrapper (grey background) -->
+    <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ebebeb">
+        <tbody>
+            <tr>
+                <td valign="top" bgcolor="#ebebeb" align="center" style="background-color: #ebebeb;">
+                    <!-- 600px container (white background) -->
+                    <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" class="container">
+                        <tbody>
+                            <tr>
+                                <td bgcolor="#507AA4" align="left" id="header" class="w640">
+                                    <div align="left" style="text-align: left">
+                                        <a href="{{main_link}}"><img border="0" align="top" id="Logo" label="Logo" editable="true" src="cid:app_logo" width="120" height="30" style="display: inline"></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#ffffff" class="container-padding" style="background-color: #ffffff; padding-left: 30px; padding-right: 30px; font-size: 14px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;">
+                                    <br>
+                                    <!-- ### BEGIN CONTENT ### -->
+                                    {% if mail_mode == 'activation' %}
+                                    <div style="font-weight: bold; font-size: 18px; line-height: 24px; color: #507AA4">
+                                        Well, hi there!
+                                    </div>
+                                    <br>We're super-glad that you decided to sign up for {{app_title}} - you're one of the cool kids now! Before you can start taking our quizzes, please click the link below to activate your account.
+                                    <br>
+                                    <br>
+                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{activation_link}}" target="_blank">{{activation_link}}</a></span>
+                                    <br>
+                                    <br>
+                                    <em style="font-style:italic; font-size: 12px; color: #aaa;">Note: If clicking the above link doesn't work (somehow inexplicably, might I add), you can copy it and paste it in your favourite browser.</em>
+                                    {% else %}
+                                    <div style="font-weight: bold; font-size: 18px; line-height: 24px; color: #507AA4">
+                                        It's okay, happens to the best of us
+                                    </div>
+                                    <br>Forgot your password? Fret not, we got you covered. Just click on the scary-looking link below to set up your new password.
+                                    <br>
+                                    <br>
+                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{reset_link}}" target="_blank">{{reset_link}}</a></span>
+                                    <br>
+                                    <br>
+                                    <em>Remember</em>, this link is valid only for the next <strong>{{validity_period}}</strong> hours!
+                                    <br>
+                                    <br>
+                                    <em style="font-style:italic; font-size: 12px; color: #aaa;">Note: If clicking the above link doesn't work (somehow inexplicably, might I add), you can copy it and paste it in your favourite browser.</em>
+                                    <br>
+                                    <br>
+                                    <strong>Wait, I didn't want to reset my password! HELP!</strong>
+                                    <ul>
+                                        <li>
+                                            First up, if you don't want to, just ignore this email. Nothing changes.
+                                        </li>
+                                        <li>Second, just for your edification, we got this request from the IP address <span style="font-family: Andale Mono, Courier, monospace; color: #666;">{{ip_address}}</span>{% if shame_name %} by the user <span style="font-family: Andale Mono, Courier, monospace; color: #666;">{{shame_name}}</span>{% endif %}.</li>
+                                    </ul>
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    <em style="font-style:italic; font-size: 12px; color: #aaa;">{{app_title}} - coded with &#x2764; using Node.js, buttloads of coffee and Nine Inch Nails on repeat.</em>
+                                    <br>
+                                    <br>
+                                    <!-- ### END CONTENT ### -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--/600px container -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!--/100% wrapper-->
+    <br>
+    <br>
+</body>
+</html>
