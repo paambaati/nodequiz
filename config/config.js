@@ -2,11 +2,14 @@
  * Configuration.
  */
 
+//Module dependencies.
+var path = require('path'),
+    logger = require('winston');
+
 var config = {};
 
 //Logging configuration.
 config.LOG_FILENAME = './logs/app_log.txt';
-var logger = require('winston');
 logger.add(logger.transports.File, {
     filename: config.LOG_FILENAME,
     handleExceptions: true,
@@ -15,10 +18,12 @@ logger.add(logger.transports.File, {
     colorize: false,
     timestamp: true
 });
+config.logger = logger;
 
 //App configuration.
 config.APP_TITLE = 'TheQuiz';
 config.APP_PORT = 3000;
+config.APP_BASE_PATH = process.env.PWD;
 
 //Basic URL configuration.
 config.URL = {
@@ -67,6 +72,7 @@ config.DB_QUIZ_HISTORY = 'quiz_history';
 config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
 
 //Mail configuration.
+config.MAIL_DEBUG = false;
 config.MAIL_HOST = 'smtp.mailgun.org';
 config.MAIL_PORT = 587;
 config.MAIL_SECURE = false;
@@ -74,9 +80,9 @@ config.MAIL_USE_TLS = true;
 config.MAIL_USERNAME = 'postmaster@inversekarma.in';
 config.MAIL_PASSWORD = '1t0p-nn-yw17';
 config.MAIL_SENDER = 'Quiz Master <quiz@global-analytics.com>';
-config.MAIL_USER_DOMAIN = '@global-analytics.com';
-config.MAIL_TEMPLATE = './views/mailer.html';
-config.MAIL_LOGO = './public/images/logo.png';
+config.MAIL_USER_DOMAIN = '@HAHAHAHAHHAHAHAHAHHAHAHAHHAHAHAHHAHAHHAglobal-analytics.com';
+config.MAIL_TEMPLATE = path.join(config.APP_BASE_PATH, './views/mailer.html');
+config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
 //Error messages.
 config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';

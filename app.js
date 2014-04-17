@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.4.1
- * Release Date: 16-Apr-2014
+ * Version: 1.5
+ * Release Date: 17-Apr-2014
  */
 
 /**
@@ -75,6 +75,9 @@ app.use(function(req, res, next) {
                 maxAge: 172800000,
                 httpOnly: true
             }); //2-day cookie.
+            config.logger.info('SHAME COOKIE - COOKIE SUCCESSFULLY SET', {
+                username: req.session.user.username
+            });
         }
     }
     next();
@@ -141,15 +144,24 @@ function authenticate(name, pass, fn) {
         if (user) {
             if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
             if (!user.activated) {
+                config.logger.warn('AUTHENTICATION - ACTIVATION PENDING', {
+                    username: name
+                });
                 return fn(new Error(config.ERR_AUTH_ACTIVATION_PENDING));
             } else {
                 hash(pass, user.salt, function(err, hash) {
                     if (err) return fn(err);
                     if (hash == user.hash) return fn(null, user);
+                    config.logger.warn('AUTHENTICATION - INVALID PASSWORD', {
+                        username: name
+                    });
                     fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
                 });
             }
         } else {
+            config.logger.warn('AUTHENTICATION - INVALID USERNAME', {
+                username: name
+            });
             return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
         }
     });
@@ -187,7 +199,12 @@ function isUsernameValid(name, fn) {
         username: name
     }, function(err, user) {
         if (user) {
-            if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
+            if (err) {
+                config.logger.warn('USERNAME DOC NOT FOUND IN DB', {
+                    username: name
+                });
+                return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
+            }
             return fn(null, true);
         } else {
             return fn(null, false);
@@ -234,7 +251,6 @@ function activateUser(name, fn) {
         username: name
     }, function(err, user) {
         if (user) {
-            console.log('user found! proceeding to update...');
             User.update({
                 username: name,
                 activated: false
@@ -246,7 +262,6 @@ function activateUser(name, fn) {
                 if (err) {
                     throw err;
                 }
-                console.log('DB UPDATED PHEW! count = ', count);
                 return fn(null, count);
             });
         } else {
@@ -335,7 +350,6 @@ function resetPassword(reset_key, new_password, fn) {
     decryptResetKey(reset_key, function(err, user_id) {
         hash(new_password, function(err, salt, hash) {
             if (err) throw err;
-            console.log('new password = ', new_password);
             var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
             var query = {
                 _id: user_id
@@ -349,7 +363,10 @@ function resetPassword(reset_key, new_password, fn) {
             };
             User.update(query, update_to, query_options, function(err, count) {
                 if (err) throw err;
-                console.log('DB UPDATED WITH NEW PASSWORD, PHEW! count = ', count);
+                config.logger.info('RESET PASSWORD - USER DOC UPDATED IN DB WITH NEW HASH', {
+                    reset_key: reset_key,
+                    records_updated: count
+                });
                 var PasswordReset = models.mongoose.model(config.DB_AUTH_PASSWORD_RESET, models.PasswordResetSchema);
                 var query = {
                     reset_key: reset_key
@@ -359,7 +376,9 @@ function resetPassword(reset_key, new_password, fn) {
                 }
                 PasswordReset.findOneAndUpdate(query, to_update, {}, function(err, updated_record) {
                     if (err) throw err;
-                    console.log('reset key entry updated..');
+                    config.logger.info('RESET PASSWORD - RESET KEY DOC INVALIDATED IN DB', {
+                        reset_key: reset_key
+                    });
                     return fn(null, true);
                 });
             });
@@ -372,12 +391,19 @@ function resetPassword(reset_key, new_password, fn) {
  */
 
 app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+    config.logger.info('START QUIZ - PAGE GET', {
+        username: req.session.user.username
+    });
     quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
         quiz.findNextQuestion(count, function(err, question, total_questions, allowed_time) {
             if (err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
                 res.redirect(config.URL.QUIZ_NOQUIZ);
             }
             if (question !== null) {
+                config.logger.info('START QUIZ - SHOWING QUESTION', {
+                    username: req.session.user.username,
+                    question_id: question._id
+                });
                 //Save answer with answer -1 to mark that the user has seen this question
                 quiz.saveAnswer(req.session.user._id, question._id, '-1', '0', function(err, record) {
                     req.session.question_id = question._id;
@@ -394,6 +420,9 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
                 quiz.getResults(req.session.user._id, today, function(err, results) {
+                    config.logger.info('START QUIZ - QUIZ COMPLETED. SHOWING RESULTS', {
+                        username: req.session.user.username
+                    });
                     res.render(config.TEMPL_QUIZ_END, {
                         results: results
                     });
@@ -406,6 +435,12 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
 app.post(config.URL.QUIZ_START, function(req, res) {
     var response_time = (new Date() - req.session.question_render_time.toString().date()) / 1000;
     var answer_choice = req.body.choice;
+    config.logger.info('START QUIZ - FORM POST - SAVING ANSWER DOC IN DB', {
+        username: req.session.user.username,
+        question_id: req.session.question_id,
+        answer_chosen: answer_choice,
+        response_time: response_time
+    });
     quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function(err, record) {
         res.redirect(req.originalUrl);
     });
@@ -413,6 +448,9 @@ app.post(config.URL.QUIZ_START, function(req, res) {
 
 app.get(config.URL.MAIN, function(req, res) {
     if (req.session.user) {
+        config.logger.info('QUIZ - WELCOME - PAGE GET', {
+            username: req.session.user.username
+        });
         res.redirect(config.URL.QUIZ_MAIN);
     } else {
         res.render(config.TEMPL_LOGIN, {
@@ -422,6 +460,7 @@ app.get(config.URL.MAIN, function(req, res) {
 });
 
 app.get(config.URL.SIGNUP, function(req, res) {
+    config.logger.info('SIGNUP - PAGE GET');
     if (req.session.user) {
         res.redirect(config.URL.MAIN);
     } else {
@@ -437,8 +476,9 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var password1 = req.body.second_password;
     var security_question = req.body.security_question;
     var security_answer = req.body.security_answer;
-    console.log('in URL_SIGNUP POST NOW...');
-    console.log(username, '----', password, '----', password1);
+    config.logger.info('SIGNUP - FORM POST', {
+        username: username
+    });
 
     isUsernameValid(username, function(err, valid) {
         if (err) throw err;
@@ -453,12 +493,18 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
                     security_answer: security_answer
                 }).save(function(err, newUser) {
                     if (err) throw err;
+                    config.logger.info('SIGNUP - USER SAVED IN DB. PROCEEDING TO GENERATE ACTIVATE KEY NOW.', {
+                        username: username
+                    });
                     var encrypt = require('./utils/pass').encrypt;
                     encrypt(username, function(err, activate_key) {
                         if (err) throw err;
                         var domain = req.protocol + '://' + req.get('host');
                         mailer.sendActivationLink(domain, username, activate_key);
-                        console.log('encrypted activation key - ', activate_key);
+                        config.logger.info('SIGNUP - SENDING ACTIVATION LINK VIA EMAIL', {
+                            username: username,
+                            activate_key: activate_key
+                        });
                     });
 
                     res.render(config.TEMPL_200, {
@@ -469,6 +515,9 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
                 });
             });
         } else {
+            config.logger.warn('SIGNUP - USERNAME ALREADY EXISTS', {
+                username: username
+            });
             req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
             res.redirect(config.URL.SIGNUP);
         }
@@ -479,25 +528,38 @@ app.post(config.URL.FORGOT, function(req, res) {
     var username = req.body.username;
     var security_question = req.body.security_question;
     var security_answer = req.body.security_answer;
-    console.log('in POST of /forgot now... for user - ', username);
+    config.logger.info('FORGOT PASSWORD - FORM POST', {
+        username: username
+    });
     isUsernameValid(username, function(err, valid) {
         if (err) throw err;
         if (valid) {
-            console.log('valid user alright. now to reset your password....');
             var domain = req.protocol + '://' + req.get('host');
             var ip = req.headers['x-forwarded-for'] ||
                 req.connection.remoteAddress ||
                 req.socket.remoteAddress ||
                 req.connection.socket.remoteAddress;
             var user_cookie = req.cookies.last_user;
+            config.logger.info('FORGOT PASSWORD - USER DOC EXISTS IN DB. PROCEEDING TO SEND RESET LINK NOW.', {
+                username: username,
+                domain: domain,
+                ip_address: ip,
+                shame_cookie: user_cookie
+            });
             sendResetKey(username, security_question, security_answer, domain, ip, user_cookie, function(err, reset_key) {
                 if (err && err.message == config.ERR_RESET_INVALID_DETAILS) {
+                    config.logger.warn('FORGOT PASSWORD - INVALID DETAILS ENTERED BY USER', {
+                        username: username
+                    });
                     req.session.error = err.message;
                     res.redirect(config.URL.FORGOT);
                 } else if (err) {
                     throw err;
                 }
-                console.log('key generated. reset key = ', reset_key);
+                config.logger.info('FORGOT PASSWORD - SENDING RESET LINK VIA EMAIL', {
+                    username: username,
+                    reset_key: reset_key
+                });
                 res.render(config.TEMPL_200, {
                     message_title: 'Done!',
                     message_1: 'We\'ve sent you an email with your reset key that is valid for <strong>' + config.RESET_VALIDITY + '</strong> hours!',
@@ -506,6 +568,9 @@ app.post(config.URL.FORGOT, function(req, res) {
             });
 
         } else {
+            config.logger.warn('FORGOT PASSWORD - USERNAME DOC DOES NOT EXIST IN DB', {
+                username: username
+            });
             req.session.error = config.ERR_RESET_INVALID_USERNAME;
             res.redirect(config.URL.FORGOT);
         }
@@ -514,8 +579,15 @@ app.post(config.URL.FORGOT, function(req, res) {
 
 app.get(config.URL.RESET + '/:reset_key', function(req, res) {
     var reset_key = req.params.reset_key;
+    config.logger.info('RESET PASSWORD - PAGE GET', {
+        reset_key: reset_key
+    });
     validateResetKey(reset_key, function(err, status) {
         if (err) throw err;
+        config.logger.info('RESET PASSWORD - GET - RESET KEY VALIDATION COMPLETED', {
+            reset_key: reset_key,
+            status: status
+        });
         res.render(config.TEMPL_RESET, {
             'reset_key': reset_key
         });
@@ -525,10 +597,21 @@ app.get(config.URL.RESET + '/:reset_key', function(req, res) {
 app.post(config.URL.RESET, function(req, res) {
     var reset_key = req.body.reset_key;
     var new_password = req.body.new_password1;
+    config.logger.info('RESET PASSWORD - FORM POST', {
+        reset_key: reset_key
+    });
     validateResetKey(reset_key, function(err, status) {
         if (err) throw err;
+        config.logger.info('RESET PASSWORD - POST - RESET KEY VALIDATION COMPLETED', {
+            reset_key: reset_key,
+            status: status
+        });
         if (status == 'success') {
             resetPassword(reset_key, new_password, function(err, succeeded) {
+                config.logger.info('RESET PASSWORD - PASSWORD RESET COMPLETE', {
+                    reset_key: reset_key,
+                    succeeded: succeeded
+                });
                 if (succeeded) {
                     res.render(config.TEMPL_200, {
                         message_title: 'Done!',
@@ -547,15 +630,26 @@ app.post(config.URL.RESET, function(req, res) {
 });
 
 app.post(config.URL.LOGIN, function(req, res) {
-    authenticate(req.body.username, req.body.password, function(err, user) {
+    var username = req.body.username;
+    config.logger.info('LOGIN - FORM POST', {
+        username: username
+    });
+    authenticate(username, req.body.password, function(err, user) {
         if (user) {
             req.session.regenerate(function() {
+                config.logger.info('LOGIN - SESSION REGENERATED SUCCESSFULLY', {
+                    username: username
+                });
                 req.session.user = user;
                 req.session.is_admin = user.admin;
                 req.session.success = 'Authenticated as ' + user.username;
                 res.redirect(config.URL.QUIZ_MAIN);
             });
         } else {
+            config.logger.warn('LOGIN - LOGIN FAILED', {
+                username: username,
+                error: err.message
+            });
             req.session.error = err.message;
             res.redirect(config.URL.LOGIN);
         }
@@ -563,24 +657,38 @@ app.post(config.URL.LOGIN, function(req, res) {
 });
 
 app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
-    console.log('in GET of /activate now...');
+    var activate_key = req.params.activate_key;
+    config.logger.info('ACTIVATION - PAGE GET', {
+        activate_key: activate_key
+    });
     var decrypt = require('./utils/pass').decrypt;
-    decrypt(req.params.activate_key, function(err, username) {
+    decrypt(activate_key, function(err, username) {
         if (err) {
+            config.logger.error('ACTIVATION - ACTIVATION KEY DECRYPTION FAILED', {
+                activate_key: activate_key
+            });
             req.session.error = '... but not really. Looks like your activation key is invalid.' +
                 'Either you\'re trying to break into someone else\'s account (which is really lame) ' +
                 'or.. nope. You\'re lame.';
             throw err;
         }
-        console.log('decrypted username - ', username);
+        config.logger.error('ACTIVATION - ACTIVATION KEY SUCCESSFULLY DECRYPTED', {
+            activate_key: activate_key,
+            username: username
+        });
         activateUser(username, function(err, count) {
             if (err) {
-                console.log(err);
-                console.log('activation -> error caught in activateUser() function!');
+                config.logger.error('ACTIVATION - ACTIVATION FAILED', {
+                    username: username,
+                    error: err
+                });
                 req.session.error = 'User no longer exists!';
                 throw err;
             }
-            console.log('activateUser - return value - ', count);
+            config.logger.info('ACTIVATION - ACTIVATION COMPLETED FOR USER', {
+                username: username,
+                records_updated: count
+            });
             if (count == 1) {
                 res.render(config.TEMPL_200, {
                     message_title: 'Done!',
@@ -593,7 +701,7 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
                     message_1: 'Your account has already been activated!',
                     message_2: 'Did you <a href="' + config.URL.FORGOT + '">forget</a> your password?'
                 });
-            } //handle other cases, should I?
+            }
         });
     });
 });
@@ -601,6 +709,10 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
 //Ajax URLs
 
 app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
+    config.logger.info('QUIZ STANDINGS - AJAX GET', {
+        username: req.session.user.username,
+        requested_statistic: req.query.stat
+    });
     if (req.query.stat == 'basic') {
         stats.getAllDailyBasicStats(function(err, daily_stats) {
             res.json(daily_stats);
@@ -631,12 +743,16 @@ app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
 //General URLs
 
 app.get(config.URL.LOGOUT, function(req, res) {
+    config.logger.info('LOGOUT', {
+        username: req.session.user.username
+    });
     req.session.destroy(function() {
         res.redirect(config.URL.MAIN);
     });
 });
 
 app.get(config.URL.FORGOT, function(req, res) {
+    config.logger.info('FORGOT PASSWORD - PAGE GET');
     res.render(config.TEMPL_LOGIN, {
         tab: 'forgot'
     });
@@ -654,6 +770,7 @@ app.get(config.URL.QUIZ_NOQUIZ, requiredAuthentication, function(req, res) {
 });
 
 app.get(config.URL.LOGIN, function(req, res) {
+    config.logger.info('LOGIN - PAGE GET');
     res.render(config.TEMPL_LOGIN, {
         tab: 'login'
     });
@@ -661,10 +778,16 @@ app.get(config.URL.LOGIN, function(req, res) {
 
 app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
+    config.logger.info('QUIZ - WELCOME - PAGE GET', {
+        username: req.session.user.username,
+        is_admin: req.session.is_admin,
+        template_shown: template
+    });
     res.render(template);
 });
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
+    config.logger.info('QUIZ STANDINGS - PAGE GET');
     res.render(config.TEMPL_QUIZ_STANDINGS);
 });
 

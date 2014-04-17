@@ -1,8 +1,8 @@
 /**
  * Email utilities.
  * Author: GP.
- * Version: 1.1
- * Release Date: 07-Apr-2014
+ * Version: 1.2
+ * Release Date: 17-Apr-2014
  */
 
 /**
@@ -32,7 +32,7 @@ var transport = nodemailer.createTransport('SMTP', {
     port: config.MAIL_PORT,
     secureConnection: config.MAIL_SECURE,
     ignoreTLS: !config.MAIL_USE_TLS,
-    debug: true,
+    debug: config.MAIL_DEBUG,
     auth: {
         user: config.MAIL_USERNAME,
         pass: config.MAIL_PASSWORD
@@ -50,6 +50,8 @@ var transport = nodemailer.createTransport('SMTP', {
  */
 
 var sendActivationLink = function(domain, username, activate_key, err) {
+    var activation_link = domain + config.URL.ACTIVATE + '/' + activate_key;
+    activation_link = (domain.lastIndexOf('http://') !== 0) ? 'http://' + activation_link : activation_link;
     var message = {
         from: config.MAIL_SENDER,
         to: username + config.MAIL_USER_DOMAIN,
@@ -63,18 +65,21 @@ var sendActivationLink = function(domain, username, activate_key, err) {
             app_title: config.APP_TITLE,
             main_link: 'http://' + domain,
             mail_mode: 'activation',
-            activation_link: 'http://' + domain + config.URL.ACTIVATE + '/' + activate_key
+            activation_link: activation_link
         })
     };
     transport.sendMail(message, function(err, response) {
         if (err) {
-            logger.log('error', 'CRITICAL ERROR! USERNAME ACTIVATION EMAIL NOT SENT', {
+            config.logger.error('ACTIVATION EMAIL - ACTIVATION EMAIL NOT SENT', {
                 'username': message.to,
                 'activate_key': activate_key,
                 'stack': err.stack
             });
         } else {
-            console.log('Message sent!');
+            config.logger.info('ACTIVATION EMAIL - SUCCESSFULLY SENT', {
+                'username': message.to,
+                'activate_key': activate_key
+            });
         }
     });
 };
@@ -92,6 +97,8 @@ var sendActivationLink = function(domain, username, activate_key, err) {
  */
 
 var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
+    var reset_link = domain + config.URL.RESET + '/' + reset_key;
+    reset_link = (domain.lastIndexOf('http://') !== 0) ? 'http://' + reset_link : reset_link;
     var shame = (user_cookie === undefined) ? '' : ' by user ' + user_cookie;
     var message = {
         from: config.MAIL_SENDER,
@@ -114,7 +121,7 @@ var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
     };
     transport.sendMail(message, function(err, response) {
         if (err) {
-            logger.log('error', 'CRITICAL ERROR! PASSWORD RESET EMAIL NOT SENT', {
+            config.logger.error('RESET EMAIL - PASSWORD RESET EMAIL NOT SENT', {
                 'username': message.to,
                 'reset_key': reset_key,
                 'ip': ip,
@@ -122,7 +129,10 @@ var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
                 'stack': err.stack
             });
         } else {
-            console.log('Message sent!');
+            config.logger.info('RESET EMAIL - SUCCESSFULLY SENT', {
+                'username': message.to,
+                'reset_key': reset_key
+            });
         }
     });
 };
