@@ -1,14 +1,18 @@
 {
     "name": "TheQuiz",
     "version": "1.0.0",
+    "author": "GP <exchequer598@gmail.com>",
+    "description": "A kickass Quiz webapp",
     "private": true,
     "scripts": {
         "start": "node app.js"
     },
     "dependencies": {
-        "date": "*",
-        "date-format-lite": "*",
-        "express": "3.5.1",
+        "express": "~4.0.0",
+        "body-parser": "~1.0.0",
+        "cookie-parser": "~1.0.0",
+        "express-session": "~1.0.0",
+        "morgan": "~1.0.0",
         "swig": "*",
         "mongoose": "*",
         "connect-mongo": "*",
@@ -16,6 +20,8 @@
         "crypto": "0.0.3",
         "cryptr": "0.0.1",
         "nodemailer": "*",
-        "winston": "*"
+        "winston": "*",
+        "date": "*",
+        "date-format-lite": "*",
     }
 }

@@ -11,11 +11,17 @@
 
 var express = require('express'),
     http = require('http'),
+    bodyparser = require('body-parser'),
+    cookieparser = require('cookie-parser'),
+    session = require('express-session'),
+    morgan = require('morgan'),
     path = require('path'),
     date = require('date'),
     swig = require('swig'),
     mongoose = require('mongoose'),
-    mongostore = require('connect-mongo')(express),
+    mongostore = require('connect-mongo')({
+        session: session
+    }),
     dateformat = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
@@ -31,37 +37,30 @@ var app = express();
  * Middlewares.
  */
 
-app.configure(function() {
-    app.use(express.logger('dev'));
-    app.use(express.json());
-    app.use(express.urlencoded());
-    app.use(express.cookieParser(config.APP_TITLE));
-    app.use(express.session({
-        secret: config.MASTER_SALT,
-        store: new mongostore({
-            db: config.DB_NAME,
-            cookie: {
-                maxAge: 86400
-            }, //1-day cookie.
-            host: config.DB_HOST,
-            port: config.DB_PORT,
-            collection: config.DB_AUTH_SESSIONS,
-            auto_reconnect: true
-        })
-    }));
-    app.use(express.session({
-        secret: config.MASTER_SALT
-    }));
-    //app.use(app.router);
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(path.join(__dirname, 'public/stylesheets')));
-    app.set('views', path.join(__dirname, 'views'));
-    app.set('view engine', 'swig');
-    swig.setDefaults({
-        autoescape: false
-    });
-    app.engine('.html', swig.renderFile);
+app.use(morgan('dev'));
+app.use(bodyparser());
+app.use(cookieparser(config.APP_TITLE));
+app.use(session({
+    secret: config.MASTER_SALT,
+    store: new mongostore({
+        db: config.DB_NAME,
+        cookie: {
+            maxAge: 86400
+        }, //1-day cookie.
+        host: config.DB_HOST,
+        port: config.DB_PORT,
+        collection: config.DB_AUTH_SESSIONS,
+        auto_reconnect: true
+    })
+}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/stylesheets')));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'swig');
+swig.setDefaults({
+    autoescape: false
 });
+app.engine('.html', swig.renderFile);
 
 // `last_user` cookie test/set middleware.
 // Saves logged in username to cookie. This is used during reset password.
@@ -98,6 +97,7 @@ app.use(function(req, res, next) {
     }
     res.locals.app_title = config.APP_TITLE;
     res.locals.URL = config.URL;
+    res.locals.username = (req.session.user) ? req.session.user.username : '';
     res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
     next();
 });
@@ -661,9 +661,7 @@ app.get(config.URL.LOGIN, function(req, res) {
 
 app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
     var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
-    res.render(template, {
-        'username': req.session.user.username
-    });
+    res.render(template);
 });
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
@@ -690,6 +688,6 @@ app.use(function(req, res, next) {
  * Run the app!
  */
 
-http.createServer(app).listen(config.APP_PORT, function() {
+app.listen(config.APP_PORT, function() {
     console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
 });
