@@ -135,6 +135,18 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
     });
 }
 
+function saveQuestion(question_title, choices, answer, image, question_id, fn) {
+    var question = new models.Question({
+        date: new Date(),
+        title: question_title,
+        choices: choices,
+        answer: answer,
+        image: image
+    }).save(function(err, saved_question) {
+        console.log(saved_question);
+    });
+}
+
 /**
  * Returns a user's final results as a JSON object.
  *
@@ -203,5 +215,6 @@ module.exports = {
     findNextQuestion: findNextQuestion,
     timeCheck: timeCheck,
     saveAnswer: saveAnswer,
-    getResults: getResults
+    getResults: getResults,
+    saveQuestion: saveQuestion
 }

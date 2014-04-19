@@ -36,10 +36,12 @@ config.URL = {
     LOGOUT: '/logout',
     TIMECLOSED: '/timeclosed',
     QUIZ_MAIN: '/quiz',
+    QUIZ_ADMIN: '/quiz/admin',
     QUIZ_START: '/quiz/start',
     QUIZ_NOQUIZ: '/quiz/noquiz',
     QUIZ_STANDINGS: '/quiz/standings',
-    QUIZ_STAT_AJAX: '/quiz/get'
+    QUIZ_STAT_AJAX: '/quiz/get',
+    QUIZ_ADMIN_SAVE_AJAX: '/quiz/admin/save'
 };
 
 //Basic template configuration.

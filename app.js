@@ -102,6 +102,7 @@ app.use(function(req, res, next) {
     res.locals.URL = config.URL;
     res.locals.username = (req.session.user) ? req.session.user.username : '';
     res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
+    res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
     next();
 });
 
@@ -740,6 +741,15 @@ app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
     }
 });
 
+app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, res) {
+    if (req.session.is_admin) {
+        console.log(req.body);
+        //quiz.saveQuestion(req.body)
+    } else {
+        res.json({'response':'lol nice try'});
+    }
+});
+
 //General URLs
 
 app.get(config.URL.LOGOUT, function(req, res) {
@@ -777,14 +787,20 @@ app.get(config.URL.LOGIN, function(req, res) {
 });
 
 app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
-    var template = (req.session.is_admin) ? config.TEMPL_QUIZ_ADMIN : config.TEMPL_QUIZ_MAIN;
     config.logger.info('QUIZ - WELCOME - PAGE GET', {
         username: req.session.user.username,
-        is_admin: req.session.is_admin,
-        template_shown: template
+        is_admin: req.session.is_admin
     });
-    res.render(template);
+    if (req.session.is_admin) {
+        res.redirect(config.URL.QUIZ_ADMIN);
+    } else {
+        res.render(config.TEMPL_QUIZ_MAIN);
+    }
 });
+
+app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+    res.render(config.TEMPL_QUIZ_ADMIN);
+})
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
     config.logger.info('QUIZ STANDINGS - PAGE GET');
@@ -813,4 +829,4 @@ app.use(function(req, res, next) {
 
 app.listen(config.APP_PORT, function() {
     console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
-});
+}); 
