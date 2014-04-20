@@ -40,6 +40,7 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher">
     <link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css">
     <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/dropzone.min.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css">
 <style type="text/css"></style>
 </head>
@@ -244,6 +245,9 @@
                                                 </div>
                                             </div>
                                         </form>
+                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="//file-arrow-circle-o-up">
+                                            <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                                        </form>
                                     </div>
                                 </div>
                                 <!-- /BOX COLLAPSED-->
@@ -358,6 +362,7 @@
     <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+    <script type="text/javascript" src="/javascripts/dropzone.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
@@ -460,6 +465,20 @@
                 var e = $(this);
                 e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
             });
+
+            /*function dropzone(){
+                try {
+                $(".dropzone").dropzone({
+                    paramName: "file",
+                    maxFilesize: .5,
+                    addRemoveLinks: !0,
+                    dictResponseError: "Error while uploading file!",
+                    previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message"><span data-dz-errormessage></span></div>\n</div>'
+                })
+            } catch (e) {
+                alert("Dropzone.js does not support older browsers!")
+            }
+            }*/
         });
     </script>
     <!-- /JAVASCRIPTS -->
