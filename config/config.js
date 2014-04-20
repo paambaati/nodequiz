@@ -82,7 +82,7 @@ config.MAIL_USE_TLS = true;
 config.MAIL_USERNAME = 'postmaster@inversekarma.in';
 config.MAIL_PASSWORD = '1t0p-nn-yw17';
 config.MAIL_SENDER = 'Quiz Master <quiz@global-analytics.com>';
-config.MAIL_USER_DOMAIN = '@HAHAHAHAHHAHAHAHAHHAHAHAHHAHAHAHHAHAHHAglobal-analytics.com';
+config.MAIL_USER_DOMAIN = '@global-analytics.com';
 config.MAIL_TEMPLATE = path.join(config.APP_BASE_PATH, './views/mailer.html');
 config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
