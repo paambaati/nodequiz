@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Author: GP.
- * Version: 1.1
- * Release Date: 10-Apr-2014
+ * Version: 1.2
+ * Release Date: 20-Apr-2014
  */
 
 /**
@@ -105,7 +105,7 @@ function timeCheck(time_window) {
 }
 
 /**
- * Upserts answer to Quiz History.
+ * Upserts answer to Quiz History collection.
  * Records user ID, question ID, answer selected and the response time.
  * Returns the upserted recorded.
  *
@@ -135,16 +135,29 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
     });
 }
 
-function saveQuestion(question_title, choices, answer, image, question_id, fn) {
-    var question = new models.Question({
-        date: new Date(),
-        title: question_title,
-        choices: choices,
-        answer: answer,
-        image: image
-    }).save(function(err, saved_question) {
-        console.log(saved_question);
-    });
+/**
+ * Inserts or updates a question into Questions collection.
+ * Returns the _id of the saved entry.
+ *
+ * @param {String} Question ID (optional).
+ * @param {Object} Full JSON of question to be saved, sanitized.
+ * @api public
+ */
+
+function saveQuestion(question_id, question_json, fn) {
+    if (!question_id) {
+        new models.Question(question_json).save(function(err, inserted_record) {
+            if (err) return fn(err.message, null);
+            return fn(null, inserted_record._id);
+        });
+    } else {
+        models.Question.findByIdAndUpdate(question_id, question_json, {
+            upsert: true
+        }, function(err, upserted_record) {
+            if (err) return fn(err.message, null);
+            return fn(null, upserted_record._id);
+        });
+    }
 }
 
 /**
