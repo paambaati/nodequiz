@@ -12,6 +12,7 @@
 var express = require('express'),
     http = require('http'),
     bodyparser = require('body-parser'),
+    methodoverride = require('method-override'),
     cookieparser = require('cookie-parser'),
     session = require('express-session'),
     morgan = require('morgan'),
@@ -745,7 +746,50 @@ app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
     }
 });
 
+app.del(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, res) {
+    config.logger.info('QUIZ ADMIN - FORM DELETE - DELETE QUESTION', {
+        username: req.session.user.username,
+        request_params: req.body
+    });
+
+    if (req.session.is_admin) {
+        quiz.deleteQuestion(req.body.question_id, function(err, deleted_id) {
+            if (err) {
+                config.logger.error('QUIZ ADMIN - FORM DELETE - DELETION FAILED', {
+                    username: req.session.user.username,
+                    question_id: req.body.question_id,
+                    error: err
+                });
+                res.json({
+                    'error': true,
+                    'response': err.message
+                })
+            } else {
+                config.logger.info('QUIZ ADMIN - FORM DELETE - QUESTION DOC DELETED FROM DB', {
+                    username: req.session.user.username,
+                    deleted_question_id: deleted_id
+                });
+                res.json({
+                    'error': false,
+                    'deleted_id': deleted_id
+                });
+            }
+        })
+    } else {
+        res.status(403);
+        res.json({
+            'error': true,
+            'response': 'lol nice try'
+        });
+    }
+});
+
 app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, res) {
+    config.logger.info('QUIZ ADMIN - FORM POST - SAVE QUESTION', {
+        username: req.session.user.username,
+        request_params: req.body
+    });
+
     var question_json = {
         'date': new Date(),
         'choices': {}
@@ -764,35 +808,37 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, 
                 question_json[item] = req_body[item];
             }
         }
-        config.logger.info('QUIZ ADMIN - FORM POST', {
-            username: req.session.user.username,
-            question_json: question_json
-        });
 
         question_id = req_body['question_id'] ? req_body['question_id'] : null;
         delete question_json['question_id'];
 
         quiz.saveQuestion(question_id, question_json, function(err, question_id) {
             if (err) {
+                config.logger.error('QUIZ ADMIN - FORM POST - SAVE FAILED!', {
+                    username: req.session.user.username,
+                    question_json: question_json,
+                    question_id: question_id,
+                    error: err
+                });
                 res.status(500);
                 res.json({
                     'error': err,
                     'response': 'Question not saved!'
                 });
             } else {
-                config.logger.info('QUIZ ADMIN - QUESTION DOC SAVED IN DB', {
+                config.logger.info('QUIZ ADMIN - FORM POST - QUESTION DOC SAVED IN DB', {
                     username: req.session.user.username,
                     question_json: question_json,
                     question_id: question_id
                 });
                 res.json({
                     'error': false,
-                    question_id: question_id
+                    'question_id': question_id
                 });
             }
         });
     } else {
-        res.status(500);
+        res.status(403);
         res.json({
             'error': true,
             'response': 'lol nice try'

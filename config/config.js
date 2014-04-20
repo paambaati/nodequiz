@@ -97,6 +97,7 @@ config.ERR_ACTIVATION_INVALID_KEY = 'Username mapped to activation key is invali
 config.ERR_RESET_INVALID_DETAILS = 'One of the values entered is incorrect!';
 config.ERR_RESET_INVALID_USERNAME = 'Username not valid. Looks like you forgot your username as well!';
 config.ERR_QUIZ_NOQUIZTODAY = 'No quiz found in database';
+config.ERR_ADMIN_NOQUESTIONFOUND = 'This question no longer exists in the database.';
 
 //Crypto configuration.
 config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';

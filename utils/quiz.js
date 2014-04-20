@@ -137,7 +137,7 @@ function saveAnswer(user_id, question_id, answer_choice, response_time, fn) {
 
 /**
  * Inserts or updates a question into Questions collection.
- * Returns the _id of the saved entry.
+ * Returns the _id of the saved document.
  *
  * @param {String} Question ID (optional).
  * @param {Object} Full JSON of question to be saved, sanitized.
@@ -158,6 +158,24 @@ function saveQuestion(question_id, question_json, fn) {
             return fn(null, upserted_record._id);
         });
     }
+}
+
+/**
+ * Deletes a question from Questions collection.
+ * Returns the _id of the deleted document.
+ *
+ * @param {String} Question ID.
+ * @api public
+ */
+
+function deleteQuestion(question_id, fn) {
+    models.Question.findOne({
+        _id: question_id
+    }, function(err, matching_doc) {
+        if (err) return fn(config.ERR_ADMIN_NOQUESTIONFOUND, null);
+        matching_doc.remove();
+        return fn(null, matching_doc._id)
+    });
 }
 
 /**
@@ -229,5 +247,6 @@ module.exports = {
     timeCheck: timeCheck,
     saveAnswer: saveAnswer,
     getResults: getResults,
-    saveQuestion: saveQuestion
+    saveQuestion: saveQuestion,
+    deleteQuestion: deleteQuestion
 }

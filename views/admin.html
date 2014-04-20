@@ -238,7 +238,7 @@
                                             <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
-                                                    <button type="button" class="btn btn-danger btn-delete" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -262,6 +262,7 @@
     <script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
@@ -325,26 +326,39 @@
                         if(response['error'] == false) {
                             form.parents('.box-question').find('span.question-status').addClass('label-success').removeClass('label-warning').html('Saved');
                             form.find('input#question_id').val(response['question_id']);
+                            form.find('button.btn-delete').removeClass('hidden');
                         }
                     });
                 }
             });
 
             $('.btn-add').on('click', function () {
-                var question_block = $('.box-question').first().clone();
-                question_block.find('input').val('').removeAttr('checked');
+                var question_block = $('.box-question').first().clone(true);
+                question_block.find('input:not([type=radio])').val('');
+                question_block.find('input[type=radio]').removeAttr('checked');
                 question_block.find('span.question-status').empty()
                 question_block.find('span.question-number').html($('.box-question').length + 1);
                 question_block.insertAfter($('.box-question').last());
             });            
 
             $('.btn-delete').on('click', function () {
-                var e = $(this);
-                e.button('loading'), setTimeout(function () {
-                    e.button('reset');
-                    var a = e.parents('.box');
-                    a.next().hasClass('box') || a.prev().hasClass('box') ? e.parents('.box').remove() : e.parents('.box').parent().remove();
-                }, 1500);
+                var btn = $(this);
+                if ($('div.box-question').length <= 1) {
+                    bootbox.alert('You cannot delete the only remaining question bro!');
+                } else {
+                    var form = $(this).closest('form').first();
+                    $.ajax({
+                        type: 'DELETE',
+                        url: form.attr('action'),
+                        data: { question_id: form.find('input#question_id').val() },
+                        success: function() {
+                            btn.parents('div.box-question').remove();
+                        },
+                        error: function(jqHxr, status, error) {
+                            console.error(status, error);
+                        }
+                    });
+                }
             });
 
             $('form :input').change(function(){
