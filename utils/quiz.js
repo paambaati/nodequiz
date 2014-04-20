@@ -179,6 +179,29 @@ function deleteQuestion(question_id, fn) {
 }
 
 /**
+ * Gets all questions for the day from the Questions collection.
+ *
+ * @api public
+ */
+
+function getAllQuestions(fn) {
+    var start_day = new Date();
+    start_day.setHours(0, 0, 0, 0);
+    var query = models.Question.find({
+        date: {
+            $gte: start_day
+        }
+    });
+    query.sort({
+        date: 1
+    });
+    query.exec(function(err, questions) {
+        if (err) throw err;
+        return fn(null, questions);
+    });
+}
+
+/**
  * Returns a user's final results as a JSON object.
  *
  * @param {String} user ID.
@@ -248,5 +271,6 @@ module.exports = {
     saveAnswer: saveAnswer,
     getResults: getResults,
     saveQuestion: saveQuestion,
-    deleteQuestion: deleteQuestion
+    deleteQuestion: deleteQuestion,
+    getAllQuestions: getAllQuestions
 }

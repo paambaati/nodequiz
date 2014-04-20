@@ -895,7 +895,16 @@ app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'),
 });
 
 app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
-    res.render(config.TEMPL_QUIZ_ADMIN);
+    config.logger.info('QUIZ ADMIN - PAGE GET', {
+        username: req.session.user.username,
+        is_admin: req.session.is_admin
+    });
+    quiz.getAllQuestions(function(err, questions) {
+        config.logger.info('QUIZ ADMIN - PAGE GET - RENDERING %s QUESTIONS.', questions.length);
+        res.render(config.TEMPL_QUIZ_ADMIN, {
+            questions: questions
+        });
+    });
 })
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
