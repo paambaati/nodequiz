@@ -41,7 +41,8 @@ config.URL = {
     QUIZ_NOQUIZ: '/quiz/noquiz',
     QUIZ_STANDINGS: '/quiz/standings',
     QUIZ_STAT_AJAX: '/quiz/get',
-    QUIZ_ADMIN_SAVE_AJAX: '/quiz/admin/save'
+    QUIZ_ADMIN_SAVE_AJAX: '/quiz/admin/save',
+    QUIZ_ADMIN_SAVE_UPLOAD: '/quiz/admin/upload'
 };
 
 //Basic template configuration.

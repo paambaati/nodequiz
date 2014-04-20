@@ -245,8 +245,8 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="//file-arrow-circle-o-up">
-                                            <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
                                         </form>
                                     </div>
                                 </div>
@@ -339,6 +339,9 @@
                                                     <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
                                                 </div>
                                             </div>
+                                        </form>
+                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
                                         </form>
                                     </div>
                                 </div>
@@ -466,19 +469,20 @@
                 e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
             });
 
-            /*function dropzone(){
-                try {
-                $(".dropzone").dropzone({
-                    paramName: "file",
+            try {
+                Dropzone.autoDiscover = false;
+                $('.dropzone').dropzone({
+                    method: 'post', //'put',
                     maxFilesize: .5,
+                    maxFiles: 1,
+                    acceptedFiles: 'image/*',
                     addRemoveLinks: !0,
-                    dictResponseError: "Error while uploading file!",
+                    dictResponseError: 'Error while uploading file!',
                     previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message"><span data-dz-errormessage></span></div>\n</div>'
-                })
+                });
             } catch (e) {
-                alert("Dropzone.js does not support older browsers!")
+                bootbox.alert('Dropzone.js does not support older browsers!');
             }
-            }*/
         });
     </script>
     <!-- /JAVASCRIPTS -->

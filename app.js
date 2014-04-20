@@ -23,6 +23,7 @@ var express = require('express'),
     mongostore = require('connect-mongo')({
         session: session
     }),
+    formidable = require('formidable'),
     dateformat = require('date-format-lite'),
     hash = require('./utils/pass').hash,
     config = require('./config/config'),
@@ -905,7 +906,23 @@ app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside')
             questions: questions
         });
     });
-})
+});
+
+app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+    //TO-DO: write logger.
+    if (req.session.is_admin) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            console.log(files);
+        });
+    } else {
+        res.status(403);
+        res.json({
+            'error': true,
+            'response': 'lol nice try'
+        });
+    }
+});
 
 app.get(config.URL.QUIZ_STANDINGS, requiredAuthentication, function(req, res) {
     config.logger.info('QUIZ STANDINGS - PAGE GET');
