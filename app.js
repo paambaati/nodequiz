@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.5
- * Release Date: 17-Apr-2014
+ * Version: 1.5.1
+ * Release Date: 20-Apr-2014
  */
 
 /**
@@ -120,6 +120,7 @@ app.use(function(req, res, next) {
  */
 function errorHandler(err, req, res, next) {
     res.status(500);
+    var is_ajax_request = req.xhr;
     var error_data = {
         error: err,
         stacktrace: err.stack
@@ -127,7 +128,11 @@ function errorHandler(err, req, res, next) {
     if (req.session.error) {
         error_data.message = req.session.error;
     }
-    res.render(config.TEMPL_500, error_data);
+    if (!is_ajax_request) {
+        res.render(config.TEMPL_500, error_data);
+    } else {
+        res.json(error_data);
+    }
 }
 
 /**
@@ -734,7 +739,6 @@ app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
     } else if (req.query.stat == 'myhistory') {
         var start_day = new Date();
         start_day.setDate(start_day.getDate() - 30);
-        console.log(start_day);
         stats.getPersonalScoreHistory(req.session.user._id, start_day, function(err, results) {
             res.json(results);
         });
@@ -742,11 +746,57 @@ app.get(config.URL.QUIZ_STAT_AJAX, requiredAuthentication, function(req, res) {
 });
 
 app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, res) {
+    var question_json = {
+        'date': new Date(),
+        'choices': {}
+    },
+        choice_counter = 1,
+        req_body = req.body,
+        question_id = null;
     if (req.session.is_admin) {
-        console.log(req.body);
-        //quiz.saveQuestion(req.body)
+        for (var item in req_body) {
+            if (item.lastIndexOf('choice') === 0 && req_body[item].trim() !== '') {
+                question_json['choices'][choice_counter] = {
+                    'choice_text': req_body[item]
+                };
+                choice_counter++;
+            } else {
+                question_json[item] = req_body[item];
+            }
+        }
+        config.logger.info('QUIZ ADMIN - FORM POST', {
+            username: req.session.user.username,
+            question_json: question_json
+        });
+
+        question_id = req_body['question_id'] ? req_body['question_id'] : null;
+        delete question_json['question_id'];
+
+        quiz.saveQuestion(question_id, question_json, function(err, question_id) {
+            if (err) {
+                res.status(500);
+                res.json({
+                    'error': err,
+                    'response': 'Question not saved!'
+                });
+            } else {
+                config.logger.info('QUIZ ADMIN - QUESTION DOC SAVED IN DB', {
+                    username: req.session.user.username,
+                    question_json: question_json,
+                    question_id: question_id
+                });
+                res.json({
+                    'error': false,
+                    question_id: question_id
+                });
+            }
+        });
     } else {
-        res.json({'response':'lol nice try'});
+        res.status(500);
+        res.json({
+            'error': true,
+            'response': 'lol nice try'
+        });
     }
 });
 
@@ -829,4 +879,4 @@ app.use(function(req, res, next) {
 
 app.listen(config.APP_PORT, function() {
     console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
-}); 
+});
