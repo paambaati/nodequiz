@@ -170,11 +170,11 @@
                                     </div>
                                     <div style="display:none" class="box-body">
                                         <form role="form" class="form-horizontal" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
-                                            <input type="hidden" name="question_id" value="">
+                                            <input type="hidden" name="question_id" id="question_id">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
-                                                        <textarea rows="3" class="form-control" name="question_title" maxlength="500" required></textarea>
+                                                        <textarea rows="3" class="form-control" name="title" maxlength="500" required></textarea>
                                                     </div>
                                             </div>
                                             <div class="form-group">
@@ -184,7 +184,7 @@
                                                         <span class="input-group-addon">
                                                             <input type="radio" name="answer" value="1" required>
                                                         </span>
-                                                        <input type="text" class="form-control" name="choice1" maxlength="100" required>
+                                                        <input type="text" class="form-control choices" name="choice1" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -196,7 +196,7 @@
                                                         <span class="input-group-addon">
                                                             <input type="radio" name="answer" value="2">
                                                         </span>
-                                                        <input type="text" class="form-control" name="choice2" maxlength="100" required>
+                                                        <input type="text" class="form-control choices" name="choice2" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -208,7 +208,7 @@
                                                         <span class="input-group-addon">
                                                             <input type="radio" name="answer" value="3">
                                                         </span>
-                                                        <input type="text" class="form-control" name="choice3" maxlength="100" required>
+                                                        <input type="text" class="form-control choices" name="choice3" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -220,7 +220,7 @@
                                                         <span class="input-group-addon">
                                                             <input type="radio" name="answer" value="4">
                                                         </span>
-                                                        <input type="text" class="form-control" name="choice4" maxlength="100">
+                                                        <input type="text" class="form-control choices" name="choice4" maxlength="100">
                                                     </div>
                                                 </div>
                                             </div>
@@ -231,7 +231,7 @@
                                                         <span class="input-group-addon">
                                                             <input type="radio" name="answer" value="5">
                                                         </span>
-                                                        <input type="text" class="form-control" name="choice5" maxlength="100">
+                                                        <input type="text" class="form-control choices" name="choice5" maxlength="100">
                                                     </div>
                                                 </div>
                                             </div>
@@ -267,73 +267,83 @@
     <script type="text/javascript" src="/javascripts/script.js"></script>
     <script type="text/javascript">
 
-        var hexDigits = new Array
-        ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
-
-        //Function to convert hex format to a rgb color
-        function rgb2hex(rgb) {
-         rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-         return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
-        }
-
-        function hex(x) {
-          return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
-        }
-
         jQuery(document).ready(function() {     
             App.setPage('widgets_box');  //Set current page
             App.init(); //Initialise plugins and elements
 
-            $(document).ready(function () {
+            $.validator.addMethod('notEqualToGroup', function(value, element, options) {
+                var elems = $(element).parents('form').find(options[0]);
+                var valueToCompare = value;
+                var matchesFound = 0;
+                $.each(elems, function(){
+                    thisVal = $(this).val();
+                    if(thisVal == valueToCompare){
+                        matchesFound++;
+                    }
+                });
+                if(this.optional(element) || matchesFound <= 1) {
+                    //elems.removeClass('error');
+                    return true;
+                } else {
+                    //elems.addClass('error');
+                }
+            }, $.validator.format('Please enter a unique value.'));
 
-                //Validations
-                $('form[name=form-question]').validate({
-                    rules: {
-                        'question_title': { required: true },
-                        'answer': { required: true },
-                        'choice1': { required: true },
-                        'choice2': { required: true },
-                        'choice3': { required: true }
-                    },
-                    messages: {
-                        'answer': 'Please mark the correct answer by clicking on one of the round buttons.'
-                    },
-                    errorElement: 'span',
-                    errorClass: 'help-block',
-                    errorPlacement: function(error, element) {
-                        if(element.is(':radio')){
-                            error.insertBefore(element.parents('form').find('button.btn-save'));
+
+            //Validations
+            $('form[name=form-question]').validate({
+                rules: {
+                    'title': { required: true },
+                    'answer': { required: true },
+                    'choice1': { required: true, notEqualToGroup: ['.choices'] },
+                    'choice2': { required: true, notEqualToGroup: ['.choices'] },
+                    'choice3': { required: true, notEqualToGroup: ['.choices'] },
+                    'choice4': { notEqualToGroup: ['.choices'] },
+                    'choice5': { notEqualToGroup: ['.choices'] }
+                },
+                messages: {
+                    'answer': 'Please mark the correct answer by clicking on one of the round buttons.'
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function(error, element) {
+                    if(element.is(':radio')){
+                        error.insertBefore(element.parents('form').find('button.btn-save'));
+                        element.parents('div.form-group').addClass('has-error');
+                    }
+                },
+                highlight: function(element, errorClass) {
+                    $(element).parents('div.form-group').addClass('has-error');
+                },
+                unhighlight: function(element, errorClass) {
+                    $(element).parents('div.form-group').removeClass('has-error');
+                    $(element).next('span.help-block').remove();
+                }
+            });
+
+            $('.btn-save').on('click', function () {
+                var form = $(this).closest('form');
+                if (form.valid()) {
+                    $.post(form.attr('action'), form.serialize(), function(response) {
+                        if(response['error'] == false) {
+                            form.find('input#question_id').val(response['question_id']);
                         }
-                    },
-                    highlight: function(element, errorClass) {
-                        $(element).parents('div.form-group').addClass('has-error');
-                    },
-                    unhighlight: function(element, errorClass) {
-                        $(element).parents('div.form-group').removeClass('has-error');
-                        $(element).next('span.help-block').remove();
-                    }
-                });
+                    });
+                }
+            });
 
-                $('.btn-save').on('click', function () {
-                    if ($(this).closest('form').valid()) {
-                        $.post($(this).closest('form').attr('action'), $(this).closest('form').serialize(), function(response) {
-                            console.log(response);
-                        });
-                    }
-                });
+            $('.btn-delete').on('click', function () {
+                var e = $(this);
+                e.button('loading'), setTimeout(function () {
+                    e.button('reset');
+                    var a = e.parents('.box');
+                    a.next().hasClass('box') || a.prev().hasClass('box') ? e.parents('.box').remove() : e.parents('.box').parent().remove();
+                }, 1500);
+            });
 
-                $('.btn-delete').on('click', function () {
-                    var e = $(this);
-                    e.button('loading'), setTimeout(function () {
-                        e.button('reset');
-                        var a = e.parents('.box');
-                        a.next().hasClass('box') || a.prev().hasClass('box') ? e.parents('.box').remove() : e.parents('.box').parent().remove();
-                    }, 1500);
-                });
-                $('form :input').change(function(){
-                    var e = $(this);
-                    e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
-                });
+            $('form :input').change(function(){
+                var e = $(this);
+                e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
             });
         });
     </script>
