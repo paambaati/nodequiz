@@ -11,7 +11,7 @@
 
 var express = require('express'),
     http = require('http'),
-    bodyparser = require('body-parser'),
+    fs = require('fs'),
     methodoverride = require('method-override'),
     cookieparser = require('cookie-parser'),
     session = require('express-session'),
@@ -40,7 +40,6 @@ var app = express();
  */
 
 app.use(morgan('dev'));
-app.use(bodyparser());
 app.use(cookieparser(config.APP_TITLE));
 app.use(session({
     secret: config.MASTER_SALT,
@@ -909,11 +908,41 @@ app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside')
 });
 
 app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
-    //TO-DO: write logger.
+    config.logger.info('QUIZ ADMIN - UPLOAD POST', {
+        username: req.session.user.username,
+        is_admin: req.session.is_admin
+    });
     if (req.session.is_admin) {
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
-            console.log(files);
+            var old_path = files.file.path,
+                file_ext = files.file.name.split('.').pop(),
+                index = files.file.path.lastIndexOf('/') + 1,
+                file_name = files.file.path.substr(index),
+                new_path = path.join(__dirname, '/public/', config.UPLOAD_DIR, file_name + '.' + file_ext);
+
+            config.logger.info('QUIZ ADMIN - UPLOAD POST - PARSED PARAMETERS', {
+                old_path: old_path,
+                new_path: new_path
+            });
+
+            fs.readFile(old_path, function(err, data) {
+                fs.writeFile(new_path, data, function(err) {
+                    fs.unlink(old_path, function(err) {
+                        if (err) {
+                            res.status(500);
+                            res.json({
+                                'error': err.message
+                            });
+                        } else {
+                            res.json({
+                                'error': null,
+                                'file_path': new_path
+                            });
+                        }
+                    });
+                });
+            });
         });
     } else {
         res.status(403);
