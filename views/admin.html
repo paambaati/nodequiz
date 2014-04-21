@@ -491,13 +491,7 @@
                              $.ajax({
                                 type: 'DELETE',
                                 url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
-                                data: { file_name: file['serverPath'] },
-                                success: function() {
-                                    console.log('success');
-                                },
-                                error: function(jqHxr, status, error) {
-                                    console.error(status, error);
-                                }
+                                data: { file_name: file['serverPath'] }
                              });
                             }
                         });
