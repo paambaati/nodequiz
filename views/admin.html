@@ -164,7 +164,7 @@
                                 <div class="box border purple">
                                     <div class="box-title">
                                         <h4><i class="fa fa-bars"></i>Question #<span class="question-number">{{ loop.index }}</span>&nbsp;</h4>
-                                        <span class="label label-right label-success question-status"></span>
+                                        <span class="label label-right label-success question-status">Saved</span>
                                         <div class="tools">
                                             <a class="expand" href="javascript:;">
                                                 <i class="fa fa-chevron-down"></i>
@@ -259,7 +259,7 @@
                                 <div class="box border purple">
                                     <div class="box-title">
                                         <h4><i class="fa fa-bars"></i>Question #<span class="question-number">1</span>&nbsp;</h4>
-                                        <span class="label label-right label-success question-status"></span>
+                                        <span class="label label-right label-warning question-status">Not Saved</span>
                                         <div class="tools">
                                             <a class="expand" href="javascript:;">
                                                 <i class="fa fa-chevron-down"></i>
@@ -422,7 +422,7 @@
                 }
             });
 
-            $('.btn-save').on('click', function () {
+            $('button.btn-save').on('click', function () {
                 var form = $(this).closest('form');
                 if (form.valid()) {
                     $.post(form.attr('action'), form.serialize(), function(response) {
@@ -435,16 +435,17 @@
                 }
             });
 
-            $('.btn-add').on('click', function () {
+            $('button.btn-add').on('click', function () {
                 var question_block = $('.box-question').first().clone(true);
-                question_block.find('input:not([type=radio])').val('');
+                question_block.find('textarea, input:not([type=radio])').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
                 question_block.find('span.question-status').empty()
                 question_block.find('span.question-number').html($('.box-question').length + 1);
+                question_block.find('form.dropzone').dropzone.resetAllFields();
                 question_block.insertAfter($('.box-question').last());
             });            
 
-            $('.btn-delete').on('click', function () {
+            $('button.btn-delete').on('click', function () {
                 var btn = $(this);
                 if ($('div.box-question').length <= 1) {
                     bootbox.alert('You cannot delete the only remaining question bro!');
@@ -472,13 +473,35 @@
             try {
                 Dropzone.autoDiscover = false;
                 $('.dropzone').dropzone({
-                    method: 'post', //'put',
-                    maxFilesize: .5,
+                    method: 'post',
+                    maxFilesize: .6,
                     maxFiles: 1,
                     acceptedFiles: 'image/*',
                     addRemoveLinks: !0,
                     dictResponseError: 'Error while uploading file!',
-                    previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message"><span data-dz-errormessage></span></div>\n</div>'
+                    previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail /></div><div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div><div class="dz-success-mark"><span></span></div><div class="dz-error-mark"><span></span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
+                    init: function() {
+                        this.on('success', function(file, response) {
+                            if (response['error'] === null) {
+                                file['serverPath'] = response['file_path'];
+                            }
+                        });
+                        this.on('removedfile', function(file, response) {
+                            if (file['serverPath']) {
+                             $.ajax({
+                                type: 'DELETE',
+                                url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
+                                data: { file_name: file['serverPath'] },
+                                success: function() {
+                                    console.log('success');
+                                },
+                                error: function(jqHxr, status, error) {
+                                    console.error(status, error);
+                                }
+                             });
+                            }
+                        });
+                    }
                 });
             } catch (e) {
                 bootbox.alert('Dropzone.js does not support older browsers!');
