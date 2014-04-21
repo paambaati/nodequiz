@@ -11,11 +11,12 @@
 
 var express = require('express'),
     http = require('http'),
-    fs = require('fs'),
+    bodyparser = require('body-parser'),
     methodoverride = require('method-override'),
     cookieparser = require('cookie-parser'),
     session = require('express-session'),
     morgan = require('morgan'),
+    fs = require('fs'),
     path = require('path'),
     date = require('date'),
     swig = require('swig'),
@@ -40,6 +41,7 @@ var app = express();
  */
 
 app.use(morgan('dev'));
+app.use(bodyparser());
 app.use(cookieparser(config.APP_TITLE));
 app.use(session({
     secret: config.MASTER_SALT,
@@ -907,8 +909,19 @@ app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside')
     });
 });
 
+app.del(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+    fs.unlink(req.body.file_name, function(err) {
+        if (err) {
+            config.logger.warn('QUIZ ADMIN - IMAGE DELETE FAILED', {
+                request_body: req.body
+            });
+        }
+        res.send(null);
+    });
+});
+
 app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
-    config.logger.info('QUIZ ADMIN - UPLOAD POST', {
+    config.logger.info('QUIZ ADMIN - UPLOAD IMAGE POST', {
         username: req.session.user.username,
         is_admin: req.session.is_admin
     });
@@ -921,7 +934,7 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeChe
                 file_name = files.file.path.substr(index),
                 new_path = path.join(__dirname, '/public/', config.UPLOAD_DIR, file_name + '.' + file_ext);
 
-            config.logger.info('QUIZ ADMIN - UPLOAD POST - PARSED PARAMETERS', {
+            config.logger.info('QUIZ ADMIN - UPLOAD IMAGE POST - PARSED PARAMETERS', {
                 old_path: old_path,
                 new_path: new_path
             });
