@@ -427,6 +427,7 @@
             $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=basic', function(data) {
                 $.each(data, function(k, v) {
                     $('#' + k).prop('number', 0).animateNumber({ number: v });
+                    if(k == 'daily_attendees') { $('#' + k).html($('#' + k).html() + '%'); }
                 });
             });
 
