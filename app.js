@@ -807,7 +807,7 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, 
                 };
                 choice_counter++;
             } else {
-                question_json[item] = req_body[item];
+                question_json[item] = (req_body[item]) ? req_body[item] : null;
             }
         }
 
@@ -910,7 +910,8 @@ app.get(config.URL.QUIZ_ADMIN, requiredAuthentication, quiz.timeCheck('outside')
 });
 
 app.del(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
-    fs.unlink(req.body.file_name, function(err) {
+    var file_name = path.join(__dirname, '/public/', config.UPLOAD_DIR, req.body.file_name);
+    fs.unlink(file_name, function(err) {
         if (err) {
             config.logger.warn('QUIZ ADMIN - IMAGE DELETE FAILED', {
                 request_body: req.body
@@ -950,7 +951,7 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeChe
                         } else {
                             res.json({
                                 'error': null,
-                                'file_path': new_path
+                                'file_path': file_name + '.' + file_ext
                             });
                         }
                     });
