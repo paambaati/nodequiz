@@ -176,7 +176,7 @@
                                         </div>
                                     </div>
                                     <div style="display:none" class="box-body">
-                                        <form role="form" class="form-horizontal" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
+                                        <form role="form" class="form-horizontal form-question" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id" id="question_id" value="{{ question._id }}">
                                             <input type="hidden" name="image" id="image" value="{{ question.image }}">
                                             <div class="form-group">
@@ -275,7 +275,7 @@
                                         </div>
                                     </div>
                                     <div style="display:none" class="box-body">
-                                        <form role="form" class="form-horizontal" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
+                                        <form role="form" class="form-horizontal form-question" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id" id="question_id">
                                             <input type="hidden" name="image" id="image">
                                             <div class="form-group">
@@ -414,7 +414,7 @@
 
 
             //Validations
-            $('form[name=form-question]').validate({
+            $('form.form-question').validate({
                 rules: {
                     'title': { required: true },
                     'answer': { required: true },
@@ -462,8 +462,9 @@
                     index = parseInt(question_block.find('form.dropzone').attr('id').replace( /^\D+/g, '')) + 1;
                 question_block.find('textarea, input:not([type=radio])').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
-                question_block.find('span.question-status').empty()
+                question_block.find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
                 question_block.find('span.question-number').html($('.box-question').length + 1);
+                question_block.find('form.form-question').data('validator').resetForm();
                 question_block.find('form.dropzone').remove();
                 $('body form#dummy-dropzone').attr('id', 'my-awesome-dropzone-' + index).insertAfter(question_block.find('form'));
                 question_block.insertAfter($('.box-question').last());
