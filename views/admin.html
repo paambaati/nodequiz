@@ -250,7 +250,7 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                        <form id="my-awesome-dropzone-{{loop.index}}" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
                                             <div class="form-group">
                                                 <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
                                             </div>
@@ -349,7 +349,7 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                        <form id="my-awesome-dropzone-0" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
                                             <div class="form-group">
                                                 <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
                                             </div>
@@ -361,6 +361,16 @@
                             </div>
                         {% endif %}
                         </div>
+                        <!-- DUMMY DROPZONE -->
+                        <div class="hidden">
+                          <form id="dummy-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                            <div class="form-group">
+                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
+                            </div>
+                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
+                           </form>
+                        </div>
+                        <!-- /DUMMY DROPZONE -->
                         <div class="footer-tools">
                             <span class="go-top">
                                 <i class="fa fa-chevron-up"></i> Top
@@ -448,12 +458,14 @@
             });
 
             $('button.btn-add').on('click', function () {
-                var question_block = $('.box-question').first().clone(true);
+                var question_block = $('.box-question').first().clone(true),
+                    index = parseInt(question_block.find('form.dropzone').attr('id').replace( /^\D+/g, '')) + 1;
                 question_block.find('textarea, input:not([type=radio])').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
                 question_block.find('span.question-status').empty()
                 question_block.find('span.question-number').html($('.box-question').length + 1);
-                question_block.find('form.dropzone').dropzone.resetAllFields();
+                question_block.find('form.dropzone').remove();
+                $('body form#dummy-dropzone').attr('id', 'my-awesome-dropzone-' + index).insertAfter(question_block.find('form'));
                 question_block.insertAfter($('.box-question').last());
             });            
 
