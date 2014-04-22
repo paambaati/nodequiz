@@ -797,21 +797,26 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, 
         'choices': {}
     },
         choice_counter = 1,
+        form_name_counter = 0,
         req_body = req.body,
         question_id = null;
     if (req.session.is_admin) {
         for (var item in req_body) {
+            //All form elements will be submitted as element-name-n where n is the nth form on the admin page.
+            //We strip it from each element. Silly, I know.
+            var new_item = item.substring(0, item.lastIndexOf('-'));
+            form_name_counter = item.substring(item.lastIndexOf('-') + 1, item.length);
             if (item.lastIndexOf('choice') === 0 && req_body[item].trim() !== '') {
                 question_json['choices'][choice_counter] = {
                     'choice_text': req_body[item]
                 };
                 choice_counter++;
             } else {
-                question_json[item] = (req_body[item]) ? req_body[item] : null;
+                question_json[new_item] = (req_body[item]) ? req_body[item] : null;
             }
         }
 
-        question_id = req_body['question_id'] ? req_body['question_id'] : null;
+        question_id = req_body['question_id-' + form_name_counter] ? req_body['question_id-' + form_name_counter] : null;
         delete question_json['question_id'];
 
         quiz.saveQuestion(question_id, question_json, function(err, question_id) {

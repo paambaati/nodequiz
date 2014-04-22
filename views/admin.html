@@ -161,6 +161,117 @@
                         </div>
                         <div class="separator"></div>
                         <div class="row">
+                        <!-- DUMMY DROPZONE -->
+                        <div class="hidden" id="dummy-dropzone">
+                          <form class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                            <div class="form-group">
+                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
+                            </div>
+                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
+                           </form>
+                        </div>
+                        <!-- /DUMMY DROPZONE -->
+                        <!-- DUMMY QUESTION FORM -->
+                        <div class="hidden">
+                            <div class="col-md-6 box-container ui-sortable box-question" id="dummy-box">
+                            <!-- BOX COLLAPSED-->
+                                <div class="box border purple">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-bars"></i>Question #<span class="question-number"></span>&nbsp;</h4>
+                                        <span class="label label-right label-warning question-status">Not Saved</span>
+                                        <div class="tools">
+                                            <a class="expand" href="javascript:;">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div style="display:none" class="box-body">
+                                        <form role="form" class="form-horizontal form-question" name="form-question-0" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
+                                            <input type="hidden" name="question_id-0" id="question_id">
+                                            <input type="hidden" name="image-0" id="image">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Question</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea rows="3" class="form-control q-title" name="title-0" maxlength="500" required></textarea>
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 1</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="1" required>
+                                                        </span>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice1-0" maxlength="100" required>
+                                                        <span class="input-group-addon">*</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 2</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="2">
+                                                        </span>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice2-0" maxlength="100" required>
+                                                        <span class="input-group-addon">*</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 3</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="3">
+                                                        </span>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice3-0" maxlength="100" required>
+                                                        <span class="input-group-addon">*</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 4</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="4">
+                                                        </span>
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice4-0" maxlength="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Choice 5</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="5">
+                                                        </span>
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice5-0" maxlength="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-10">
+                                                    <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
+                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <form id="my-awesome-dropzone-0" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                            <div class="form-group">
+                                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
+                                            </div>
+                                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /BOX COLLAPSED-->
+                            </div>
+                        </div>
+                        <!-- /DUMMY QUESTION FORM -->
                         {% if questions.length >= 1 %}
                         {% for question in questions %}
                             <div class="col-md-6 box-container ui-sortable box-question">
@@ -176,13 +287,13 @@
                                         </div>
                                     </div>
                                     <div style="display:none" class="box-body">
-                                        <form role="form" class="form-horizontal form-question" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
-                                            <input type="hidden" name="question_id" id="question_id" value="{{ question._id }}">
-                                            <input type="hidden" name="image" id="image" value="{{ question.image }}">
+                                        <form role="form" class="form-horizontal form-question" name="form-question-{{ loop.index0 }}" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
+                                            <input type="hidden" name="question_id-{{ loop.index0 }}" id="question_id" value="{{ question._id }}">
+                                            <input type="hidden" name="image-{{ loop.index0 }}" id="image" value="{{ question.image }}">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
-                                                        <textarea rows="3" class="form-control" name="title" maxlength="500" required>{{ question.title }}</textarea>
+                                                        <textarea rows="3" class="form-control q-title" name="title-{{ loop.index0 }}" maxlength="500" required>{{ question.title }}</textarea>
                                                     </div>
                                             </div>
                                             <div class="form-group">
@@ -190,9 +301,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="1" required {% if question.answer == 1 %}checked{% endif %}>
+                                                            <input type="radio" class="q-radio" name="answer-{{ loop.index0 }}" value="1" required {% if question.answer == 1 %}checked{% endif %}>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice1" maxlength="100" value="{{ question.choices['1'].choice_text }}" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice1-{{ loop.index0 }}" maxlength="100" value="{{ question.choices['1'].choice_text }}" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -202,9 +313,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="2" {% if question.answer == 2 %}checked{% endif %}>
+                                                            <input type="radio" class="q-radio" name="answer-{{ loop.index0 }}" value="2" {% if question.answer == 2 %}checked{% endif %}>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice2" maxlength="100" value="{{ question.choices['2'].choice_text }}" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice2-{{ loop.index0 }}" maxlength="100" value="{{ question.choices['2'].choice_text }}" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -214,9 +325,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="3" {% if question.answer == 3 %}checked{% endif %}>
+                                                            <input type="radio" class="q-radio" name="answer-{{ loop.index0 }}" value="3" {% if question.answer == 3 %}checked{% endif %}>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice3" maxlength="100" value="{{ question.choices['3'].choice_text }}" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice3-{{ loop.index0 }}" maxlength="100" value="{{ question.choices['3'].choice_text }}" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -226,9 +337,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="4" {% if question.answer == 4 %}checked{% endif %}>
+                                                            <input type="radio" class="q-radio" name="answer-{{ loop.index0 }}" value="4" {% if question.answer == 4 %}checked{% endif %}>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice4" maxlength="100" {% if question.choices['4'] %}value="{{ question.choices['4'].choice_text }}"{% endif %}>
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice4-{{ loop.index0 }}" maxlength="100" {% if question.choices['4'] %}value="{{ question.choices['4'].choice_text }}"{% endif %}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -237,9 +348,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="5" {% if question.answer == 5 %}checked{% endif %}>
+                                                            <input type="radio" class="q-radio" name="answer-{{ loop.index0 }}" value="5" {% if question.answer == 5 %}checked{% endif %}>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice5" maxlength="100" {% if question.choices['5'] %}value="{{ question.choices['5'].choice_text }}"{% endif %}>
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice5-{{ loop.index0 }}" maxlength="100" {% if question.choices['5'] %}value="{{ question.choices['5'].choice_text }}"{% endif %}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -250,7 +361,7 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <form id="my-awesome-dropzone-{{loop.index}}" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                        <form id="my-awesome-dropzone-{{loop.index}}" name="my-awesome-dropzone-{{loop.index}}" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
                                             <div class="form-group">
                                                 <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
                                             </div>
@@ -275,13 +386,13 @@
                                         </div>
                                     </div>
                                     <div style="display:none" class="box-body">
-                                        <form role="form" class="form-horizontal form-question" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
-                                            <input type="hidden" name="question_id" id="question_id">
-                                            <input type="hidden" name="image" id="image">
+                                        <form role="form" class="form-horizontal form-question" name="form-question-0" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
+                                            <input type="hidden" name="question_id-0" id="question_id">
+                                            <input type="hidden" name="image-0" id="image">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
-                                                        <textarea rows="3" class="form-control" name="title" maxlength="500" required></textarea>
+                                                        <textarea rows="3" class="form-control q-title" name="title"-0 maxlength="500" required></textarea>
                                                     </div>
                                             </div>
                                             <div class="form-group">
@@ -289,9 +400,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="1" required>
+                                                            <input type="radio" class="q-radio" name="answer-0" value="1" required>
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice1" maxlength="100" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice1-0" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -301,9 +412,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="2">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="2">
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice2" maxlength="100" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice2-0" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -313,9 +424,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="3">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="3">
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice3" maxlength="100" required>
+                                                        <input type="text" class="form-control choices q-choice-mandatory" name="choice3-0" maxlength="100" required>
                                                         <span class="input-group-addon">*</span>
                                                     </div>
                                                 </div>
@@ -325,9 +436,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="4">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="4">
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice4" maxlength="100">
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice4-0" maxlength="100">
                                                     </div>
                                                 </div>
                                             </div>
@@ -336,9 +447,9 @@
                                                 <div class="col-sm-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="answer" value="5">
+                                                            <input type="radio" class="q-radio" name="answer-0" value="5">
                                                         </span>
-                                                        <input type="text" class="form-control choices" name="choice5" maxlength="100">
+                                                        <input type="text" class="form-control choices q-choice-optional" name="choice5-0" maxlength="100">
                                                     </div>
                                                 </div>
                                             </div>
@@ -361,16 +472,6 @@
                             </div>
                         {% endif %}
                         </div>
-                        <!-- DUMMY DROPZONE -->
-                        <div class="hidden">
-                          <form id="dummy-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
-                            <div class="form-group">
-                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
-                            </div>
-                            <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
-                           </form>
-                        </div>
-                        <!-- /DUMMY DROPZONE -->
                         <div class="footer-tools">
                             <span class="go-top">
                                 <i class="fa fa-chevron-up"></i> Top
@@ -415,18 +516,6 @@
 
             //Validations
             $('form.form-question').validate({
-                rules: {
-                    'title': { required: true },
-                    'answer': { required: true },
-                    'choice1': { required: true, notEqualToGroup: ['.choices'] },
-                    'choice2': { required: true, notEqualToGroup: ['.choices'] },
-                    'choice3': { required: true, notEqualToGroup: ['.choices'] },
-                    'choice4': { notEqualToGroup: ['.choices'] },
-                    'choice5': { notEqualToGroup: ['.choices'] }
-                },
-                messages: {
-                    'answer': 'Please mark the correct answer by clicking on one of the round buttons.'
-                },
                 errorElement: 'span',
                 errorClass: 'help-block',
                 errorPlacement: function(error, element) {
@@ -444,6 +533,8 @@
                 }
             });
 
+            bindValidationRules();
+
             $('button.btn-save').on('click', function () {
                 var form = $(this).closest('form');
                 if (form.valid()) {
@@ -458,17 +549,26 @@
             });
 
             $('button.btn-add').on('click', function () {
-                var question_block = $('.box-question').first().clone(true),
-                    index = parseInt(question_block.find('form.dropzone').attr('id').replace( /^\D+/g, '')) + 1;
+                //console.log('last form valid? ', $('.box-question').last().valid());
+                var question_block = $('div#dummy-box').clone(true),
+                    index = parseInt($('.box-question:visible').last().find('form.form-question').attr('name').replace( /^\D+/g, '')) + 1;
+                question_block.removeAttr('id');
                 question_block.find('textarea, input:not([type=radio])').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
+                $.each(question_block.find('input, textarea'), function(counter, element){
+                    var curr_name = element.getAttribute('name'),
+                        count = parseInt(curr_name.substring(curr_name.lastIndexOf('-') + 1, curr_name.length)) + 1,
+                        new_name = curr_name.substring(0, curr_name.lastIndexOf('-') + 1) + count;
+                    element.setAttribute('name', new_name);
+                });
                 question_block.find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
-                question_block.find('span.question-number').html($('.box-question').length + 1);
-                question_block.find('form.form-question').data('validator').resetForm();
+                question_block.find('span.question-number').html($('.box-question:visible').length + 1);
+                //question_block.find('form.form-question').data('validator').resetForm();
                 question_block.find('form.dropzone').remove();
-                $('body form#dummy-dropzone').attr('id', 'my-awesome-dropzone-' + index).insertAfter(question_block.find('form'));
+                $('body form#dummy-dropzone').attr('id', 'my-awesome-dropzone-' + index).attr('name', 'my-awesome-dropzone-' + index).insertAfter(question_block.find('form'));
+                bindValidationRules();
                 question_block.insertAfter($('.box-question').last());
-            });            
+            });
 
             $('button.btn-delete').on('click', function () {
                 var btn = $(this);
@@ -530,6 +630,13 @@
                 });
             } catch (e) {
                 bootbox.alert('Dropzone.js does not support older browsers!');
+            }
+
+            function bindValidationRules() {
+                $('textarea.q-title').rules('add', { required: true });
+                $('input.q-radio').rules('add', { required: true });
+                $('input.q-choice-mandatory').rules('add', { required: true, notEqualToGroup: ['.choices'] });
+                $('input.q-choice-optional').rules('add', { notEqualToGroup: ['.choices'] });
             }
         });
     </script>
