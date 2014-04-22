@@ -178,6 +178,7 @@
                                     <div style="display:none" class="box-body">
                                         <form role="form" class="form-horizontal" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id" id="question_id" value="{{ question._id }}">
+                                            <input type="hidden" name="image" id="image" value="{{ question.image }}">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
@@ -250,6 +251,9 @@
                                             </div>
                                         </form>
                                         <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                            <div class="form-group">
+                                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
+                                            </div>
                                             <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
                                         </form>
                                     </div>
@@ -273,6 +277,7 @@
                                     <div style="display:none" class="box-body">
                                         <form role="form" class="form-horizontal" name="form-question" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id" id="question_id">
+                                            <input type="hidden" name="image" id="image">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
@@ -345,6 +350,9 @@
                                             </div>
                                         </form>
                                         <form id="my-awesome-dropzone" class="dropzone dz-clickable" action="{{ URL.QUIZ_ADMIN_SAVE_UPLOAD }}">
+                                            <div class="form-group">
+                                                <label class="col-sm-12 center control-label">Upload image for question (optional)</label>
+                                            </div>
                                             <div class="dz-default dz-message"><span>Drop file here to upload</span></div>
                                         </form>
                                     </div>
@@ -488,14 +496,17 @@
                         this.on('success', function(file, response) {
                             if (response['error'] === null) {
                                 file['serverPath'] = response['file_path'];
+                                $(this.element).prev().find('input#image').val(response['file_path']);
                             }
                         });
                         this.on('removedfile', function(file, response) {
                             if (file['serverPath']) {
+                             var e = $(this.element);
                              $.ajax({
                                 type: 'DELETE',
                                 url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
-                                data: { file_name: file['serverPath'] }
+                                data: { file_name: file['serverPath'] },
+                                success: function() { e.prev().find('input#image').val(''); }
                              });
                             }
                         });
