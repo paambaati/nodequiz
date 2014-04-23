@@ -189,6 +189,7 @@
                                         <form role="form" class="form-horizontal form-question" name="form-question-0" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id-0" id="question_id">
                                             <input type="hidden" name="image-0" id="image">
+                                            <input type="hidden" name="size-0" id="size">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
@@ -290,6 +291,7 @@
                                         <form role="form" class="form-horizontal form-question" name="form-question-{{ loop.index0 }}" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id-{{ loop.index0 }}" id="question_id" value="{{ question._id }}">
                                             <input type="hidden" name="image-{{ loop.index0 }}" id="image" value="{{ question.image }}">
+                                            <input type="hidden" name="image_size-{{ loop.index0 }}" id="image_size" value="{{ question.image_size }}">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
@@ -388,7 +390,7 @@
                                     <div class="box-body">
                                         <form role="form" class="form-horizontal form-question" name="form-question-0" action="{{ URL.QUIZ_ADMIN_SAVE_AJAX }}" method="POST">
                                             <input type="hidden" name="question_id-0" id="question_id">
-                                            <input type="hidden" name="image-0" id="image">
+                                            <input type="hidden" name="image_size-0" id="image_size">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Question</label>
                                                     <div class="col-sm-9">
@@ -513,7 +515,6 @@
                 }
             }, $.validator.format('Please enter a unique value.'));
 
-
             //Validations
             $.validator.setDefaults({
                 errorElement: 'span',
@@ -533,7 +534,6 @@
                 }
             });
 
-            //TO-DO: Add this for all forms on page load.
             $('form[name="form-question-0"]:visible').validate({
                 rules: {
                     'title-0': { required: true },
@@ -630,15 +630,17 @@
                         if (response['error'] === null) {
                             file['serverPath'] = response['file_path'];
                             $(this.element).prev().find('input#image').val(response['file_path']);
+                            $(this.element).prev().find('input#image_size').val(response['image_size']);
                         }
                     });
                     this.on('removedfile', function(file, response) {
-                        if (file['serverPath']) {
-                         var e = $(this.element);
+                        var e = $(this.element);
+                        var image = file['serverPath'] || e.prev().find('input#image').val();
+                        if (image) {
                          $.ajax({
                             type: 'DELETE',
                             url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
-                            data: { file_name: file['serverPath'] },
+                            data: { file_name: image },
                             success: function() { e.prev().find('input#image').val(''); }
                          });
                         }
@@ -648,9 +650,24 @@
 
             try {
                 Dropzone.autoDiscover = false;
+                {% if questions.length >= 1 %}
+                var myDropzone = null;
+                //Load images into existing dropzones.
+                {% for question in questions %}
+                myDropzone = new Dropzone('form#my-awesome-dropzone-{{loop.index}}', dropzone_settings);
+                {% if question.image %}
+                console.log("{{UPLOAD_DIR}}{{question.image}}");
+                var mockFile = { name: '{{question.image}}', size: '{{question.image_size}}' };
+                myDropzone.emit('addedfile', mockFile);
+                myDropzone.emit('thumbnail', mockFile, '{{UPLOAD_DIR}}{{question.image}}');
+                myDropzone.options.maxFiles = myDropzone.options.maxFiles - 1;
+                {% endif %}
+                {% endfor %}
+                {% else %}
                 $('form.dropzone').dropzone(dropzone_settings);
+                {% endif %}
             } catch (e) {
-                bootbox.alert('Dropzone.js does not support older browsers!');
+                bootbox.alert('Image upload functionality does not work in older browsers!');
             }
         });
     </script>
