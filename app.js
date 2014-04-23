@@ -883,6 +883,10 @@ app.get(config.URL.TIMECLOSED, requiredAuthentication, function(req, res) {
     });
 });
 
+app.get(config.URL.FAQ, function(req, res) {
+    res.render(config.TEMPL_FAQ);
+});
+
 app.get(config.URL.QUIZ_NOQUIZ, requiredAuthentication, function(req, res) {
     res.render(config.TEMPL_QUIZ_NOQUIZ);
 });

@@ -34,6 +34,7 @@ config.URL = {
     RESET: '/reset',
     ACTIVATE: '/activate',
     LOGOUT: '/logout',
+    FAQ: '/faq',
     TIMECLOSED: '/timeclosed',
     QUIZ_MAIN: '/quiz',
     QUIZ_ADMIN: '/quiz/admin',
@@ -52,6 +53,7 @@ config.TEMPL_500 = '500.html';
 config.TEMPL_400 = '404.html';
 config.TEMPL_200 = '200.html';
 config.TEMPL_TIMECLOSED = 'timeclosed.html';
+config.TEMPL_FAQ = 'faq.html';
 config.TEMPL_QUIZ_MAIN = 'quiz.html';
 config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';

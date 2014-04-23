@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<!--
+    ░░░░░░░░░▄░░░░░░░░░░░░░░▄ 
+    ░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌ 
+    ░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐ wow
+    ░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐ 
+    ░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐ 
+    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so quiz
+    ░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌ 
+    ░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐ 
+    ░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌ much nodejs
+    ░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌ 
+    ▌▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐ 
+    ▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌ 
+    ▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐ very hidden source
+    ░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌ 
+    ░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐
+    ░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌ 
+    ░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀ 
+    ░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀ such interface
+    ░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀
+    -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>{{ app_title }} | FAQs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+	<meta name="description" content="{{ app_title }} - Frequently Asked Questions">
+	<meta name="author" content="GP">
+	<!-- JAVASCRIPTS -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/excanvas.min.js"></script>
+    <script src="/javascripts/html5.js"></script>
+    <script src="/javascripts/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <!-- /JAVASCRIPTS -->
+	<!-- STYLESHEETS -->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
+	<link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
+	<!-- /STYLESHEETS -->
+	<!-- FAVICON -->
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <!-- /FAVICON -->
+<style type="text/css"></style></head>
+<body style="">
+	<!-- HEADER -->
+	<header class="navbar clearfix" id="header">
+		<div class="container">
+			<div class="navbar-brand">
+				<!-- LOGO -->
+				<a href="/">
+					<img src="/images/logo.png" alt="GA Quiz Logo" class="img-responsive" height="30" width="120">
+				</a>
+				<!-- /LOGO -->
+			</div>
+			<!-- NAVBAR LEFT -->
+			<ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-cog"></i>
+						<span class="name">Skins</span>
+						<i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="dropdown-menu skins">
+						<li class="dropdown-title">
+							<span><i class="fa fa-leaf"></i> Skins</span>
+						</li>
+						<li><a href="#" data-skin="default">Default</a></li>
+						<li><a href="#" data-skin="night">Night</a></li>
+						<li><a href="#" data-skin="earth">Earth</a></li>
+						<li><a href="#" data-skin="utopia">Utopia</a></li>
+						<li><a href="#" data-skin="nature">Nature</a></li>
+						<li><a href="#" data-skin="graphite">Graphite</a></li>
+					 </ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" href="{{ URL.FAQ }}"><span><i class="fa fa-question-circle"></i>FAQs</span></a>
+				</li>
+			</ul>
+			<!-- /NAVBAR LEFT -->
+		</div>
+	</header>
+	<!--/HEADER -->
+	<!-- PAGE -->
+	<section id="page">
+		<div id="main-content">
+			<div class="container">
+				<div class="row">
+					<div id="content" class="col-lg-12" style="min-height:1063px !important">
+						<!-- PAGE HEADER-->
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="page-header">
+									<!-- BREADCRUMBS -->
+									<ul class="breadcrumb">
+										<li>
+											<i class="fa fa-home"></i>
+										</li>
+										<li><a href="{{ URL.QUIZ_MAIN }}">Welcome</a></li>
+										<li>FAQs</li>
+									</ul>
+									<!-- /BREADCRUMBS -->
+									<div class="clearfix">
+										<h3 class="content-title pull-left">FAQs (and hypothetical 'What ifs')</h3>
+									</div>
+									<div class="description">All that you ever wanted to know about me.</div>
+								</div>
+							</div>
+						</div>
+						<!-- /PAGE HEADER -->
+						<!-- FAQ -->
+						<div class="row">
+							<!-- NAV -->
+							<div id="list-toggle" class="col-md-2">
+								<div class="list-group">
+								  <a href="#tab1" data-toggle="tab" class="list-group-item active">
+									<i class="fa fa-smile-o"></i> General
+								  </a>
+								  <a href="#tab2" data-toggle="tab" class="list-group-item"><i class="fa fa-gamepad"></i> Quiz</a>
+								  <a href="#tab3" data-toggle="tab" class="list-group-item"><i class="fa fa-eye"></i> Privacy</a>
+								  <a href="#tab4" data-toggle="tab" class="list-group-item"><i class="fa fa-bug"></i> Bugs &amp; Problems</a>
+								</div>
+							</div>
+							<!-- /NAV -->
+							<!-- CONTENT -->
+							<div class="col-md-10">
+								<div class="tab-content">
+								   <div class="tab-pane active" id="tab1">
+									  <div class="panel-group" id="accordion">
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_1">1. If I post to a public community, does that mean all my friends and followers can see it? </a> </h3>
+											 </div>
+											 <div id="collapse1_1" class="panel-collapse collapse in">
+												<div class="panel-body"> No, the posts you share to a public community will not show up in your friends and followers’ Home streams, unless your friends and followers are also members of the same community.
+												Your public community posts will be visible to people who navigate to your profile page unless you have set your settings for them not to appear. Visitors will see text indicating that it was shared to a community.
+												Remember that your private community posts will only be visible to people in those communities, regardless of whether or not you show community posts on your profile. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-info">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_2">2. How can I control whether my public community posts appear on my profile page? </a> </h3>
+											 </div>
+											 <div id="collapse1_2" class="panel-collapse collapse">
+												<div class="panel-body"> While in communities:
+													Place your cursor in the top left corner for the main menu.
+													Select  Settings.
+													Scroll to 'Profile'.
+													Check or uncheck the box next to Show your Google+ communities posts on your Google+ profile
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-success">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_3">3. Can I change my community from public to private, or vice versa? </a> </h3>
+											 </div>
+											 <div id="collapse1_3" class="panel-collapse collapse">
+												<div class="panel-body">You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-danger">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_4">4. Why aren't people seeing my invites? </a> </h3>
+											 </div>
+											 <div id="collapse1_4" class="panel-collapse collapse">
+												<div class="panel-body"> You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new.
+												Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_5">5. If I moderate a post out of my community, is it deleted? </a> </h3>
+											 </div>
+											 <div id="collapse1_5" class="panel-collapse collapse">
+												<div class="panel-body">Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_6">6. Are community names unique? If someone else has a "Software" community, does that prevent me from owning one? </a> </h3>
+											 </div>
+											 <div id="collapse1_6" class="panel-collapse collapse">
+												<div class="panel-body"> They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications. They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_7">7. How can I control how many community invitations I receive? </a> </h3>
+											 </div>
+											 <div id="collapse1_7" class="panel-collapse collapse">
+												<div class="panel-body">A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+									   </div>
+								   </div>
+								   <div class="tab-pane" id="tab2">
+									  <div class="panel-group" id="accordion">
+										  <div class="panel panel-danger">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_1">1. If I post to a public community, does that mean all my friends and followers can see it? </a> </h3>
+											 </div>
+											 <div id="collapse2_1" class="panel-collapse collapse">
+												<div class="panel-body"> No, the posts you share to a public community will not show up in your friends and followers’ Home streams, unless your friends and followers are also members of the same community.
+												Your public community posts will be visible to people who navigate to your profile page unless you have set your settings for them not to appear. Visitors will see text indicating that it was shared to a community.
+												Remember that your private community posts will only be visible to people in those communities, regardless of whether or not you show community posts on your profile. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_2">2. How can I control whether my public community posts appear on my profile page? </a> </h3>
+											 </div>
+											 <div id="collapse2_2" class="panel-collapse collapse">
+												<div class="panel-body"> While in communities:
+													Place your cursor in the top left corner for the main menu.
+													Select  Settings.
+													Scroll to 'Profile'.
+													Check or uncheck the box next to Show your Google+ communities posts on your Google+ profile
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_3">3. Can I change my community from public to private, or vice versa? </a> </h3>
+											 </div>
+											 <div id="collapse2_3" class="panel-collapse collapse">
+												<div class="panel-body">You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_4">4. Why aren't people seeing my invites? </a> </h3>
+											 </div>
+											 <div id="collapse2_4" class="panel-collapse collapse in">
+												<div class="panel-body"> You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new.
+												Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-success">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_5">5. If I moderate a post out of my community, is it deleted? </a> </h3>
+											 </div>
+											 <div id="collapse2_5" class="panel-collapse collapse">
+												<div class="panel-body">Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-warning">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_6">6. Are community names unique? If someone else has a "Software" community, does that prevent me from owning one? </a> </h3>
+											 </div>
+											 <div id="collapse2_6" class="panel-collapse collapse">
+												<div class="panel-body"> They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications. They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_7">7. How can I control how many community invitations I receive? </a> </h3>
+											 </div>
+											 <div id="collapse2_7" class="panel-collapse collapse">
+												<div class="panel-body">A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+									   </div>
+								   </div>
+								   <div class="tab-pane" id="tab3">
+									  <div class="panel-group" id="accordion">
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_1">1. If I post to a public community, does that mean all my friends and followers can see it? </a> </h3>
+											 </div>
+											 <div id="collapse3_1" class="panel-collapse collapse">
+												<div class="panel-body"> No, the posts you share to a public community will not show up in your friends and followers’ Home streams, unless your friends and followers are also members of the same community.
+												Your public community posts will be visible to people who navigate to your profile page unless you have set your settings for them not to appear. Visitors will see text indicating that it was shared to a community.
+												Remember that your private community posts will only be visible to people in those communities, regardless of whether or not you show community posts on your profile. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_2">2. How can I control whether my public community posts appear on my profile page? </a> </h3>
+											 </div>
+											 <div id="collapse3_2" class="panel-collapse collapse">
+												<div class="panel-body"> While in communities:
+													Place your cursor in the top left corner for the main menu.
+													Select  Settings.
+													Scroll to 'Profile'.
+													Check or uncheck the box next to Show your Google+ communities posts on your Google+ profile
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_3">3. Can I change my community from public to private, or vice versa? </a> </h3>
+											 </div>
+											 <div id="collapse3_3" class="panel-collapse collapse">
+												<div class="panel-body">You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_4">4. Why aren't people seeing my invites? </a> </h3>
+											 </div>
+											 <div id="collapse3_4" class="panel-collapse collapse">
+												<div class="panel-body"> You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new.
+												Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_5">5. If I moderate a post out of my community, is it deleted? </a> </h3>
+											 </div>
+											 <div id="collapse3_5" class="panel-collapse collapse in">
+												<div class="panel-body">Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-info">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_6">6. Are community names unique? If someone else has a "Software" community, does that prevent me from owning one? </a> </h3>
+											 </div>
+											 <div id="collapse3_6" class="panel-collapse collapse">
+												<div class="panel-body"> They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications. They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-success">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_7">7. How can I control how many community invitations I receive? </a> </h3>
+											 </div>
+											 <div id="collapse3_7" class="panel-collapse collapse">
+												<div class="panel-body">A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+									   </div>
+								   </div>
+								   <div class="tab-pane" id="tab4">
+									  <div class="panel-group" id="accordion">
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_1">1. If I post to a public community, does that mean all my friends and followers can see it? </a> </h3>
+											 </div>
+											 <div id="collapse4_1" class="panel-collapse collapse in">
+												<div class="panel-body"> No, the posts you share to a public community will not show up in your friends and followers’ Home streams, unless your friends and followers are also members of the same community.
+												Your public community posts will be visible to people who navigate to your profile page unless you have set your settings for them not to appear. Visitors will see text indicating that it was shared to a community.
+												Remember that your private community posts will only be visible to people in those communities, regardless of whether or not you show community posts on your profile. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_2">2. How can I control whether my public community posts appear on my profile page? </a> </h3>
+											 </div>
+											 <div id="collapse4_2" class="panel-collapse collapse">
+												<div class="panel-body"> While in communities:
+													Place your cursor in the top left corner for the main menu.
+													Select  Settings.
+													Scroll to 'Profile'.
+													Check or uncheck the box next to Show your Google+ communities posts on your Google+ profile
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_3">3. Can I change my community from public to private, or vice versa? </a> </h3>
+											 </div>
+											 <div id="collapse4_3" class="panel-collapse collapse">
+												<div class="panel-body">You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_4">4. Why aren't people seeing my invites? </a> </h3>
+											 </div>
+											 <div id="collapse4_4" class="panel-collapse collapse">
+												<div class="panel-body"> You can turn your community notifications on or off by clicking on the  icon on a community’s page.
+												Community members can use notifications to know when new things are shared with their communities. If notifications are On you’ll get a notification by email, on your device, and by the Google toolbar when someone posts something new.
+												Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_5">5. If I moderate a post out of my community, is it deleted? </a> </h3>
+											 </div>
+											 <div id="collapse4_5" class="panel-collapse collapse">
+												<div class="panel-body">Notifications default on in communities where the membership is moderated - that is, private communities, or public communities where you need to ask to join. It's also on by default for any community you create.A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_6">6. Are community names unique? If someone else has a "Software" community, does that prevent me from owning one? </a> </h3>
+											 </div>
+											 <div id="collapse4_6" class="panel-collapse collapse">
+												<div class="panel-body"> They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications. They may not see your invites if they don’t have you in their circles, or if they’ve limited the “Who can send you notifications?” setting. Learn more about who can send you notifications.
+												 </div>
+											 </div>
+										  </div>
+										  <div class="panel panel-default">
+											 <div class="panel-heading">
+												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse4_7">7. How can I control how many community invitations I receive? </a> </h3>
+											 </div>
+											 <div id="collapse4_7" class="panel-collapse collapse">
+												<div class="panel-body">A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. A communit's privacy settings currently can't be changed once it's been created. Please pick your desired setting from the start. </div>
+											 </div>
+										  </div>
+									   </div>
+								   </div>
+								</div>
+							</div>
+							<!-- /CONTENT -->
+						</div>
+						<!-- /FAQ -->
+						<div class="separator"></div>
+						<div class="footer-tools">
+							<span class="go-top">
+								<i class="fa fa-chevron-up"></i> Top
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--/PAGE -->
+	<!-- JAVASCRIPTS -->
+	<script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+	<script type="text/javascript" src="/javascripts/script.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function() {		
+			App.setPage("faq");  //Set current page
+			App.init(); //Initialise plugins and elements
+		});
+	</script>
+	<!-- /JAVASCRIPTS -->
+</body>
+</html>
