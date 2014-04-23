@@ -516,7 +516,6 @@
 
             //Validations
             $.validator.setDefaults({
-                messages: '',
                 errorElement: 'span',
                 errorClass: 'help-block',
                 errorPlacement: function(error, element) {
@@ -544,6 +543,9 @@
                     'choice3-0': { required: true, notEqualToGroup: ['.choices'] },
                     'choice4-0': { notEqualToGroup: ['.choices'] },
                     'choice5-0': { notEqualToGroup: ['.choices'] }
+                },
+                messages: {
+                    'answer-0': 'Please select an answer by selecting one of the round buttons.'
                 }
             });
 
@@ -561,7 +563,6 @@
             });
 
             $('button.btn-add').on('click', function () {
-                //console.log('last form valid? ', $('.box-question').last().valid());
                 var question_block = $('div#dummy-box').clone(true),
                     index = parseInt($('.box-question:visible').last().find('form.form-question').attr('name').replace( /^\D+/g, '')) + 1;
                 question_block.removeAttr('id');
@@ -580,11 +581,11 @@
                          $(element).rules('add', { notEqualToGroup: ['.choices'] });
                     }
                 });
+                question_block.find('input[type=radio]').first().rules('add', { messages: 'Please select an answer by selecting one of the round buttons.' });
                 question_block.find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
                 question_block.find('span.question-number').html($('.box-question:visible').length + 1);
-                //question_block.find('form.form-question').data('validator').resetForm();
                 question_block.find('form.dropzone').remove();
-                $('body form#dummy-dropzone').attr('id', 'my-awesome-dropzone-' + index).attr('name', 'my-awesome-dropzone-' + index).insertAfter(question_block.find('form'));
+                $('body div#dummy-dropzone').clone(true).removeClass('hidden').children().first().attr('id', 'my-awesome-dropzone-' + index).attr('name', 'my-awesome-dropzone-' + index).dropzone(dropzone_settings).insertAfter(question_block.find('form.form-question'));
                 question_block.insertAfter($('.box-question').last());
             });
 
@@ -613,39 +614,41 @@
                 e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
             });
 
+            var dropzone_settings = {
+                method: 'post',
+                maxFilesize: .6,
+                maxFiles: 1,
+                acceptedFiles: 'image/*',
+                addRemoveLinks: !0,
+                dictResponseError: 'Error while uploading file!',
+                previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail /></div><div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div><div class="dz-success-mark"><span></span></div><div class="dz-error-mark"><span></span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
+                init: function() {
+                    this.on('addedfile', function(file) {
+                        $(this.element).parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
+                    });
+                    this.on('success', function(file, response) {
+                        if (response['error'] === null) {
+                            file['serverPath'] = response['file_path'];
+                            $(this.element).prev().find('input#image').val(response['file_path']);
+                        }
+                    });
+                    this.on('removedfile', function(file, response) {
+                        if (file['serverPath']) {
+                         var e = $(this.element);
+                         $.ajax({
+                            type: 'DELETE',
+                            url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
+                            data: { file_name: file['serverPath'] },
+                            success: function() { e.prev().find('input#image').val(''); }
+                         });
+                        }
+                    });
+                }
+            }
+
             try {
                 Dropzone.autoDiscover = false;
-                $('.dropzone').dropzone({
-                    method: 'post',
-                    maxFilesize: .6,
-                    maxFiles: 1,
-                    acceptedFiles: 'image/*',
-                    addRemoveLinks: !0,
-                    dictResponseError: 'Error while uploading file!',
-                    previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail /></div><div class="progress progress-sm progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div><div class="dz-success-mark"><span></span></div><div class="dz-error-mark"><span></span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
-                    init: function() {
-                        this.on('addedfile', function(file) {
-                            $(this.element).parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
-                        });
-                        this.on('success', function(file, response) {
-                            if (response['error'] === null) {
-                                file['serverPath'] = response['file_path'];
-                                $(this.element).prev().find('input#image').val(response['file_path']);
-                            }
-                        });
-                        this.on('removedfile', function(file, response) {
-                            if (file['serverPath']) {
-                             var e = $(this.element);
-                             $.ajax({
-                                type: 'DELETE',
-                                url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
-                                data: { file_name: file['serverPath'] },
-                                success: function() { e.prev().find('input#image').val(''); }
-                             });
-                            }
-                        });
-                    }
-                });
+                $('form.dropzone').dropzone(dropzone_settings);
             } catch (e) {
                 bootbox.alert('Dropzone.js does not support older browsers!');
             }
