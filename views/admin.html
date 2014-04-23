@@ -656,7 +656,6 @@
                 {% for question in questions %}
                 myDropzone = new Dropzone('form#my-awesome-dropzone-{{loop.index}}', dropzone_settings);
                 {% if question.image %}
-                console.log("{{UPLOAD_DIR}}{{question.image}}");
                 var mockFile = { name: '{{question.image}}', size: '{{question.image_size}}' };
                 myDropzone.emit('addedfile', mockFile);
                 myDropzone.emit('thumbnail', mockFile, '{{UPLOAD_DIR}}{{question.image}}');
