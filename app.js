@@ -940,6 +940,7 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeChe
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
             var old_path = files.file.path,
+                image_size = files.file.size,
                 file_ext = files.file.name.split('.').pop(),
                 index = files.file.path.lastIndexOf('/') + 1,
                 file_name = files.file.path.substr(index),
@@ -947,7 +948,8 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeChe
 
             config.logger.info('QUIZ ADMIN - UPLOAD IMAGE POST - PARSED PARAMETERS', {
                 old_path: old_path,
-                new_path: new_path
+                new_path: new_path,
+                image_size: image_size
             });
 
             fs.readFile(old_path, function(err, data) {
@@ -961,7 +963,8 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, requiredAuthentication, quiz.timeChe
                         } else {
                             res.json({
                                 'error': null,
-                                'file_path': file_name + '.' + file_ext
+                                'file_path': file_name + '.' + file_ext,
+                                'image_size': image_size
                             });
                         }
                     });

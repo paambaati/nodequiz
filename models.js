@@ -94,6 +94,10 @@ var QuestionSchema = new Schema({
         type: String,
         default: null
     },
+    image_size: {
+        type: Number,
+        default: 0
+    },
     choices: {},
     answer: {
         type: Number,
