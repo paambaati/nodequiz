@@ -803,7 +803,7 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, 
     if (req.session.is_admin) {
         for (var item in req_body) {
             //Sanitize for HTML/XSS
-            item.text.replace(/&/g, '&amp;').
+            item = item.replace(/&/g, '&amp;').
                 replace(/</g, '&lt;').  // it's not neccessary to escape >
                 replace(/"/g, '&quot;').
                 replace(/'/g, '&#039;');
