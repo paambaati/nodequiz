@@ -181,7 +181,7 @@
                                               <tr>
                                                 <td>{{ loop.index }}</td>
                                                 <td>{{ result.question_title }}</td>
-                                                <td>{{ result.answer_title }}</td><td>{% if result.response_time == 0 %}<span data-content="No response time has been recorded. This means you did not choose an answer in time." data-title="Wait, what?" data-original-title="" title="" class="label label-danger pop-hover"><i class="fa fa-question"></i></span>{% else %}{{ result.response_time }}{% endif %}</td>
+                                                <td>{{ result.answer_title }}</td><td>{% if result.response_time == 0 %}<span data-toggle="popover" data-trigger="hover focus" title="" data-content="No response time has been recorded. This means you did not choose an answer in time." data-title="Wait, what?" data-original-title="" title="" class="label label-danger pop-hover"><i class="fa fa-question"></i></span>{% else %}{{ result.response_time }}{% endif %}</td>
                                                 <td>{% if result.correct_answer %}<span class="label label-success"><i class="fa fa-check-square"></i></span>{% else %}<span class="label label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                               </tr>
                                             {% endfor %}
