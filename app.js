@@ -486,49 +486,57 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var security_question = req.body.security_question;
     var security_answer = req.body.security_answer;
     config.logger.info('SIGNUP - FORM POST', {
-        username: username
+        username: username,
+        form_data: req.body
     });
 
-    isUsernameValid(username, function(err, valid) {
-        if (err) throw err;
-        if (!valid) {
-            hash(password, function(err, salt, hash) {
+    misc.validateSignUpForm(req.body, function(err, valid) {
+        if (err) {
+            req.session.error = err;
+            res.redirect(config.URL.SIGNUP);
+        } else {
+            isUsernameValid(username, function(err, valid) {
                 if (err) throw err;
-                var user = new models.User({
-                    username: username,
-                    salt: salt,
-                    hash: hash,
-                    security_question: security_question,
-                    security_answer: security_answer
-                }).save(function(err, newUser) {
-                    if (err) throw err;
-                    config.logger.info('SIGNUP - USER SAVED IN DB. PROCEEDING TO GENERATE ACTIVATE KEY NOW.', {
-                        username: username
-                    });
-                    var encrypt = require('./utils/pass').encrypt;
-                    encrypt(username, function(err, activate_key) {
+                if (!valid) {
+                    hash(password, function(err, salt, hash) {
                         if (err) throw err;
-                        var domain = req.protocol + '://' + req.get('host');
-                        mailer.sendActivationLink(domain, username, activate_key);
-                        config.logger.info('SIGNUP - SENDING ACTIVATION LINK VIA EMAIL', {
+                        var user = new models.User({
                             username: username,
-                            activate_key: activate_key
+                            salt: salt,
+                            hash: hash,
+                            security_question: security_question,
+                            security_answer: security_answer
+                        }).save(function(err, newUser) {
+                            if (err) throw err;
+                            config.logger.info('SIGNUP - USER SAVED IN DB. PROCEEDING TO GENERATE ACTIVATE KEY NOW.', {
+                                username: username
+                            });
+                            var encrypt = require('./utils/pass').encrypt;
+                            encrypt(username, function(err, activate_key) {
+                                if (err) throw err;
+                                var domain = req.protocol + '://' + req.get('host');
+                                mailer.sendActivationLink(domain, username, activate_key);
+                                config.logger.info('SIGNUP - SENDING ACTIVATION LINK VIA EMAIL', {
+                                    username: username,
+                                    activate_key: activate_key
+                                });
+                            });
+
+                            res.render(config.TEMPL_200, {
+                                message_title: 'Done!',
+                                message_1: 'We\'ve sent you an email with the activation link!',
+                                message_2: 'Check your mailbox yo!'
+                            });
                         });
                     });
-
-                    res.render(config.TEMPL_200, {
-                        message_title: 'Done!',
-                        message_1: 'We\'ve sent you an email with the activation link!',
-                        message_2: 'Check your mailbox yo!'
+                } else {
+                    config.logger.warn('SIGNUP - USERNAME ALREADY EXISTS', {
+                        username: username
                     });
-                });
+                    req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
+                    res.redirect(config.URL.SIGNUP);
+                }
             });
-        } else {
-            config.logger.warn('SIGNUP - USERNAME ALREADY EXISTS', {
-                username: username
-            });
-            req.session.error = config.ERR_SIGNUP_ALREADY_EXISTS;
-            res.redirect(config.URL.SIGNUP);
         }
     });
 });

@@ -81,6 +81,24 @@ var getMonday = function(fn) {
     fn(null, new Date(today.setDate(diff)));
 }
 
+var validateSignUpForm = function(request_body, fn) {
+    var username = request_body.username;
+    var password = request_body.first_password;
+    var password1 = request_body.second_password;
+    var security_question = request_body.security_question;
+    var security_answer = request_body.security_answer;
+
+    if (username && password && password1 && security_question && security_answer) {
+        if (password === password1) {
+            return fn(null, true);
+        } else {
+            return fn(config.ERR_SIGNUP_PASSWORD_MISMATCH, false);
+        }
+    } else {
+        return fn(config.ERR_SIGNUP_DATA_MISSING, false);
+    }
+}
+
 /**
  * Module exports.
  */
@@ -88,5 +106,6 @@ var getMonday = function(fn) {
 module.exports = {
     getMaxOrMinofArray: getMaxOrMinofArray,
     getAllowedTime: getAllowedTime,
-    getMonday: getMonday
+    getMonday: getMonday,
+    validateSignUpForm: validateSignUpForm
 }
