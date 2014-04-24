@@ -110,8 +110,6 @@ config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.
 config.RESET_VALIDITY = 3; //Hours
-config.MISC_AVG_WORDS_PPM = 180;
-config.MISC_DEFAULT_ALLOWED_QUESTION_TIME = 10; //Seconds
 
 //Uploads configuration.
 config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/

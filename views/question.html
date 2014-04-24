@@ -28,7 +28,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="{{ app_title }} - Quiz Question">
 	<meta name="author" content="GP">
-	<meta http-equiv="refresh" content="{{ allowed_time }}">
+	<meta http-equiv="refresh" content="{{ question.allowed_time }}">
 	<meta http-equiv="Expires" content="0">
 	<meta http-equiv="Cache-Control" content="no-cache">
 	<!-- JAVASCRIPTS -->
@@ -126,7 +126,7 @@
 									<div class="clearfix">
 										<h3 class="content-title pull-left">Question <strong>{{ question_index }}</strong> of {{ total_questions }}</h3>
 									</div>
-									<div class="description">Question expires in <span class="badge badge-red">{{ allowed_time }}</span> seconds.</div>
+									<div class="description">Question expires in <span class="badge badge-red">{{ question.allowed_time }}</span> seconds.</div>
 								</div>
 							</div>
 						</div>
@@ -139,7 +139,7 @@
 										<h4><i class="fa fa-bars"></i> <span class="hidden-inline-mobile">Question #{{ question_index }}</span></h4>
 										<div class="items">
 											<div class="progress active">
-												<div id="time_progress" style="width: 0%" aria-valuemax="{{ allowed_time }}" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info"></div>
+												<div id="time_progress" style="width: 0%" aria-valuemax="{{ question.allowed_time }}" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info"></div>
 										</div>
 										</div>
 									</div>
@@ -201,7 +201,7 @@
 			App.setPage('widgets_box');  //Set current page
 			App.init(); //Initialise plugins and elements
 
-			var count = '{{ allowed_time }}' || 10;
+			var count = '{{ question.allowed_time }}' || 10;
 			var counter = setInterval(function(){timer()}, 1000); //1000 will run it every 1 second.
 			var progress_percent = 100 / count;
 			function timer() {
@@ -213,7 +213,7 @@
 					return;
 				}
 				$('#time_progress').css('width', progress_percent + '%').attr('aria-valuenow', progress_percent);
-				progress_percent = progress_percent + 100 / '{{ allowed_time }}';
+				progress_percent = progress_percent + 100 / '{{ question.allowed_time }}';
 			}
 
 			$('input.uniform').on('click', function() {

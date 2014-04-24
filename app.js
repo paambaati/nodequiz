@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.5.1
- * Release Date: 20-Apr-2014
+ * Version: 1.6
+ * Release Date: 24-Apr-2014
  */
 
 /**
@@ -404,7 +404,7 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
         username: req.session.user.username
     });
     quiz.findUserQuestionsForToday(req.session.user._id, function(err, count) {
-        quiz.findNextQuestion(count, function(err, question, total_questions, allowed_time) {
+        quiz.findNextQuestion(count, function(err, question, total_questions) {
             if (err && err.message == config.ERR_QUIZ_NOQUIZTODAY) {
                 res.redirect(config.URL.QUIZ_NOQUIZ);
             }
@@ -421,7 +421,6 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside')
                         question: question,
                         question_index: count + 1,
                         total_questions: total_questions,
-                        allowed_time: allowed_time,
                         image: question.image
                     });
                 });

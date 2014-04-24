@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.3
- * Release Date: 09-Apr-2014
+ * Version: 1.4
+ * Release Date: 24-Apr-2014
  */
 
 /**
@@ -102,6 +102,11 @@ var QuestionSchema = new Schema({
     answer: {
         type: Number,
         required: true
+    },
+    allowed_time: {
+        type: Number,
+        required: true,
+        default: 10
     }
 });
 

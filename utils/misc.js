@@ -1,8 +1,8 @@
 /**
  * Miscellaneous utilities.
  * Author: GP.
- * Version: 1.1
- * Release Date: 12-Apr-2014
+ * Version: 1.2
+ * Release Date: 24-Apr-2014
  */
 
 /**
@@ -44,29 +44,6 @@ var getMaxOrMinofArray = function(maxormin, array_dict, column, fn) {
     }));
 }
 
-/*
- * Counts number of words in a given string and returns
- * the optimal allowed time( in seconds) to read it.
- * Average words PPM can be changed in config.
- * @param {String} string to calculate allowed time for.
- * @param {Function} callback.
- * @api public
- */
-
-var getAllowedTime = function(text, fn) {
-    try {
-        text = text.replace(/ ( ^ \s * ) | (\s * $) /gi, ''); //exclude  start and end white-space
-        text = text.replace(/[ ]{2,}/gi, ' '); //2 or more space to 1
-        text = text.replace(/\n /, '\n'); //exclude newline with a start spacing
-        var word_count = text.split(' ').length;
-        var allowed_time = (word_count * 60) / config.MISC_AVG_WORDS_PPM;
-        allowed_time = (allowed_time <= 10) ? config.MISC_DEFAULT_ALLOWED_QUESTION_TIME : Math.round(allowed_time);
-        fn(null, allowed_time);
-    } catch (err) {
-        fn(null, config.MISC_DEFAULT_ALLOWED_QUESTION_TIME);
-    }
-}
-
 /**
  * Gets starting day of this week and returns a Date() object for that day.
  *
@@ -105,7 +82,6 @@ var validateSignUpForm = function(request_body, fn) {
 
 module.exports = {
     getMaxOrMinofArray: getMaxOrMinofArray,
-    getAllowedTime: getAllowedTime,
     getMonday: getMonday,
     validateSignUpForm: validateSignUpForm
 }

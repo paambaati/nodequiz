@@ -258,6 +258,22 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-sm-3 control-label">Allowed time (in seconds)</label>
+                                                <div class="col-sm-9 input-group">
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-0" data-type="minus" class="btn btn-grey btn-number" type="button" name="allowed_time-0">
+                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                          </button>
+                                                      </span>
+                                                      <input type="text" max="25" min="10" value="10" class="form-control input-number" name="allowed_time-0" required>
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-0" data-type="plus" class="btn btn-grey btn-number" type="button" name="allowed_time-0">
+                                                              <span class="glyphicon glyphicon-plus"></span>
+                                                          </button>
+                                                      </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
                                                     <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
@@ -360,6 +376,22 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-sm-3 control-label">Allowed time (in seconds)</label>
+                                                <div class="col-sm-9 input-group">
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-{{ loop.index0 }}" data-type="minus" class="btn btn-grey btn-number" type="button" name="allowed_time-{{ loop.index0 }}">
+                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                          </button>
+                                                      </span>
+                                                      <input type="text" max="25" min="10" value="{{ question.allowed_time }}" class="form-control input-number" name="allowed_time-{{ loop.index0 }}" required>
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-{{ loop.index0 }}" data-type="plus" class="btn btn-grey btn-number" type="button" name="allowed_time-{{ loop.index0 }}">
+                                                              <span class="glyphicon glyphicon-plus"></span>
+                                                          </button>
+                                                      </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
                                                     <button type="button" class="btn btn-danger btn-delete" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
@@ -459,6 +491,22 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-sm-3 control-label">Allowed time (in seconds)</label>
+                                                <div class="col-sm-9 input-group">
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-0" data-type="minus" class="btn btn-grey btn-number" type="button" name="allowed_time-0">
+                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                          </button>
+                                                      </span>
+                                                      <input type="text" max="25" min="10" value="10" class="form-control input-number" name="allowed_time-0" required>
+                                                      <span class="input-group-btn">
+                                                          <button data-field="allowed_time-0" data-type="plus" class="btn btn-grey btn-number" type="button" name="allowed_time-0">
+                                                              <span class="glyphicon glyphicon-plus"></span>
+                                                          </button>
+                                                      </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
                                                     <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
@@ -545,7 +593,8 @@
                     'choice2-0': { required: true, notEqualToGroup: ['.choices'] },
                     'choice3-0': { required: true, notEqualToGroup: ['.choices'] },
                     'choice4-0': { notEqualToGroup: ['.choices'] },
-                    'choice5-0': { notEqualToGroup: ['.choices'] }
+                    'choice5-0': { notEqualToGroup: ['.choices'] },
+                    'allowed_time-0': { required: true, digits: true, min: 10, max: 25 }
                 },
                 messages: {
                     'answer-0': 'Please select an answer by selecting one of the round buttons.'
@@ -572,17 +621,20 @@
                 question_block.find('textarea, input:not([type=radio])').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
                 question_block.find('form').first().validate();
-                $.each(question_block.find('input, textarea'), function(counter, element){
+                $.each(question_block.find('input, textarea, button.btn-number'), function(counter, element){
                     var curr_name = element.getAttribute('name'),
                         count = parseInt(curr_name.substring(curr_name.lastIndexOf('-') + 1, curr_name.length)) + 1,
                         new_name = curr_name.substring(0, curr_name.lastIndexOf('-') + 1) + count;
                     element.setAttribute('name', new_name);
+                    if (element.hasAttribute('data-field')) {
+                        element.setAttribute('data-field', new_name);
+                    };
                     if (element.hasAttribute('required')) {
                         $(element).rules('add', { required: true });
-                    }
+                    };
                     if (element.tagName.toLowerCase() == 'input') {
                          $(element).rules('add', { notEqualToGroup: ['.choices'] });
-                    }
+                    };
                 });
                 question_block.find('input[type=radio]').first().rules('add', { messages: 'Please select an answer by selecting one of the round buttons.' });
                 question_block.find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
@@ -615,6 +667,71 @@
             $('form :input').change(function(){
                 var e = $(this);
                 e.parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
+            });
+
+            //+/-
+            $('.btn-number').on('click', function(e){
+                e.preventDefault();
+                fieldName = $(this).attr('data-field');
+                type = $(this).attr('data-type');
+                var input = $("input[name='" + fieldName + "']:visible");
+                var currentVal = parseInt(input.val());
+                if (!isNaN(currentVal)) {
+                    if(type == 'minus') {
+                        if(currentVal > input.attr('min')) {
+                            input.val(currentVal - 1).change();
+                        }
+                        if(parseInt(input.val()) == input.attr('min')) {
+                            $(this).attr('disabled', true);
+                        }
+                    } else if(type == 'plus') {
+                        if(currentVal < input.attr('max')) {
+                            input.val(currentVal + 1).change();
+                        }
+                        if(parseInt(input.val()) == input.attr('max')) {
+                            $(this).attr('disabled', true);
+                        }
+                    }
+                } else {
+                    input.val(input.attr('min'));
+                }
+            });
+
+            $('.input-number').on('focusin', function(){
+               $(this).data('oldValue', $(this).val());
+            });
+
+            $('.input-number').on('change', function() {
+                minValue =  parseInt($(this).attr('min'));
+                maxValue =  parseInt($(this).attr('max'));
+                valueCurrent = parseInt($(this).val());
+                name = $(this).attr('name');
+                if(valueCurrent >= minValue) {
+                    $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+                } else {
+                    $(this).val($(this).data('oldValue'));
+                }
+                if(valueCurrent <= maxValue) {
+                    $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+                } else {
+                    $(this).val($(this).data('oldValue'));
+                }
+            });
+
+            $('.input-number').on('keydown', function (e) {
+                    // Allow: backspace, delete, tab, escape and enter.
+                    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13]) !== -1 ||
+                         // Allow: Ctrl+A
+                        (e.keyCode == 65 && e.ctrlKey === true) || 
+                         // Allow: home, end, left, right
+                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                             // let it happen, don't do anything
+                             return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
             });
 
             var dropzone_settings = {

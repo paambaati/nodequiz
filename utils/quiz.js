@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Author: GP.
- * Version: 1.2
- * Release Date: 20-Apr-2014
+ * Version: 1.3
+ * Release Date: 24-Apr-2014
  */
 
 /**
@@ -38,8 +38,7 @@ function findUserQuestionsForToday(user_id, fn) {
 
 /**
  * Finds next question to display to user.
- * Returns the full Question document, total number of questions today and
- * the optimal allowed time to read the question text.
+ * Returns the full Question document and total number of questions today.
  *
  * @param {String} nth question to display sorted by date.
  * @param {Function} callback.
@@ -67,9 +66,7 @@ function findNextQuestion(index, fn) {
             //No more questions in the quiz!
             return fn(null, null, null);
         } else {
-            misc.getAllowedTime(questions[index].title, function(err, allowed_time) {
-                return fn(null, questions[index], questions.length, allowed_time);
-            });
+            return fn(null, questions[index], questions.length);
         }
     });
 }
