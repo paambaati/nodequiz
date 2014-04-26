@@ -618,7 +618,7 @@
                 var question_block = $('div#dummy-box').clone(true),
                     index = parseInt($('.box-question:visible').last().find('form.form-question').attr('name').replace( /^\D+/g, '')) + 1;
                 question_block.removeAttr('id');
-                question_block.find('textarea, input:not([type=radio])').val('');
+                question_block.find('textarea, input:not([type=radio],.input-number)').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
                 question_block.find('form').first().validate();
                 $.each(question_block.find('input, textarea, button.btn-number'), function(counter, element){
@@ -719,16 +719,11 @@
             });
 
             $('.input-number').on('keydown', function (e) {
-                    // Allow: backspace, delete, tab, escape and enter.
                     if ($.inArray(e.keyCode, [46, 8, 9, 27, 13]) !== -1 ||
-                         // Allow: Ctrl+A
                         (e.keyCode == 65 && e.ctrlKey === true) || 
-                         // Allow: home, end, left, right
                         (e.keyCode >= 35 && e.keyCode <= 39)) {
-                             // let it happen, don't do anything
                              return;
                     }
-                    // Ensure that it is a number and stop the keypress
                     if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
                         e.preventDefault();
                     }
