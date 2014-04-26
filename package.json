@@ -20,7 +20,7 @@
         "async": "*",
         "formidable": "~1.0.0",
         "crypto": "0.0.3",
-        "cryptr": "0.0.1",
+        "hashids": "0.3.2",
         "nodemailer": "*",
         "winston": "*",
         "date": "*",

@@ -105,7 +105,7 @@ config.ERR_QUIZ_NOQUIZTODAY = 'No quiz found in database';
 config.ERR_ADMIN_NOQUESTIONFOUND = 'This question no longer exists in the database.';
 
 //Crypto configuration.
-config.MASTER_SALT = 'cycle la illayam kaathu ernakulathula illayam vaathu';
+config.MASTER_SALT = 'cycle_la_illayam_kaathu_ernakulathula_illayam_vaathu';
 config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.

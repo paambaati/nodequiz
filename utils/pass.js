@@ -1,8 +1,8 @@
 /**
  * Cryptography utilities.
  * Author: GP.
- * Version: 1.0
- * Release Date: 06-Apr-2014
+ * Version: 1.1
+ * Release Date: 27-Apr-2014
  */
 
 /**
@@ -10,7 +10,7 @@
  */
 
 var crypto = require('crypto'),
-    cryptr = require('cryptr'),
+    hashids = require('hashids'),
     config = require('../config/config');
 
 /**
@@ -44,60 +44,60 @@ var hash = function(pwd, salt, fn) {
 };
 
 /**
- * Encrypts a string using ridiculously simple encryption.
- * WARNING: DO NOT use this to encrypt passwords!
+ * Encrypts a MongoDB ObjectID.
  *
- * @param {String} string to encrypt.
+ * @param {String} ObjectID to encrypt.
  * @param {Function} callback.
  * @api public
  */
 
-var encrypt = function(input, fn) {
+var encrypt = function(mongo_id, fn) {
     try {
-        var cryptr_object = new cryptr(config.MASTER_SALT);
-        fn(null, cryptr_object.encrypt(input));
+        var hashid = new hashids(config.MASTER_SALT);
+        fn(null, hashid.encryptHex(mongo_id.toString()));
     } catch (err) {
-        fn(err, null)
+        fn(err, null);
     }
 };
 
 /**
- * Decrypts a cipher using the same ridiculously simple encryption that was used to encrypt it.
+ * Decrypts a cipher encrypted using hex hashids.
  *
  * @param {String} string to decrypt.
  * @param {Function} callback.
  * @api public
  */
 
-var decrypt = function(input, fn) {
+var decrypt = function(hash_value, fn) {
     try {
-        var cryptr_object = new cryptr(config.MASTER_SALT);
-        fn(null, cryptr_object.decrypt(input));
+        var hashid = new hashids(config.MASTER_SALT);
+        fn(null, hashid.decryptHex(hash_value.toString()));
     } catch (err) {
         fn(err, null);
     }
 };
 
 /**
- * Generates a unique cipher by encrypting a user's ID along with the timestamp
- * to be used as a unique time-sensitive key for password reset.
+ * Generates a unique cipher by encrypting a user's MongoDB ObjectID
+ * along with a right-padded 0 to be used as a unique key for password reset.
  *
- * @param {String} string to encrypt.
+ * @param {String} ObjectID to encrypt.
  * @param {Function} callback.
  * @api public
  */
 
 var generateResetKey = function(user_id, fn) {
     try {
-        var cryptr_object = new cryptr(config.RESET_PASSWORD_SALT);
-        fn(null, cryptr_object.encrypt(user_id + '$' + new Date().format('DD-MM-YYYY HH:mm').toString()));
+        var hashid = new hashids(config.RESET_PASSWORD_SALT);
+        fn(null, hashid.encryptHex(user_id.toString() + '0'));
     } catch (err) {
         fn(err, null);
     }
 };
 
 /**
- * Decrypts the reset key and returns the user ID from the decrypted text.
+ * Decrypts the reset key and returns the user ID from the decrypted text
+ * after removing the 0 right padding.
  *
  * @param {String} encrypted reset key.
  * @param {Function} callback.
@@ -106,8 +106,9 @@ var generateResetKey = function(user_id, fn) {
 
 var decryptResetKey = function(reset_key, fn) {
     try {
-        var cryptr_object = new cryptr(config.RESET_PASSWORD_SALT);
-        fn(null, cryptr_object.decrypt(reset_key).split('$')[0]);
+        var hashid = new hashids(config.RESET_PASSWORD_SALT);
+        var decrypted_string = hashid.decryptHex(reset_key.toString());
+        fn(null, decrypted_string.slice(0, decrypted_string.length - 1));
     } catch (err) {
         fn(err, null);
     }

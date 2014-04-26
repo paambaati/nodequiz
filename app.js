@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.6
- * Release Date: 24-Apr-2014
+ * Version: 1.7
+ * Release Date: 27-Apr-2014
  */
 
 /**
@@ -248,20 +248,20 @@ function userExist(req, res, next) {
 /**
  * Activates user by setting `activated` = `true` in DB docs.
  *
- * @param {String} username.
+ * @param {String} user ID (MongoDB's ObjectID).
  * @param {Function} callback.
  */
 
-function activateUser(name, fn) {
+function activateUser(id, fn) {
     //Better use a new instance because mongoose behaves
     //weirdly when doing an UPDATE on an existing instance.
     var User = models.mongoose.model(config.DB_AUTH_TABLE, models.UserSchema);
     models.User.findOne({
-        username: name
+        _id: id
     }, function(err, user) {
         if (user) {
             User.update({
-                username: name,
+                _id: id,
                 activated: false
             }, {
                 activated: true
@@ -486,7 +486,8 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
     var security_answer = req.body.security_answer;
     config.logger.info('SIGNUP - FORM POST', {
         username: username,
-        form_data: req.body
+        security_question: security_question,
+        security_answer: security_answer
     });
 
     misc.validateSignUpForm(req.body, function(err, valid) {
@@ -505,13 +506,13 @@ app.post(config.URL.SIGNUP, userExist, function(req, res) {
                             hash: hash,
                             security_question: security_question,
                             security_answer: security_answer
-                        }).save(function(err, newUser) {
+                        }).save(function(err, new_user) {
                             if (err) throw err;
                             config.logger.info('SIGNUP - USER SAVED IN DB. PROCEEDING TO GENERATE ACTIVATE KEY NOW.', {
                                 username: username
                             });
                             var encrypt = require('./utils/pass').encrypt;
-                            encrypt(username, function(err, activate_key) {
+                            encrypt(new_user._id, function(err, activate_key) {
                                 if (err) throw err;
                                 var domain = req.protocol + '://' + req.get('host');
                                 mailer.sendActivationLink(domain, username, activate_key);
@@ -678,7 +679,7 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
         activate_key: activate_key
     });
     var decrypt = require('./utils/pass').decrypt;
-    decrypt(activate_key, function(err, username) {
+    decrypt(activate_key, function(err, user_id) {
         if (err) {
             config.logger.error('ACTIVATION - ACTIVATION KEY DECRYPTION FAILED', {
                 activate_key: activate_key
@@ -688,21 +689,21 @@ app.get(config.URL.ACTIVATE + '/:activate_key', function(req, res) {
                 'or.. nope. You\'re lame.';
             throw err;
         }
-        config.logger.error('ACTIVATION - ACTIVATION KEY SUCCESSFULLY DECRYPTED', {
+        config.logger.info('ACTIVATION - ACTIVATION KEY SUCCESSFULLY DECRYPTED', {
             activate_key: activate_key,
-            username: username
+            user_id: user_id
         });
-        activateUser(username, function(err, count) {
+        activateUser(user_id, function(err, count) {
             if (err) {
                 config.logger.error('ACTIVATION - ACTIVATION FAILED', {
-                    username: username,
+                    user_id: user_id,
                     error: err
                 });
                 req.session.error = 'User no longer exists!';
                 throw err;
             }
             config.logger.info('ACTIVATION - ACTIVATION COMPLETED FOR USER', {
-                username: username,
+                user_id: user_id,
                 records_updated: count
             });
             if (count == 1) {
