@@ -186,7 +186,7 @@
 												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_1">1. How do I take the quiz? </a> </h3>
 											 </div>
 											 <div id="collapse2_1" class="panel-collapse collapse">
-												<div class="panel-body"> A daily quiz (of usually 5 to 10 questions) is hosted every day, between <strong>{{ start_hour|json|replace(',', ':', 'g') }}</strong> and <strong>{{ stop_hour|json|replace(',', ':', 'g') }}</strong> hours. All you have to do is login and start the quiz. Each question has an intelligently-calculated time limit, and the time left is displayed by an animated progress bar. If you do not select an answer within the time period, an empty response is recorded and the page automatically switches to the next question. </div>
+												<div class="panel-body"> A daily quiz (of usually 5 to 10 questions) is hosted every day, between <strong>{{ start_hour|json|replace(',', ':', 'g') }}</strong> and <strong>{{ stop_hour|json|replace(',', ':', 'g') }}</strong> hours. All you have to do is login and start the quiz. Each question has an <abbr data-content="By the quiz master, of course." data-toggle="popover" class="pop-hover" data-original-title="" data-trigger="hover focus" title="">intelligently-calculated</abbr> time limit, and the time left is displayed by an animated progress bar. If you do not select an answer within the time period, an empty response is recorded and the page automatically switches to the next question. </div>
 											 </div>
 										  </div>
 										  <div class="panel panel-default">
@@ -213,8 +213,8 @@
 											 <div class="panel-heading">
 												<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse3_1">1. Wait, you actually have a privacy policy? </a> </h3>
 											 </div>
-											 <div id="collapse3_1" class="panel-collapse collapse">
-												<div class="panel-body"> Yup. The only personal information we ask of you is your password. This password is one-way encrypted using a <abbr data-content="128-bit PBKDF2 with around 12,000 iterative derivates." data-toggle="popover" data-title="Crypto" class="pop-hover" data-original-title="" data-trigger="hover focus" title="">super secure algorithm</abbr> - meaning a hash value is saved along with a unique salt. This means that even if someone managed to gain access to the database, he or she cannot view your password. Read more about how one-way hashes work <a href="http://security.stackexchange.com/q/11717" target="_blank" title="encryption - Why are hash functions one way? If I know the algorithm, why can&#39;t I calculate the input from it? - Information Security Stack Exchange">here</a>.</div>
+											 <div id="collapse3_1" class="panel-collapse collapse in">
+												<div class="panel-body"> Yup. The only personal information we ask of you is your password. This password is one-way encrypted using a <abbr data-content="128-bit PBKDF2 with around 12,000 iterative derivates." data-toggle="popover" data-title="Crypto" class="pop-hover" data-original-title="" data-trigger="hover focus" title="">super secure algorithm</abbr> that makes sure that even if someone manages to gain access to the database, he or she cannot decrypt, let alone see, your password. Read more about how one-way hashes work <a href="http://security.stackexchange.com/q/11717" target="_blank" title="encryption - Why are hash functions one way? If I know the algorithm, why can&#39;t I calculate the input from it? - Information Security Stack Exchange">here</a>.</div>
 											 </div>
 										  </div>
 									   </div>
