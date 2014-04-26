@@ -566,7 +566,9 @@ app.post(config.URL.FORGOT, function(req, res) {
             sendResetKey(username, security_question, security_answer, domain, ip, user_cookie, function(err, reset_key) {
                 if (err && err.message == config.ERR_RESET_INVALID_DETAILS) {
                     config.logger.warn('FORGOT PASSWORD - INVALID DETAILS ENTERED BY USER', {
-                        username: username
+                        username: username,
+                        security_question: security_question,
+                        security_answer: security_answer
                     });
                     req.session.error = err.message;
                     res.redirect(config.URL.FORGOT);
