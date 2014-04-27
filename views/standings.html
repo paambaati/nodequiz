@@ -39,6 +39,7 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.gritter.min.css" />
     <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
     <!-- /STYLESHEETS -->
@@ -420,6 +421,7 @@
     <script type="text/javascript" src="/javascripts/jquery.flot.resize.min.js"></script>
     <script type="text/javascript" src="/javascripts/xdate.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.animateNumber.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.gritter.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="/javascripts/script.js"></script>
     <script type="text/javascript">
@@ -520,6 +522,15 @@
                     }
                 });
             }
+
+            $.gritter.add({
+              title: 'Congratulations!',
+              text: 'You just made it to the top 5 quizzers list this week!',
+              image: '/some/nice/128x128image.png',
+              sticky: false,
+              class_name: 'my-sticky-class',
+              time: ''
+            });
 
             var ajax_box1 = $('#box_top5');
             App.blockUI(ajax_box1), getTop5Stats();
