@@ -508,6 +508,9 @@
                             table_html = '';
                         for(var j = 0; j < length; j++) {
                             table_html += '<tr><td><span class="badge badge-' + badge_colors[data[j][3]] + '">' + data[j][3] + '</span></td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
+                            if(data[j][1] == "{{ username }}") {
+                              notify(top5_periods[i]);
+                            }
                         }
                         document.getElementById('tbody_top5_' + top5_periods[i]).innerHTML = table_html;
                     });
@@ -523,14 +526,16 @@
                 });
             }
 
-            $.gritter.add({
-              title: 'Congratulations!',
-              text: 'You just made it to the top 5 quizzers list this week!',
-              image: '/some/nice/128x128image.png',
-              sticky: false,
-              class_name: 'my-sticky-class',
-              time: ''
-            });
+            function notify(time_period) {
+              $.gritter.add({
+                title: 'Congratulations!',
+                text: 'You just made it to the ' + time_period + ' top 5!',
+                image: '/images/gritter-congrats.png',
+                sticky: false,
+                class_name: 'my-sticky-class',
+                time: ''
+              });
+            }
 
             var ajax_box1 = $('#box_top5');
             App.blockUI(ajax_box1), getTop5Stats();
