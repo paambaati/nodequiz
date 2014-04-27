@@ -1023,5 +1023,5 @@ app.use(function(req, res, next) {
  */
 
 app.listen(config.APP_PORT, function() {
-    console.log('NodeJS Express server listening on port [' + config.APP_PORT + ']');
+    config.logger.info('START - NodeJS Express server started listening on port [' + config.APP_PORT + ']');
 });
