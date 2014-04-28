@@ -8,7 +8,7 @@ A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run
  1. Fully built using the latest stable versions of Node.JS, Express (4.x) and MongoDB.
  2. Beautiful frontend using Bootstrap 3.x and jQuery 2.x, including skins.
  3. Custom admin interface complete with image upload functionality.
- 4. Uses the `[swig][1]` template engine instead of the default `jade`. (That's because I come from Django).
+ 4. Uses the [swig][1] template engine instead of the default `jade`. (That's because I come from Django).
 
 **Deployment**
 
