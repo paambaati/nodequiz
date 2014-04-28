@@ -1,8 +1,8 @@
 /**
  * Miscellaneous utilities.
  * Author: GP.
- * Version: 1.2
- * Release Date: 24-Apr-2014
+ * Version: 1.3
+ * Release Date: 28-Apr-2014
  */
 
 /**
@@ -58,6 +58,14 @@ var getMonday = function(fn) {
     fn(null, new Date(today.setDate(diff)));
 }
 
+/**
+ * Validates signup form.
+ *
+ * @param {Object} JSON object of request body.
+ * @param {Function} callback.
+ * @api public
+ */
+
 var validateSignUpForm = function(request_body, fn) {
     var username = request_body.username;
     var password = request_body.first_password;
@@ -77,11 +85,27 @@ var validateSignUpForm = function(request_body, fn) {
 }
 
 /**
+ * Sanitizes text to counter XSS, by stripping out HTML tags and problematic delimiters.
+ *
+ * @param {String} Text to clean.
+ * @api public
+ */
+
+var sanitizeText = function(input_text, fn) {
+    input_text = input_text.replace(/&/g, '&amp;').
+    replace(/</g, '&lt;'). // it's not neccessary to escape >
+    replace(/"/g, '&quot;').
+    replace(/'/g, '&#039;');
+    return fn(input_text);
+}
+
+/**
  * Module exports.
  */
 
 module.exports = {
     getMaxOrMinofArray: getMaxOrMinofArray,
     getMonday: getMonday,
-    validateSignUpForm: validateSignUpForm
+    validateSignUpForm: validateSignUpForm,
+    sanitizeText: sanitizeText
 }

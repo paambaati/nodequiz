@@ -138,13 +138,13 @@
 									<div class="box-title">
 										<h4><i class="fa fa-bars"></i> <span class="hidden-inline-mobile">Question #{{ question_index }}</span></h4>
 										<div class="items">
-											<div class="progress active">
+											<div class="progress progress-striped active">
 												<div id="time_progress" style="width: 0%" aria-valuemax="{{ question.allowed_time }}" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info"></div>
 										</div>
 										</div>
 									</div>
 									<div class="box-body">
-										<blockquote><p>{{ question.title }}</p></blockquote>
+										<blockquote><p>{{ question.title|striptags }}</p></blockquote>
 										{% if question.image %}
 										<div class="jumbotron">
 											<img src="{{ UPLOAD_DIR }}{{ question.image }}" class="thumbnail">
@@ -159,7 +159,7 @@
 													<div class="radio">
 														<span style="vertical-align: middle">
 															<input type="radio" value="{{ loop.index }}" name="choice" class="uniform">
-															{{ choice.choice_text }}
+															{{ choice.choice_text|striptags }}
 														</span>
 													</div>
 												</label>

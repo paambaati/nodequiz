@@ -1,7 +1,7 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.7.1
+ * Version: 1.7.2
  * Release Date: 28-Apr-2014
  */
 
@@ -401,7 +401,7 @@ function resetPassword(reset_key, new_password, fn) {
  * Routes
  */
 
-app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('inside'), function(req, res) {
     config.logger.info('START QUIZ - PAGE GET', {
         username: req.session.user.username
     });
@@ -814,11 +814,6 @@ app.post(config.URL.QUIZ_ADMIN_SAVE_AJAX, requiredAuthentication, function(req, 
         question_id = null;
     if (req.session.is_admin) {
         for (var item in req_body) {
-            //Sanitize for HTML/XSS
-            item = item.replace(/&/g, '&amp;').
-            replace(/</g, '&lt;'). // it's not neccessary to escape >
-            replace(/"/g, '&quot;').
-            replace(/'/g, '&#039;');
             //All form elements will be submitted as element-name-n where n is the nth form on the admin page.
             //We strip it from each element. Silly, I know.
             var new_item = item.substring(0, item.lastIndexOf('-'));
@@ -914,7 +909,7 @@ app.get(config.URL.LOGIN, function(req, res) {
     });
 });
 
-app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('outside'), function(req, res) {
+app.get(config.URL.QUIZ_MAIN, requiredAuthentication, quiz.timeCheck('inside'), function(req, res) {
     config.logger.info('QUIZ - WELCOME - PAGE GET', {
         username: req.session.user.username,
         is_admin: req.session.is_admin
