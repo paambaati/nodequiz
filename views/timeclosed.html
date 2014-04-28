@@ -61,19 +61,22 @@
 				</div>
 				<div class="col-md-4 col-md-offset-4 not-found text-center">
 				   <div class="content">
-                   {% if IS_ADMIN == false %}
+                    {% if IS_ADMIN == false %}
 					  <h3>Time window closed!</h3>
 					  <p>
 						 Sorry, but you can take the quiz only between <strong>{{ start_hour }}</strong> and <strong>{{ stop_hour }}</strong> hours.<br>
-						 Don't forget to take the quiz tomorrow!
 					  </p>
                       {% else %}
                       <h3>It's quiz time now!</h3>
                       <p>
                           Sorry, but the quiz is scheduled to run between <strong>{{ start_hour }}</strong> and <strong>{{ stop_hour }}</strong> hours.<br>
-                          You cannot edit stuff during this time.
+                          You cannot add or modify questions during this time.
                       </p>
-                      {% endif %}
+                    {% endif %}
+                    <div class="btn-group">
+                        <a href="{{ URL.QUIZ_MAIN }}" class="btn btn-success"><i class="fa fa-refresh"></i> Try Again</a>
+                        <a href="{{ URL.LOGOUT }}" class="btn btn-default">Logout</a>
+                    </div>
 				   </div>
 				</div>
 			</div>
