@@ -55,7 +55,7 @@
                 <div class="navbar-brand">
                     <!-- LOGO -->
                     <a href="/">
-                        <img src="/images/logo.png" alt="GA Quiz Logo" class="img-responsive" height="30" width="120">
+                        <img src="/images/logo.png" alt="Quiz Logo" class="img-responsive" height="30" width="120">
                     </a>
                     <!-- /LOGO -->
                 </div>
@@ -141,7 +141,7 @@
                                            <div class="panel-right">
                                                 <div class="number" id="daily_attendees">...</div>
                                                 <div class="title">Attendees Today</div>
-                                                <span class="label label-success" id="attendee_percentage">...<span>%</span></span>
+                                                <span class="label label-success" id="attendee_percentage">...</span>
                                            </div>
                                         </div>
                                      </div>
@@ -432,8 +432,9 @@
             $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=basic', function(data) {
                 $.each(data, function(k, v) {
                     $('#' + k).prop('number', 0).animateNumber({ number: v });
-                    if(k == 'daily_attendees') { $('#' + k).html($('#' + k).html() + '%'); }
                 });
+            }).done(function() {
+                document.getElementById('attendee_percentage').innerHTML += '%';
             });
 
             $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=easytough', function(data) {
