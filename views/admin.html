@@ -756,7 +756,7 @@
                             type: 'DELETE',
                             url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
                             data: { file_name: image },
-                            success: function() { e.prev().find('input#image').val(''); }
+                            success: function() { e.prev().find('input#image').val(''); e.prev().find('input#image_size').val(''); }
                          });
                         }
                     });
@@ -774,7 +774,6 @@
                 var mockFile = { name: '{{question.image}}', size: '{{question.image_size}}' };
                 myDropzone.emit('addedfile', mockFile);
                 myDropzone.emit('thumbnail', mockFile, '{{UPLOAD_DIR}}{{question.image}}');
-                myDropzone.options.maxFiles = myDropzone.options.maxFiles - 1;
                 {% endif %}
                 {% endfor %}
                 {% else %}
