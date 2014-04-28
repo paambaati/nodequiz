@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Author: GP.
- * Version: 1.3
- * Release Date: 24-Apr-2014
+ * Version: 1.3.1
+ * Release Date: 28-Apr-2014
  */
 
 /**
@@ -93,9 +93,9 @@ function timeCheck(time_window) {
         stop_time.setMinutes(config.QUIZ_STOP_TIME[1]);
         stop_time.setSeconds(0);
         if (time_window == 'inside') {
-            result = start_time.getTime() > now.getTime() > stop_time.getTime();
-        } else {
             result = start_time.getTime() < now.getTime() < stop_time.getTime();
+        } else {
+            result = (start_time.getTime() > now.getTime() || now.getTime() > stop_time.getTime());
         }
         (result) ? next() : res.redirect(config.URL.TIMECLOSED);
     });
