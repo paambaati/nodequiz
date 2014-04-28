@@ -756,7 +756,7 @@
                             type: 'DELETE',
                             url: '{{URL.QUIZ_ADMIN_SAVE_UPLOAD}}',
                             data: { file_name: image },
-                            success: function() { e.prev().find('input#image').val(''); e.prev().find('input#image_size').val(''); }
+                            success: function() { e.prev().find('input#image').val(''); e.prev().find('input#image_size').val('0'); }
                          });
                         }
                     });
