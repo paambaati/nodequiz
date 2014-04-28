@@ -64,13 +64,17 @@
                     {% if IS_ADMIN == false %}
 					  <h3>Time window closed!</h3>
 					  <p>
-						 Sorry, but you can take the quiz only between <strong>{{ start_hour }}</strong> and <strong>{{ stop_hour }}</strong> hours.<br>
+						 Sorry, but you can take the quiz only between <strong>{{ start_time|first }}:{{ start_time|last }}</strong> and <strong>{{ stop_time|first }}:{{ stop_time|last }}</strong> hours.<br>
 					  </p>
                       {% else %}
                       <h3>It's quiz time now!</h3>
                       <p>
-                          Sorry, but the quiz is scheduled to run between <strong>{{ start_hour }}</strong> and <strong>{{ stop_hour }}</strong> hours.<br>
+                          Sorry, but the quiz is scheduled to run between <strong>{{ start_time|first }}:{{ start_time|last }}</strong> and <strong>{{ stop_time|first }}:{{ stop_time|last }}</strong> hours.<br>
+                          {% if current_time > stop_time %}
+                          There's no point in trying to modify the quiz now, is there?
+                          {% else %}
                           You cannot add or modify questions during this time.
+                          {% endif %}
                       </p>
                     {% endif %}
                     <div class="btn-group">

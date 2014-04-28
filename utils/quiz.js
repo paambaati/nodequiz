@@ -95,7 +95,7 @@ function timeCheck(time_window) {
         if (time_window == 'inside') {
             result = start_time.getTime() < now.getTime() < stop_time.getTime();
         } else {
-            result = (start_time.getTime() > now.getTime() || now.getTime() > stop_time.getTime());
+            result = start_time.getTime() > now.getTime();
         }
         (result) ? next() : res.redirect(config.URL.TIMECLOSED);
     });

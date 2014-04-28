@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.7
- * Release Date: 27-Apr-2014
+ * Version: 1.7.1
+ * Release Date: 28-Apr-2014
  */
 
 /**
@@ -890,8 +890,9 @@ app.get(config.URL.FORGOT, function(req, res) {
 
 app.get(config.URL.TIMECLOSED, requiredAuthentication, function(req, res) {
     res.render(config.TEMPL_TIMECLOSED, {
-        start_hour: config.QUIZ_START_TIME[0],
-        stop_hour: config.QUIZ_STOP_TIME[0]
+        start_time: config.QUIZ_START_TIME,
+        stop_time: config.QUIZ_STOP_TIME,
+        current_time: [new Date().getHours(), new Date().getMinutes()]
     });
 });
 
