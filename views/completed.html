@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="box-body">
                                         <p>
-                                            <span class="label label-primary arrow-in arrow-in-right">Your score <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> {% if results.total_points == 0 %} points{% else %} point{% endif %} for <strong>{{ results.total_questions }}</strong> {% if results.total_questions == 1 %}question{% else %}questions{% endif %} today! Check out the full results.
+                                            <span class="label label-primary arrow-in arrow-in-right">Your score <i class="fa fa-star"></i></span> You've scored <span class="badge badge-orange">{{ results.total_points }}</span> {% if results.total_points == 0 %} points{% else %} point{% endif %} for <strong>{{ results.total_questions }}</strong> {% if results.total_questions == 1 %}question{% else %}questions{% endif %} today! Check out the full results. You can also view the full <a href="{{ URL.QUIZ_STANDINGS }}"><button class="btn btn-xs btn-warning">Standings</button></a>
                                         </p>
                                         <table class="table table-hover" style="margin-bottom: 0">
                                             <thead>
