@@ -109,6 +109,8 @@ config.MASTER_SALT = 'cycle_la_illayam_kaathu_ernakulathula_illayam_vaathu';
 config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.
+config.COMPANY_SHORT_NAME = 'GA';
+config.COMPANY_LONG_NAME = 'Global Analytics';
 config.RESET_VALIDITY = 3; //Hours
 
 //Uploads configuration.

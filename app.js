@@ -106,6 +106,8 @@ app.use(function(req, res, next) {
     res.locals.username = (req.session.user) ? req.session.user.username : '';
     res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
     res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
+    res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;
+    res.locals.MAIL_USER_DOMAIN = config.MAIL_USER_DOMAIN;
     next();
 });
 
