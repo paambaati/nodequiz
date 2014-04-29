@@ -1,7 +1,7 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.8
+ * Version: 1.8.1
  * Release Date: 29-Apr-2014
  */
 
@@ -27,7 +27,7 @@ var express = require('express'),
 var app = express();
 
 /**
- * Middleware.
+ * Settings.
  */
 
 app.use(morgan('dev'));
@@ -55,54 +55,16 @@ swig.setDefaults({
 });
 app.engine('.html', swig.renderFile);
 
-// `last_user` cookie test/set middleware.
-// Saves logged in username to cookie. This is used during reset password.
-// If a user is resetting password for someone else, this cookie value
-// is sent for shaming.
-app.use(function(req, res, next) {
-    var cookie = req.cookies.last_user;
-    var session_username = (req.session.user) ? req.session.user.username : null;
-    if (cookie === undefined || cookie != session_username) {
-        if (req.session.user) {
-            res.cookie('last_user', req.session.user.username, {
-                maxAge: 172800000,
-                httpOnly: true
-            }); //2-day cookie.
-            config.logger.info('SHAME COOKIE - COOKIE SUCCESSFULLY SET', {
-                username: req.session.user.username
-            });
-        }
-    }
-    next();
-});
+/**
+ * Routes
+ */
 
-// Messaging middleware.
-app.use(function(req, res, next) {
-    var error = req.session.error,
-        msg = req.session.success;
-    delete req.session.error;
-    delete req.session.success;
-    res.locals.message = null;
-    if (error) {
-        res.locals.message = error;
-        res.locals.message_type = 'danger';
-    }
-    if (msg) {
-        res.locals.message = msg;
-        res.locals.message_type = 'success';
-    }
-    res.locals.app_title = config.APP_TITLE;
-    res.locals.URL = config.URL;
-    res.locals.username = (req.session.user) ? req.session.user.username : '';
-    res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
-    res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
-    res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;
-    res.locals.MAIL_USER_DOMAIN = config.MAIL_USER_DOMAIN;
-    next();
-});
+require('./routes/middleware')(app);
+require('./routes/user')(app);
+require('./routes/quiz')(app);
 
 /**
- * Helper functions.
+ * Error handling.
  */
 
 /**
@@ -113,7 +75,8 @@ app.use(function(req, res, next) {
  * @param {Response} response.
  * @param {Boolean} allow to move to next middleware.
  */
-function errorHandler(err, req, res, next) {
+
+function errorHandler500(err, req, res, next) {
     res.status(500);
     var is_ajax_request = req.xhr;
     var error_data = {
@@ -131,27 +94,32 @@ function errorHandler(err, req, res, next) {
 }
 
 /**
- * Routes
+ * Custom 404 page handler.
+ *
+ * @param {Error} full error.
+ * @param {Request} request.
+ * @param {Response} response.
+ * @param {Boolean} allow to move to next middleware.
  */
 
-require('./routes/user')(app);
-require('./routes/quiz')(app);
-
-/**
- * Error handling.
- */
-
-//Use our custom 500 handler.
-app.use(errorHandler);
-
-//404 handler.
-app.use(function(req, res, next) {
+function errorHandler404(req, res, next) {
+    config.logger.error('404 - PAGE NOT FOUND', {
+        username: (req.session.user) ? req.session.user.username : 'AnonymousUser',
+        accessed_url: req.originalUrl,
+        referer_url: req.headers.referer
+    });
     res.status(404);
     res.render(config.TEMPL_400, {
         url: req.url
     });
     return;
-});
+}
+
+//Use our custom 500 handler.
+app.use(errorHandler500);
+
+//404 handler.
+app.use(errorHandler404);
 
 /**
  * Run the app!
