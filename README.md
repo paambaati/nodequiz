@@ -37,9 +37,11 @@ where `x` is the maximum number of processor cores available to the app.
 
 For a ridiculously speedy app, also setup `nginx` as a reverse proxy on top of the pm2/node process. Refer the `nginx.conf` file in `config/` for a highly optimized nginx deployment setup.
 
+All other app-specific configuration is present in `config/config.js`.
+
 ### Possible areas of improvement
 
- 5. There's a very small level of code smell - most of the routes are still in `app.js`. Pull requests for cleanup are super-welcome.
+ 5. ~~There's a very small level of code smell - most of the routes are still in `app.js`. Pull requests for cleanup are super-welcome.~~ [COMPLETED]
  6. Templates are all plain and are not structured into base/inherited templates.
  7. Could probably use a Grunt or Gulp task runner script for continuous deployment.
 
