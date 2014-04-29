@@ -419,6 +419,7 @@ app.get(config.URL.QUIZ_START, requiredAuthentication, quiz.timeCheck('inside'),
                 quiz.saveAnswer(req.session.user._id, question._id, '-1', '0', function(err, record) {
                     req.session.question_id = question._id;
                     req.session.question_render_time = new Date();
+                    req.session.question_allowed_time = question.allowed_time;
                     res.render(config.TEMPL_QUIZ_START, {
                         question: question,
                         question_index: count + 1,
@@ -451,6 +452,12 @@ app.post(config.URL.QUIZ_START, function(req, res) {
         answer_chosen: answer_choice,
         response_time: response_time
     });
+    if (response_time > req.session.question_allowed_time) {
+        config.logger.warn('FRAUD DETECTED - RESPONSE TIME > ALLOWED TIME', {
+            allowed_time: req.session.question_allowed_time,
+            response_time: response_time
+        });
+    }
     quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function(err, record) {
         res.redirect(req.originalUrl);
     });
