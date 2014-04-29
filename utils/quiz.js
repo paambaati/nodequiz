@@ -10,7 +10,7 @@
  */
 
 var config = require('../config/config'),
-    models = require('../models'),
+    models = require('../models/models'),
     misc = require('../utils/misc');
 
 /**
