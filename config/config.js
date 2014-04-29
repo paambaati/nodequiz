@@ -78,14 +78,14 @@ config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB
 
 //Mail configuration.
 config.MAIL_DEBUG = false;
-config.MAIL_HOST = 'smtp.mailgun.org';
-config.MAIL_PORT = 587;
-config.MAIL_SECURE = false;
-config.MAIL_USE_TLS = true;
-config.MAIL_USERNAME = 'postmaster@inversekarma.in';
-config.MAIL_PASSWORD = '1t0p-nn-yw17';
-config.MAIL_SENDER = 'Quiz Master <quiz@global-analytics.com>';
-config.MAIL_USER_DOMAIN = '@global-analytics.com';
+config.MAIL_HOST = 'smtp.example.com'; //SMTP mail server
+config.MAIL_PORT = 587; //SMTP port
+config.MAIL_SECURE = false; //SSL
+config.MAIL_USE_TLS = true; //TLS
+config.MAIL_USERNAME = 'username@example.com';
+config.MAIL_PASSWORD = '******';
+config.MAIL_SENDER = 'Quiz Master <quiz@example.com>'; //From address
+config.MAIL_USER_DOMAIN = '@example.com';
 config.MAIL_TEMPLATE = path.join(config.APP_BASE_PATH, './views/mailer.html');
 config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
@@ -109,8 +109,8 @@ config.MASTER_SALT = 'cycle_la_illayam_kaathu_ernakulathula_illayam_vaathu';
 config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.
-config.COMPANY_SHORT_NAME = 'GA';
-config.COMPANY_LONG_NAME = 'Global Analytics';
+config.COMPANY_SHORT_NAME = 'FBI';
+config.COMPANY_LONG_NAME = 'Federal Bureau of Investigation';
 config.RESET_VALIDITY = 3; //Hours
 
 //Uploads configuration.
