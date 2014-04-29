@@ -13,19 +13,6 @@ var config = require('../config/config'),
     nodemailer = require('nodemailer'),
     swig = require('swig');
 
-// SMTP transport for debugging. Not sure if I should be distributing this.
-var transport = nodemailer.createTransport('SMTP', {
-    service: 'Gmail',
-    auth: {
-        XOAuth2: {
-            user: 'exchequer598@gmail.com',
-            clientId: '1097162541020.apps.googleusercontent.com',
-            clientSecret: '6ea8NmVKD7zUa6obgc8HCzps',
-            refreshToken: '1/luLonngmJ5wnWvfUYwSSuuTOUlKIsKrTPWTVMk08zbg'
-        }
-    }
-});
-
 // SMTP transport object.
 var transport = nodemailer.createTransport('SMTP', {
     host: config.MAIL_HOST,
