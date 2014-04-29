@@ -17,7 +17,9 @@ A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run
 Make sure the following packages are installed first.
 
 [nodejs][3]
+
 [mongodb][4]
+
 [nginx][5]
 
 Once these basic packages are installed, DEPLOYMENT TIME!
