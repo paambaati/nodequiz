@@ -20,6 +20,7 @@ module.exports = function(app) {
 
     /**
      * Custom 500 page handler.
+     * (Needs to be the penultimate route)
      *
      * @param {Error} full error.
      * @param {Request} request.
@@ -46,6 +47,7 @@ module.exports = function(app) {
 
     /**
      * Custom 404 page handler.
+     * (Needs to be the very last route)
      *
      * @param {Error} full error.
      * @param {Request} request.
