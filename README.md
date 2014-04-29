@@ -1,26 +1,22 @@
-NodeQuiz
-========
+## NodeQuiz
 
 A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run inside an organization, where users can register and take a quiz everyday. Also features a full-fledged admin interface for adding questions.
 
-**Features**
+### Features
 
  1. Fully built using the latest stable versions of Node.JS, Express (4.x) and MongoDB.
  2. Beautiful responsive frontend using Bootstrap 3.x and jQuery 2.x, including skins.
  3. Custom admin interface complete with image upload functionality using [DropzoneJS][1].
  4. Uses the [`swig`][2] template engine instead of the default `jade`. (That's because I come from Django).
  5. Well-designed responsive mail templates for all email communication.
- 6. Beautiful & functional admin interface.
 
-**Deployment**
+### Deployment
 
 Make sure the following packages are installed first.
 
-[nodejs][3]
-
-[mongodb][4]
-
-[nginx][5]
+- [nodejs][3]
+- [mongodb][4]
+- [nginx][5]
 
 Once these basic packages are installed, DEPLOYMENT TIME!
 
@@ -40,7 +36,7 @@ where `x` is the maximum number of processor cores available to the app.
 
 For a ridiculously speedy app, also setup `nginx` as a reverse proxy on top of the pm2/node process. Refer the `nginx.conf` file in `config/` for a highly optimized nginx deployment setup.
 
-**Possible areas of improvement**
+### Possible areas of improvement
 
  5. There's a very small level of code smell - most of the routes are still in `app.js`. Pull requests for cleanup are super-welcome.
  6. Templates are all plain and are not structured into base/inherited templates.
