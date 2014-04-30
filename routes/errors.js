@@ -29,6 +29,12 @@ module.exports = function(app) {
      */
 
     app.use(function(err, req, res, next) {
+        config.logger.error('500 - EXCEPTION', {
+            username: (req.session.user) ? req.session.user.username : 'AnonymousUser',
+            accessed_url: req.originalUrl,
+            is_ajax: req.xhr,
+            stacktrace: err.stack,
+        });
         res.status(500);
         var is_ajax_request = req.xhr;
         var error_data = {
