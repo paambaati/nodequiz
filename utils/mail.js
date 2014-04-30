@@ -1,8 +1,8 @@
 /**
  * Email utilities.
  * Author: GP.
- * Version: 1.2
- * Release Date: 17-Apr-2014
+ * Version: 1.2.1
+ * Release Date: 30-Apr-2014
  */
 
 /**
