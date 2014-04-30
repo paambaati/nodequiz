@@ -13,6 +13,10 @@ var config = require('../config/config'),
     nodemailer = require('nodemailer'),
     swig = require('swig');
 
+/**
+ * Common variables.
+ */
+
 // SMTP transport object.
 var transport = nodemailer.createTransport('SMTP', {
     host: config.MAIL_HOST,
@@ -26,6 +30,13 @@ var transport = nodemailer.createTransport('SMTP', {
     }
 });
 
+//Mailer logo.
+var attachment = [{
+    filename: config.MAIL_LOGO.substring(config.MAIL_LOGO.lastIndexOf('/') + 1, config.MAIL_LOGO.length),
+    filePath: config.MAIL_LOGO,
+    cid: 'app_logo'
+}];
+
 /**
  * Sends an email with the activation link to `username`.
  *
@@ -37,20 +48,17 @@ var transport = nodemailer.createTransport('SMTP', {
  */
 
 var sendActivationLink = function(domain, username, activate_key, err) {
+    domain = (domain.lastIndexOf('http://') !== 0) ? 'http://' + domain : domain;
+    domain = (domain.substr(-1) == '/') ? domain + '/' : domain;
     var activation_link = domain + config.URL.ACTIVATE + '/' + activate_key;
-    activation_link = (domain.lastIndexOf('http://') !== 0) ? 'http://' + activation_link : activation_link;
     var message = {
         from: config.MAIL_SENDER,
         to: username + config.MAIL_USER_DOMAIN,
         subject: '» ' + config.APP_TITLE + ' - Activate your Account',
-        attachments: [{
-            filename: 'logo.png',
-            filePath: config.MAIL_LOGO,
-            cid: 'app_logo'
-        }],
+        attachments: attachment,
         html: swig.renderFile(config.MAIL_TEMPLATE, {
             app_title: config.APP_TITLE,
-            main_link: 'http://' + domain,
+            main_link: domain,
             mail_mode: 'activation',
             activation_link: activation_link
         })
@@ -84,23 +92,20 @@ var sendActivationLink = function(domain, username, activate_key, err) {
  */
 
 var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
+    domain = (domain.lastIndexOf('http://') !== 0) ? 'http://' + domain : domain;
+    domain = (domain.substr(-1) == '/') ? domain + '/' : domain;
     var reset_link = domain + config.URL.RESET + '/' + reset_key;
-    reset_link = (domain.lastIndexOf('http://') !== 0) ? 'http://' + reset_link : reset_link;
     var shame = (user_cookie === undefined) ? '' : ' by user ' + user_cookie;
     var message = {
         from: config.MAIL_SENDER,
         to: username + config.MAIL_USER_DOMAIN,
         subject: '» ' + config.APP_TITLE + ' - Reset Your Password',
-        attachments: [{
-            filename: 'logo.png',
-            filePath: config.MAIL_LOGO,
-            cid: 'app_logo'
-        }],
+        attachments: attachment,
         html: swig.renderFile(config.MAIL_TEMPLATE, {
             app_title: config.APP_TITLE,
-            main_link: 'http://' + domain,
+            main_link: domain,
             mail_mode: 'reset_password',
-            reset_link: 'http://' + domain + config.URL.RESET + '/' + reset_key,
+            reset_link: reset_link,
             validity_period: config.RESET_VALIDITY,
             ip_address: ip,
             shame_name: shame
