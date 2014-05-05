@@ -122,7 +122,8 @@ var QuizHistorySchema = new Schema({
     },
     user_id: {
         type: ObjectId,
-        required: true
+        required: true,
+        ref: config.DB_AUTH_TABLE
     },
     question_id: {
         type: ObjectId,
