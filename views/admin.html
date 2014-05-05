@@ -644,6 +644,10 @@
                 question_block.find('form.dropzone').remove();
                 $('body div#dummy-dropzone').clone(true).removeClass('hidden').children().first().attr('id', 'my-awesome-dropzone-' + index).attr('name', 'my-awesome-dropzone-' + index).dropzone(dropzone_settings).insertAfter(question_block.find('form.form-question'));
                 question_block.insertAfter($('.box-question').last());
+                question_block.find('textarea').focus();
+                $('html, body').animate({
+                    scrollTop: question_block.offset().top
+                }, 500);
             });
 
             $('button.btn-delete').on('click', function () {
