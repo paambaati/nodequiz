@@ -51,20 +51,20 @@ function getDailyQuestionsCount(fn) {
 }
 
 /**
- * Gets the total number of users registered.
+ * Gets the total number of registered non-admin users.
  *
  * @param {Function} callback.
  * @api public
  */
 
 function getTotalUserCount(fn) {
-    models.User.count(function(err, count) {
+    models.User.where({'admin': false}).count(function(err, count) {
         return fn(null, count);
     })
 }
 
 /**
- * Gets all unique users who've attended today's quiz.
+ * Gets all unique non-admin users who've attended today's quiz.
  *
  * @param {Function} callback.
  * @api private
@@ -73,13 +73,15 @@ function getTotalUserCount(fn) {
 function getDailyAttendees(fn) {
     var start_day = new Date();
     start_day.setHours(0, 0, 0, 0);
-    var query = {
+    var to_find = {
         date: {
             $gte: start_day
         }
     };
-    models.QuizHistory.count(query).distinct('user_id', function(err, count) {
-        return fn(null, count);
+    var query = models.QuizHistory.count(to_find).distinct('user_id');
+    query.populate('user_id', null, {admin: {$ne: true}});
+    query.exec(function(err, results) {
+        return fn(null, results);
     });
 };
 
