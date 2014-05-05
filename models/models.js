@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4
- * Release Date: 24-Apr-2014
+ * Version: 1.4.1
+ * Release Date: 05-May-2014
  */
 
 /**
