@@ -82,10 +82,12 @@
                                     <br>We're super-glad that you decided to sign up for {{app_title}} - you're one of the cool kids now! Before you can start taking our quizzes, please click the link below to activate your account.
                                     <br>
                                     <br>
-                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{activation_link}}" target="_blank">{{activation_link}}</a></span>
+                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{activation_link}}" style="color:#2469A0;" target="_blank">{{activation_link}}</a></span>
                                     <br>
                                     <br>
                                     <em style="font-style:italic; font-size: 12px; color: #aaa;">Note: If clicking the above link doesn't work (somehow inexplicably, might I add), you can copy it and paste it in your favourite browser.</em>
+                                    <br>
+                                    <br>
                                     {% else %}
                                     <div style="font-weight: bold; font-size: 18px; line-height: 24px; color: #507AA4">
                                         It's okay, happens to the best of us
@@ -93,7 +95,7 @@
                                     <br>Forgot your password? Fret not, we got you covered. Just click on the scary-looking link below to set up your new password.
                                     <br>
                                     <br>
-                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{reset_link}}" target="_blank">{{reset_link}}</a></span>
+                                    <span style="font-family: Andale Mono, Courier, monospace; color: #666;"><a href="{{reset_link}}" style="color:#2469A0;" target="_blank">{{reset_link}}</a></span>
                                     <br>
                                     <br>
                                     <em>Remember</em>, this link is valid only for the next <strong>{{validity_period}}</strong> hours!
@@ -111,8 +113,11 @@
                                     </ul>
                                     {% endif %}
                                     <br>
+                                    <div style="border-top: 1px solid #ddd;">
+                                        <br>Have questions? Check the <a href="{{faq_link}}" style="color:#2469A0;">FAQ</a>.
+                                    </div>
                                     <br>
-                                    <em style="font-style:italic; font-size: 12px; color: #aaa;">{{app_title}} - coded with &#x2764; using Node.js, buttloads of coffee and Nine Inch Nails on repeat.</em>
+                                    <em style="font-style:italic; font-size: 12px; color: #aaa;">{{app_title}} - coded with <a href="http://github.com/paambaati/nodequiz" target="_blank" style="text-decoration: none; color: #D03C0F">&#x2764;</a> using Node.js, buttloads of coffee and Nine Inch Nails on repeat.</em>
                                     <br>
                                     <br>
                                     <!-- ### END CONTENT ### -->
