@@ -9,7 +9,7 @@ A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run
  3. Standings/Rankings page that shows detailed organization-wide statistics, along with fancy graph charts built using [Flot](http://www.flotcharts.org/ "Flot: Attractive JavaScript plotting for jQuery").
  4. Custom admin interface complete with image upload functionality using [DropzoneJS][1].
  5. Uses the [`swig`][2] template engine instead of the default `jade`. (That's because I come from Django).
- 6. Well-designed responsive mail templates for all email communication.
+ 6. Well-designed responsive templates for all email communication, thanks to [Antwort](https://github.com/InterNations/antwort).
 
 ### Deployment
 
