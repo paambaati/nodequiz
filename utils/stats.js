@@ -374,9 +374,9 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
     };
     start_day.setHours(0, 0, 0, 0);
     var to_find = {
-        /*date: {
+        date: {
             $gte: start_day
-        },*/
+        },
         user_id: user_id
     };
     var history_query = models.QuizHistory.find(to_find);
