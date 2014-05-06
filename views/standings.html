@@ -124,7 +124,7 @@
                                     <div class="clearfix">
                                         <h3 class="content-title pull-left">Quiz Standings &amp; Rankings</h3>
                                     </div>
-                                    <div class="description">Stats for nerds. <i class="fa fa-refresh"></i> Refresh the page to update.</div>
+                                    <div class="description">Stats for nerds. <a href='#' onclick='location.reload(true); return false;'><i class="fa fa-refresh"></i></a> Refresh the page to update.</div>
                                 </div>
                             </div>
                         </div>
@@ -433,8 +433,6 @@
                 $.each(data, function(k, v) {
                     $('#' + k).prop('number', 0).animateNumber({ number: v });
                 });
-            }).done(function() {
-                document.getElementById('attendee_percentage').innerHTML += '%';
             });
 
             $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=easytough', function(data) {
