@@ -239,7 +239,11 @@ function getTop5(time_period, fn) {
                     break_at = i + 1;
                     if (counter == rank_limit) break;
                 }
-                return fn(null, userscore_array.slice(0, break_at));
+                if(userscore_array.length == 1) {
+                    return fn(null, userscore_array);
+                } else {
+                    return fn(null, userscore_array.slice(0, break_at));
+                }
             });
     });
 }
