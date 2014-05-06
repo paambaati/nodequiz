@@ -288,6 +288,9 @@
                 },
                 errorElement: 'span',
                 errorClass: 'help-block',
+                errorPlacement: function(error, element) {
+                    error.appendTo(element.parents('div.form-group'));
+                },
                 highlight: function(element, errorClass) {
                     $(element).parents('div.form-group').addClass('has-error');
                 },
