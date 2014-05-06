@@ -93,7 +93,7 @@ function timeCheck(time_window) {
         stop_time.setMinutes(config.QUIZ_STOP_TIME[1]);
         stop_time.setSeconds(0);
         if (time_window == 'inside') {
-            result = start_time.getTime() < now.getTime() < stop_time.getTime();
+            result = (start_time.getTime() < now.getTime()) && (now.getTime() < stop_time.getTime());
         } else {
             result = start_time.getTime() > now.getTime();
         }
