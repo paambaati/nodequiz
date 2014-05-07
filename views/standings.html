@@ -132,7 +132,21 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
-                                  <div class="col-lg-3">
+                                  <div class="col-lg-4">
+                                     <div class="dashbox panel panel-default">
+                                        <div class="panel-body">
+                                           <div class="panel-left green">
+                                                <i class="fa fa-users fa-3x"></i>
+                                           </div>
+                                           <div class="panel-right">
+                                                <div class="number" id="overall_rank">...</div>
+                                                <div class="title">Your Overall Rank</div>
+                                                <span class="label label-info">Out of {{ total_users_count }}</span>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="col-lg-2">
                                      <div class="dashbox panel panel-default">
                                         <div class="panel-body">
                                            <div class="panel-left red">
@@ -146,7 +160,7 @@
                                         </div>
                                      </div>
                                   </div>
-                                  <div class="col-lg-3">
+                                  <div class="col-lg-2">
                                      <div class="dashbox panel panel-default">
                                         <div class="panel-body">
                                            <div class="panel-left red">
@@ -159,7 +173,7 @@
                                         </div>
                                      </div>
                                   </div>
-                                  <div class="col-lg-3">
+                                  <div class="col-lg-2">
                                      <div class="dashbox panel panel-default">
                                         <div class="panel-body">
                                            <div class="panel-left blue">
@@ -172,10 +186,10 @@
                                         </div>
                                      </div>
                                   </div>
-                                  <div class="col-lg-3">
+                                  <div class="col-lg-2">
                                      <div class="dashbox panel panel-default">
                                         <div class="panel-body">
-                                           <div class="panel-left red">
+                                           <div class="panel-left yellow">
                                                 <i class="fa fa-clock-o fa-3x"></i>
                                            </div>
                                            <div class="panel-right">
@@ -498,7 +512,8 @@
             function getTop5Stats() {
                 var top5_periods = ['weekly', 'monthly', 'alltime'],
                     badge_colors = ['','red', 'blue', 'green', 'orange', ''],
-                    length = top5_periods.length;
+                    length = top5_periods.length,
+                    fetch_rank = true;
                 for (var i = 0; i < length; i++) {
                   (function(i){
                     $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=top5&period=' + top5_periods[i], function(data) {
@@ -509,12 +524,24 @@
                             table_html += '<tr><td><span class="badge badge-' + badge_colors[data[j][3]] + '">' + data[j][3] + '</span></td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
                             if(data[j][1] == "{{ username }}") {
                               notify(top5_periods[i]);
+                              if(top5_periods[i] == 'alltime') {
+                                fetch_rank = false;
+                                $('div#overall_rank').html(data[j][3]).prop('number', 0).animateNumber({ number: data[j][3] });
+                              }
                             }
                         }
                         document.getElementById('tbody_top5_' + top5_periods[i]).innerHTML = table_html;
+                    }).always(function() {
+                        if (fetch_rank && top5_periods[i] == 'alltime') { getRank(); }
                     });
                   })(i);
                 }
+            }
+
+            function getRank() {
+                $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=myrank', function(data) {
+                    $('div#overall_rank').html(data).prop('number', 0).animateNumber({ number: data });
+                });
             }
 
             function getMyHistory() {
@@ -540,7 +567,7 @@
             App.blockUI(ajax_box1), getTop5Stats();
 
             var ajax_box2 = $('#box_myhistory');
-            App.blockUI(ajax_box2), getMyHistory();            
+            App.blockUI(ajax_box2), getMyHistory();
 
             $(document).ajaxStop(function () {
                 App.unblockUI(ajax_box1);
