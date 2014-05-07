@@ -50,6 +50,7 @@ config.URL = {
 config.TEMPL_LOGIN = 'login.html';
 config.TEMPL_RESET = 'reset.html';
 config.TEMPL_500 = '500.html';
+config.TEMPL_403 = '403.html';
 config.TEMPL_404 = '404.html';
 config.TEMPL_200 = '200.html';
 config.TEMPL_TIMECLOSED = 'timeclosed.html';
