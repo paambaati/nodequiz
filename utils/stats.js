@@ -166,7 +166,7 @@ function getDailyQuickestQuiz(fn) {
 }
 
 /**
- * Gets the top 5 scorers for the specified time period.
+ * Gets the top `n` scorers for the specified time period.
  * Returns a nested array of the form
  * [
  *    [score, username, avg response time, rank],
@@ -174,11 +174,12 @@ function getDailyQuickestQuiz(fn) {
  * ]
  *
  * @param {String} time period for which the data is required. Allowed values are 'weekly', 'monthly', 'alltime'.
+ * @param {Number} `n` number of top scorers to be fetched - optional, default = 5.
  * @param {Function} callback.
  * @api public
  */
 
-function getTop5(time_period, fn) {
+function getTopRanks(time_period, rank_limit, fn) {
     var start_day = new Date(),
         userscore_array = [];
     switch (time_period) {
@@ -220,9 +221,9 @@ function getTop5(time_period, fn) {
             },
             function() {
                 //First, we sort the rank by descending order of points.
-                //Then, we take a slice of the array with the top 5 rank, NOT top 5 items.
-                var rank_limit = 5,
-                    counter = 1,
+                //Then, we take a slice of the array with the top `n` rank, NOT top `n` items.
+                rank_limit = rank_limit || 5;
+                var counter = 1,
                     break_at = 0,
                     rank = 1,
                     rank_match = false;
@@ -417,13 +418,35 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
 }
 
 /**
+ * Gets a user's overall rank.
+ *
+ * @param {String} username.
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getPersonalRank(username, fn) {
+    var rank = -1;
+    getTopRanks('alltime', null, function(err, ranks) {
+        for(var i = 0; i < ranks.length; i++) {
+            if(ranks[i][1] == username) {
+                rank = ranks[i][3];
+                break;
+            }
+        }
+        return fn(null, rank);
+    });
+}
+
+/**
  * Module exports.
  */
 
 module.exports = {
-    getTop5: getTop5,
+    getTopRanks: getTopRanks,
     getTotalUserCount: getTotalUserCount,
     getAllDailyBasicStats: getAllDailyBasicStats,
     getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion,
-    getPersonalScoreHistory: getPersonalScoreHistory
+    getPersonalScoreHistory: getPersonalScoreHistory,
+    getPersonalRank: getPersonalRank
 }
