@@ -29,7 +29,7 @@ module.exports = function(app) {
      * GET '/quiz'
      */
 
-    app.get(config.URL.QUIZ_MAIN, user.requiredAuthentication, quiz.timeCheck('inside'), function(req, res) {
+    app.get(config.URL.QUIZ_MAIN, user.requiredAuthentication, function(req, res) {
         config.logger.info('QUIZ - WELCOME - PAGE GET', {
             username: req.session.user.username,
             is_admin: req.session.is_admin
@@ -331,7 +331,7 @@ module.exports = function(app) {
                     file_ext = files.file.name.split('.').pop(),
                     index = files.file.path.lastIndexOf('/') + 1,
                     file_name = files.file.path.substr(index),
-                    new_path = path.join(__dirname, '/public/', config.UPLOAD_DIR, file_name + '.' + file_ext);
+                    new_path = path.join(config.APP_BASE_PATH, '/public/', config.UPLOAD_DIR, file_name + '.' + file_ext);
 
                 config.logger.info('QUIZ ADMIN - UPLOAD IMAGE POST - PARSED PARAMETERS', {
                     old_path: old_path,
@@ -349,7 +349,7 @@ module.exports = function(app) {
                                 });
                             } else {
                                 res.json({
-                                    'error': null,
+                                    'error': false,
                                     'file_path': file_name + '.' + file_ext,
                                     'image_size': image_size
                                 });
