@@ -72,6 +72,32 @@ function requiredAuthentication(req, res, next) {
 }
 
 /**
+ * Checks if user is an administrator.
+ * If yes, proceed to next middleware.
+ * If no, redirect user to login page or send a 403 response for AJAX request.
+ *
+ * @param {String} request.
+ * @param {String} response.
+ * @param {Boolean} allow to move to next middleware.
+ */
+
+function requiredAdmin(req, res, next) {
+    if (req.session.is_admin) {
+        next();
+    } else {
+        res.status(403);
+        if (req.xhr) {
+            res.json({
+                'error': true,
+                'response': 'lol nice try'
+            });
+        } else {
+            res.render(config.TEMPL_403);
+        }
+    }
+}
+
+/**
  * Checks if the username exists.
  * Returns a boolean value.
  *
@@ -278,6 +304,7 @@ function resetPassword(reset_key, new_password, fn) {
 module.exports = {
     authenticate: authenticate,
     requiredAuthentication: requiredAuthentication,
+    requiredAdmin: requiredAdmin,
     isUsernameValid: isUsernameValid,
     userExist: userExist,
     activateUser: activateUser,
