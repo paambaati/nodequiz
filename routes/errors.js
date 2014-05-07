@@ -68,7 +68,7 @@ module.exports = function(app) {
             referer_url: req.headers.referer
         });
         res.status(404);
-        res.render(config.TEMPL_400, {
+        res.render(config.TEMPL_404, {
             url: req.url
         });
         return;
