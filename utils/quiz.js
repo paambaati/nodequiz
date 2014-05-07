@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Author: GP.
- * Version: 1.3.2
- * Release Date: 28-Apr-2014
+ * Version: 1.3.3
+ * Release Date: 07-May-2014
  */
 
 /**
