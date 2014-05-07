@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.8.2
- * Release Date: 29-Apr-2014
+ * Version: 1.8.3
+ * Release Date: 07-May-2014
  */
 
 /**
@@ -19,9 +19,7 @@ var express = require('express'),
     path = require('path'),
     swig = require('swig'),
     mongoose = require('mongoose'),
-    mongostore = require('connect-mongo')({
-        session: session
-    }),
+    mongostore = require('connect-mongo')(session),
     config = require('./config/config');
 
 var app = express();
