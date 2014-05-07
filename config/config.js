@@ -43,7 +43,8 @@ config.URL = {
     QUIZ_STANDINGS: '/quiz/standings',
     QUIZ_STAT_AJAX: '/quiz/get',
     QUIZ_ADMIN_SAVE_AJAX: '/quiz/admin/save',
-    QUIZ_ADMIN_SAVE_UPLOAD: '/quiz/admin/upload'
+    QUIZ_ADMIN_SAVE_UPLOAD: '/quiz/admin/upload',
+    QUIZ_ADMIN_INACTIVE: '/quiz/admin/data/inactive'
 };
 
 //Basic template configuration.
@@ -60,6 +61,7 @@ config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';
 config.TEMPL_QUIZ_NOQUIZ = 'noquiz.html';
 config.TEMPL_QUIZ_ADMIN = 'admin.html';
+config.TEMPL_QUIZ_ADMIN_INACTIVE = 'inactive_users.html';
 config.TEMPL_QUIZ_STANDINGS = 'standings.html';
 
 //Quiz configuration.

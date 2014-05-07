@@ -190,6 +190,14 @@ module.exports = function(app) {
     });
 
     /*
+     * GET '/quiz/admin/data/inactive'
+     */
+
+    app.get(config.URL.QUIZ_ADMIN_INACTIVE, user.requiredAuthentication, user.requiredAdmin, function(req, res) {
+        res.render(config.TEMPL_QUIZ_ADMIN_INACTIVE);
+    });
+
+    /*
      * POST '/quiz/admin/save'
      * AJAX
      */

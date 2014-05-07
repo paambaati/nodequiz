@@ -7,7 +7,7 @@
     ░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐ wow
     ░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐ 
     ░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐ 
-    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so quiz
+    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so admin
     ░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌ 
     ░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐ 
     ░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌ much nodejs
@@ -52,12 +52,17 @@
     <!-- HEADER -->
     <header class="navbar clearfix" id="header">
         <div class="container">
-                <div class="navbar-brand">
+                <div class="navbar-brand mini-menu">
                     <!-- LOGO -->
                     <a href="/">
                         <img src="/images/logo.png" alt="Quiz Logo" class="img-responsive" height="30" width="120">
                     </a>
                     <!-- /LOGO -->
+                    <!-- SIDEBAR COLLAPSE -->
+                    <div class="sidebar-collapse btn" id="sidebar-collapse">
+                        <i data-icon2="fa fa-bars" data-icon1="fa fa-bars" class="fa fa-bars"></i>
+                    </div>
+                    <!-- /SIDEBAR COLLAPSE -->
                 </div>
                 <!-- NAVBAR LEFT -->
                 <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
@@ -104,7 +109,36 @@
     <!--/HEADER -->
     <!-- PAGE -->
     <section id="page">
-        <div id="main-content">
+        <!-- SIDEBAR -->
+        <div class="sidebar mini-menu" id="sidebar" style="">
+            <div class="sidebar-menu nav-collapse">
+                <div class="divide-20"></div>
+                <!-- SIDEBAR MENU -->
+                <ul>
+                    <li class="active">
+                        <a href="{{ URL.QUIZ_ADMIN }}">
+                            <i class="fa fa-list fa-fw"></i> <span class="menu-text">Quiz</span>
+                        </a>
+                    </li>
+                    <li class="has-sub">
+                        <a class="" href="javascript:;">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">User Data</span>
+                        <span class="arrow"></span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_INACTIVE }}">
+                                    <span class="sub-menu-text">Inactive Users</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /SIDEBAR MENU -->
+            </div>
+        </div>
+        <!-- /SIDEBAR -->
+        <div id="main-content" class="margin-left-50">
             <div class="container">
                 <div class="row">
                     <div id="content" class="col-lg-12" style="min-height:1063px !important">
