@@ -125,7 +125,11 @@ module.exports = function(app) {
 
     app.get(config.URL.QUIZ_STANDINGS, user.requiredAuthentication, function(req, res) {
         config.logger.info('QUIZ STANDINGS - PAGE GET');
-        res.render(config.TEMPL_QUIZ_STANDINGS);
+        stats.getTotalUserCount(function(err, total_users_count) {
+            res.render(config.TEMPL_QUIZ_STANDINGS, {
+                'total_users_count': total_users_count
+            });
+        });
     });
 
     /*
@@ -143,7 +147,7 @@ module.exports = function(app) {
                 res.json(daily_stats);
             });
         } else if (req.query.stat == 'top5') {
-            stats.getTop5(req.query.period, function(err, top5rankers) {
+            stats.getTopRanks(req.query.period, 5, function(err, top5rankers) {
                 /*//Sleep for 2 seconds
                 var stop = new Date().getTime();
                 while (new Date().getTime() < stop + 2000) {;
@@ -160,6 +164,10 @@ module.exports = function(app) {
             start_day.setDate(start_day.getDate() - 30);
             stats.getPersonalScoreHistory(req.session.user._id, start_day, function(err, results) {
                 res.json(results);
+            });
+        } else if(req.query.stat == 'myrank') {
+            stats.getPersonalRank(req.session.user.username, function(err, result) {
+                res.json(result);
             });
         }
     });
