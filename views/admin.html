@@ -748,7 +748,7 @@
                         $(this.element).parents('.box').find('span.question-status').removeClass('label-success').addClass('label-warning').html('Not Saved');
                     });
                     this.on('success', function(file, response) {
-                        if (response['error'] === null) {
+                        if (response['error'] === false) {
                             file['serverPath'] = response['file_path'];
                             $(this.element).prev().find('input#image').val(response['file_path']);
                             $(this.element).prev().find('input#image_size').val(response['image_size']);
