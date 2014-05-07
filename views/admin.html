@@ -780,6 +780,7 @@
                 var mockFile = { name: '{{question.image}}', size: '{{question.image_size}}' };
                 myDropzone.emit('addedfile', mockFile);
                 myDropzone.emit('thumbnail', mockFile, '{{UPLOAD_DIR}}{{question.image}}');
+                $('form#my-awesome-dropzone-{{loop.index}}').parent().prev().find('span.question-status').removeClass('label-warning').addClass('label-success').html('Saved');
                 {% endif %}
                 {% endfor %}
                 {% else %}
