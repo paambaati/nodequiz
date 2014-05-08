@@ -10,13 +10,14 @@
  */
 
 var async = require('async'),
+    date_format = require('date-format-lite'),
     config = require('../config/config'),
     models = require('../models/models'),
     misc = require('../utils/misc'),
     quiz = require('../utils/quiz');
 
 /**
- * Gets the username from the user's unique _id.
+ * Gets the username from the user's _id.
  *
  * @param {Function} callback.
  * @api private
@@ -27,6 +28,21 @@ function getUsernameFromId(user_id, fn) {
         _id: user_id
     }, function(err, user) {
         return fn(null, user.username);
+    });
+}
+
+/**
+ * Gets the user's _id from his/her username.
+ *
+ * @param {Function} callback.
+ * @api private
+ */
+
+function getUserIdFromName(username, fn) {
+    models.User.findOne({
+        username: username
+    }, function(err, user) {
+        return fn(null, user._id);
     });
 }
 
@@ -47,6 +63,31 @@ function getDailyQuestionsCount(fn) {
     };
     models.Question.count(query, function(err, count) {
         return fn(null, count);
+    });
+}
+
+/**
+ * Gets the last date the user took a quiz.
+ *
+ * @param {String} username.
+ * @param {Function} callback.
+ * @api private
+ */
+
+function getLastQuizDate(username, fn) {
+    getUserIdFromName(username, function(err, user_id) {
+        var to_find = {
+            user_id: user_id
+        };
+        var query = models.QuizHistory.find(to_find);
+        query.sort({
+            date: -1
+        });
+        query.select('date');
+        query.limit(1);
+        query.exec(function(err, results) {
+            return fn(null, results);
+        });
     });
 }
 
@@ -439,6 +480,29 @@ function getPersonalRank(username, fn) {
 }
 
 /**
+ * Gets all user data for admins.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getUserDataForAdmin(fn) {
+    var index = 0;
+    getTopRanks(null, null, function(err, results) {
+        async.eachSeries(results, function(item, callback) {
+        getLastQuizDate(item[1], function(err, result) {
+                //Format to ISU-8601 so that the timeago plugin can format this.
+                results[index].push(result[0]['date'].format('isoUtcDateTime') );
+                index++;
+                return callback();
+            });
+        }, function() {
+            return fn(null, results);
+        });
+    });
+}
+
+/**
  * Module exports.
  */
 
@@ -448,5 +512,6 @@ module.exports = {
     getAllDailyBasicStats: getAllDailyBasicStats,
     getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion,
     getPersonalScoreHistory: getPersonalScoreHistory,
-    getPersonalRank: getPersonalRank
+    getPersonalRank: getPersonalRank,
+    getUserDataForAdmin: getUserDataForAdmin
 }
