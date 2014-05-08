@@ -378,6 +378,7 @@ module.exports = function(app) {
 
     app.get(config.URL.FAQ, function(req, res) {
         res.render(config.TEMPL_FAQ, {
+            username: (req.session.user) ? req.session.user.username : null,
             start_time: config.QUIZ_START_TIME,
             stop_time: config.QUIZ_STOP_TIME
         });
