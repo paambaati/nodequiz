@@ -1,5 +1,5 @@
 /**
- * Quiz routes.
+ * Admin routes.
  * Author: GP.
  * Version: 1.0
  * Release Date: 08-May-2014
