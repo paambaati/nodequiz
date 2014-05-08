@@ -378,8 +378,8 @@ module.exports = function(app) {
 
     app.get(config.URL.FAQ, function(req, res) {
         res.render(config.TEMPL_FAQ, {
-            start_hour: config.QUIZ_START_TIME,
-            stop_hour: config.QUIZ_STOP_TIME
+            start_time: config.QUIZ_START_TIME,
+            stop_time: config.QUIZ_STOP_TIME
         });
     });
 };
