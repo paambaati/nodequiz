@@ -61,7 +61,7 @@ config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';
 config.TEMPL_QUIZ_NOQUIZ = 'noquiz.html';
 config.TEMPL_QUIZ_ADMIN = 'admin.html';
-config.TEMPL_QUIZ_ADMIN_DATA = 'admin_data.html';
+config.TEMPL_QUIZ_ADMIN_DATA = 'userdata.html';
 config.TEMPL_QUIZ_STANDINGS = 'standings.html';
 
 //Quiz configuration.
