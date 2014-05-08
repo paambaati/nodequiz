@@ -1,8 +1,8 @@
 /**
  * User routes.
  * Author: GP.
- * Version: 1.0
- * Release Date: 29-Apr-2014
+ * Version: 1.0.1
+ * Release Date: 08-May-2014
  */
 
 /**
