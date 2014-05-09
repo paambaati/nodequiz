@@ -155,7 +155,7 @@
                                     </ul>
                                     <!-- /BREADCRUMBS -->
                                     <div class="clearfix">
-                                        <h3 class="content-title pull-left">Admin Section</h3>
+                                        <h3 class="content-title pull-left">Today's Quiz</h3>
                                     </div>
                                     <div class="description">With great power comes great responsibility.</div>
                                 </div>
@@ -652,15 +652,15 @@
 
             $('button.btn-add').on('click', function () {
                 var question_block = $('div#dummy-box').clone(true),
-                    index = parseInt($('.box-question:visible').last().find('form.form-question').attr('name').replace( /^\D+/g, '')) + 1;
+                    index = parseInt($('.box-question:visible').last().find('form.form-question').attr('name').replace( /^\D+/g, '')) + 1,
+                    q_form = question_block.find('form').first();
                 question_block.removeAttr('id');
                 question_block.find('textarea, input:not([type=radio],.input-number)').val('');
                 question_block.find('input[type=radio]').removeAttr('checked');
-                question_block.find('form').first().validate();
+                q_form.attr('name',q_form.attr('name').substring(0, q_form.attr('name').lastIndexOf('-') + 1) + index).validate();
                 $.each(question_block.find('input, textarea, button.btn-number'), function(counter, element){
                     var curr_name = element.getAttribute('name'),
-                        count = parseInt(curr_name.substring(curr_name.lastIndexOf('-') + 1, curr_name.length)) + 1,
-                        new_name = curr_name.substring(0, curr_name.lastIndexOf('-') + 1) + count;
+                        new_name = curr_name.substring(0, curr_name.lastIndexOf('-') + 1) + index;
                     element.setAttribute('name', new_name);
                     if (element.hasAttribute('data-field')) {
                         element.setAttribute('data-field', new_name);
