@@ -234,6 +234,8 @@ function getResults(user_id, start_day, fn) {
                 if (item.question.answer == item.choice_id) {
                     correct_answer = true;
                     total_points++;
+                } else {
+                    correct_answer = false;
                 }
                 results[index] = {
                     'question_title': item.question.title,
