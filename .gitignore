@@ -1,4 +1,4 @@
 node_modules/
-logs/app_log.txt
+logs/thequiz_log*.txt
 npm-debug.log
 public/uploads/*
