@@ -202,10 +202,10 @@
                                             {% for row in user_data %}
                                             <tr>
                                                 <td>{{ row[1] }}</td>
-                                                <td>{{ row[3] }}</td>
+                                                <td>{{ loop.index}}</td>
                                                 <td>{{ row[0] }}</td>
                                                 <td>{{ row[2] }}</td>
-                                                <td><abbr class="timeago" title="{{ row[4] }}">{{ row[4] }}</abbr></td>
+                                                <td><abbr class="timeago" title="{{ row[3] }}">{{ row[3] }}</abbr></td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>

@@ -511,7 +511,7 @@
 
             function getTop5Stats() {
                 var top5_periods = ['weekly', 'monthly', 'alltime'],
-                    badge_colors = ['','red', 'blue', 'green', 'orange', ''],
+                    badge_colors = ['red', 'blue', 'green', 'orange', ''],
                     length = top5_periods.length,
                     fetch_rank = true;
                 for (var i = 0; i < length; i++) {
@@ -521,18 +521,18 @@
                         var length = data.length,
                             table_html = '';
                         for(var j = 0; j < length; j++) {
-                            table_html += '<tr><td><span class="badge badge-' + badge_colors[data[j][3]] + '">' + data[j][3] + '</span></td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
+                            table_html += '<tr><td><span class="badge badge-' + badge_colors[j] + '">' + (j + 1) + '</span></td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
                             if(data[j][1] == "{{ username }}") {
                               notify(top5_periods[i]);
                               if(top5_periods[i] == 'alltime') {
                                 fetch_rank = false;
-                                $('div#overall_rank').html(data[j][3]).prop('number', 0).animateNumber({ number: data[j][3] });
+                                $('div#overall_rank').html(data[j][3]).prop('number', 0).animateNumber({ number: j + 1 });
                               }
                             }
                         }
                         document.getElementById('tbody_top5_' + top5_periods[i]).innerHTML = table_html;
                     }).always(function() {
-                        if (fetch_rank && top5_periods[i] == 'alltime') { getRank(); }
+                      if (fetch_rank && top5_periods[i] == 'alltime') { getRank(); }
                     });
                   })(i);
                 }
