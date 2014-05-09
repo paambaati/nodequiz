@@ -1,8 +1,8 @@
 /**
  * Miscellaneous utilities.
  * Author: GP.
- * Version: 1.3
- * Release Date: 28-Apr-2014
+ * Version: 1.4
+ * Release Date: 09-May-2014
  */
 
 /**
@@ -100,6 +100,37 @@ var sanitizeText = function(input_text, fn) {
 }
 
 /**
+ * Custom sort comparator for use with Array.sort()
+ * Sorts an array of the form -
+ * [
+ *      [1, x, 2],
+ *      [3, y, 4],
+ *      [...], ...
+ * ]
+ *
+ * by 1st item first, then if they tie, by the 3rd item second.
+ *
+ * @param {Object} First array.
+ * @param {Object} Second array.
+ * @api public
+ */
+
+var rankByScoreAndResTime = function (a,b) {
+  if (a[0] < b[0])
+     return 1;
+  if (a[0] > b[0])
+    return -1;
+  if(a[0]==b[0])
+  {
+  if (a[2] < b[2])
+     return -1;
+  if (a[2] > b[2])
+    return 1;
+  return 0;
+  }
+}
+
+/**
  * Module exports.
  */
 
@@ -107,5 +138,6 @@ module.exports = {
     getMaxOrMinofArray: getMaxOrMinofArray,
     getMonday: getMonday,
     validateSignUpForm: validateSignUpForm,
-    sanitizeText: sanitizeText
+    sanitizeText: sanitizeText,
+    rankByScoreAndResTime: rankByScoreAndResTime
 }
