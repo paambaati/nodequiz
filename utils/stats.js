@@ -1,7 +1,7 @@
 /**
  * Quiz statistics & ranking utilities.
  * Author: GP.
- * Version: 1.4.3
+ * Version: 1.4.4
  * Release Date: 09-May-2014
  */
 
@@ -468,7 +468,7 @@ function getUserDataForAdmin(fn) {
     var index = 0;
     getTopRanks(null, null, function(err, results) {
         async.eachSeries(results, function(item, callback) {
-        getLastQuizDate(item[1], function(err, result) {
+            getLastQuizDate(item[1], function(err, result) {
                 //Format to ISU-8601 so that the timeago plugin can format this.
                 results[index].push(result[0]['date'].format('isoUtcDateTime') );
                 index++;
