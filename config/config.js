@@ -9,9 +9,10 @@ var path = require('path'),
 var config = {};
 
 //Logging configuration.
-config.LOG_FILENAME = './logs/app_log.txt';
-logger.add(logger.transports.File, {
+config.LOG_FILENAME = './logs/thequiz_log_';
+logger.add(logger.transports.DailyRotateFile, {
     filename: config.LOG_FILENAME,
+    datePattern: 'dd-MM-yyyy.txt',
     handleExceptions: true,
     exitOnError: false,
     json: false,
