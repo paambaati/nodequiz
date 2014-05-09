@@ -115,20 +115,20 @@ var sanitizeText = function(input_text, fn) {
  * @api public
  */
 
-var rankByScoreAndResTime = function (a,b) {
-  if (a[0] < b[0])
-     return 1;
-  if (a[0] > b[0])
-    return -1;
-  if(a[0]==b[0])
-  {
-  if (a[2] < b[2])
-     return -1;
-  if (a[2] > b[2])
-    return 1;
-  return 0;
-  }
+var rankByScoreAndResTime = function(a, b) {
+    if (a[0] < b[0])
+        return 1;
+    if (a[0] > b[0])
+        return -1;
+    if (a[0] == b[0]) {
+        if (a[2] < b[2])
+            return -1;
+        if (a[2] > b[2])
+            return 1;
+        return 0;
+    }
 }
+
 
 /**
  * Module exports.
