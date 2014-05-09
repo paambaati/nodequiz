@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Author: GP.
- * Version: 1.4.2
- * Release Date: 07-May-2014
+ * Version: 1.4.3
+ * Release Date: 09-May-2014
  */
 
 /**
@@ -177,7 +177,7 @@ function getDailyPerfectScoresCount(fn) {
 }
 
 /**
- * Gets the day's quickest quiz.
+ * Gets the day's quickest fully-correct quiz.
  * This function makes sure we pick a user's record for calculating total response time only
  * when the user has taken all questions.
  *
@@ -249,44 +249,22 @@ function getTopRanks(time_period, rank_limit, fn) {
     } : {};
     models.QuizHistory.find(query).distinct('user_id', function(err, results) {
         async.eachSeries(results, function(item, callback) {
-                quiz.getResults(item, start_day, function(err, results) {
-                    if (results != null) {
-                        getUsernameFromId(item, function(err, username) {
-                            userscore_array.push([results['total_points'], username, results['avg_response_time']]);
-                            return callback();
-                        });
-                    } else {
+            quiz.getResults(item, start_day, function(err, results) {
+                if (results != null) {
+                    getUsernameFromId(item, function(err, username) {
+                        userscore_array.push([results['total_points'], username, results['avg_response_time']]);
                         return callback();
-                    }
-                });
-            },
-            function() {
-                //First, we sort the rank by descending order of points.
-                //Then, we take a slice of the array with the top `n` rank, NOT top `n` items.
-                rank_limit = rank_limit || 5;
-                var counter = 1,
-                    break_at = 0,
-                    rank = 1,
-                    rank_match = false;
-                userscore_array.sort().reverse();
-                if (userscore_array.length < 1) {
-                    return fn(null, null);
-                }
-                userscore_array[0].splice(userscore_array[0].length, 0, rank);
-                for (var i = 1; i < userscore_array.length; i++) {
-                    rank_match = userscore_array[i][0] == userscore_array[i - 1][0];
-                    rank = (rank_match) ? rank : rank + 1;
-                    userscore_array[i].splice(userscore_array[i].length, 0, rank);
-                    counter = (rank_match) ? counter : counter + 1;
-                    break_at = i + 1;
-                    if (counter == rank_limit) break;
-                }
-                if(userscore_array.length == 1) {
-                    return fn(null, userscore_array);
+                    });
                 } else {
-                    return fn(null, userscore_array.slice(0, break_at));
+                    return callback();
                 }
             });
+        },
+        function() {
+            rank_limit = rank_limit || 5;
+            userscore_array.sort(misc.rankByScoreAndResTime);
+            return fn(null, userscore_array.slice(0, rank_limit));
+        });
     });
 }
 
@@ -471,7 +449,7 @@ function getPersonalRank(username, fn) {
     getTopRanks('alltime', null, function(err, ranks) {
         for(var i = 0; i < ranks.length; i++) {
             if(ranks[i][1] == username) {
-                rank = ranks[i][3];
+                rank = i + 1;
                 break;
             }
         }
