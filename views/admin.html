@@ -94,7 +94,7 @@
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <li class="dropdown" id="header-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="username"><i class="fa fa-user"></i>&nbsp;{{username}}&nbsp;</span>
+                            <span class="username"><i class="fa fa-user-md"></i>&nbsp;{{username}}&nbsp;</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -185,6 +185,7 @@
                                                 <li>Try to save <strong>at least 5 </strong> questions for a day's quiz.</li>
                                                 <li>If you are uploading an image, please it is small in size and dimensions. We recommend a file size of <code> &lt; 100 KB</code> and dimensions of <code>400px or less</code> on the longest side.</li>
                                                 <li><strong>Do not</strong> use any markup or HTML. All HTML tags will be stripped!</li>
+                                                <li><strong>Do not</strong> forget to <button class="btn btn-xs btn-primary">Save</button> your question after you've finished creating/editing it.</li>
                                             </ul>
                                         </p>
                                     </div>
@@ -194,7 +195,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-primary tip-right btn-add"><i class="fa fa-plus"></i> Add Question</button>
+                                <button type="button" class="btn btn-info tip-right btn-add"><i class="fa fa-plus"></i> Add Question</button>
                             </div>
                         </div>
                         <div class="separator"></div>
@@ -218,6 +219,9 @@
                                         <h4><i class="fa fa-bars"></i>Question #<span class="question-number"></span>&nbsp;</h4>
                                         <span class="label label-right label-warning question-status">Not Saved</span>
                                         <div class="tools">
+                                            <a class="add" href="javascript:;">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
                                             <a class="collapse" href="javascript:;">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
@@ -311,7 +315,7 @@
                                             <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
-                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-times-circle"></i> Delete</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -336,6 +340,9 @@
                                         <h4><i class="fa fa-bars"></i>Question #<span class="question-number">{{ loop.index }}</span>&nbsp;</h4>
                                         <span class="label label-right label-success question-status">Saved</span>
                                         <div class="tools">
+                                            <a class="add" href="javascript:;">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
                                             <a class="collapse" href="javascript:;">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
@@ -429,7 +436,7 @@
                                             <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
-                                                    <button type="button" class="btn btn-danger btn-delete" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                    <button type="button" class="btn btn-danger btn-delete" data-loading-text="Delete.."><i class="fa fa-times-circle"></i> Delete</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -452,6 +459,9 @@
                                         <h4><i class="fa fa-bars"></i>Question #<span class="question-number">1</span>&nbsp;</h4>
                                         <span class="label label-right label-warning question-status">Not Saved</span>
                                         <div class="tools">
+                                            <a class="add" href="javascript:;">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
                                             <a class="collapse" href="javascript:;">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
@@ -545,7 +555,7 @@
                                             <div class="form-group">
                                                 <div class="col-sm-offset-3 col-sm-10">
                                                     <button type="button" class="btn btn-primary btn-save" data-loading-text="Saving.."><i class="fa fa-floppy-o"></i> Save</button>
-                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-eraser"></i> Delete</button>
+                                                    <button type="button" class="btn btn-danger btn-delete hidden" data-loading-text="Delete.."><i class="fa fa-times-circle"></i> Delete</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -682,6 +692,10 @@
                 $('html, body').animate({
                     scrollTop: question_block.offset().top
                 }, 500);
+            });
+
+            $('a.add').on('click', function () {
+               $('button.btn-add').last().click(); 
             });
 
             $('button.btn-delete').on('click', function () {
