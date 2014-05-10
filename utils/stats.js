@@ -99,9 +99,24 @@ function getLastQuizDate(username, fn) {
  */
 
 function getTotalUserCount(fn) {
-    models.User.where({'admin': false}).count(function(err, count) {
+    models.User.where({
+        'admin': false
+    }).count(function(err, count) {
         return fn(null, count);
-    })
+    });
+}
+
+/**
+ * Gets the total number of questions.
+ *
+ * @param {Function} callback.
+ * @api public
+ */
+
+function getTotalQuestionCount(fn) {
+    models.Question.count(function(err, count) {
+        return fn(null, count);
+    });
 }
 
 /**
@@ -120,7 +135,11 @@ function getDailyAttendees(fn) {
         }
     };
     var query = models.QuizHistory.count(to_find).distinct('user_id');
-    query.populate('user_id', null, {admin: {$ne: true}});
+    query.populate('user_id', null, {
+        admin: {
+            $ne: true
+        }
+    });
     query.exec(function(err, results) {
         return fn(null, results);
     });
@@ -249,22 +268,22 @@ function getTopRanks(time_period, rank_limit, fn) {
     } : {};
     models.QuizHistory.find(query).distinct('user_id', function(err, results) {
         async.eachSeries(results, function(item, callback) {
-            quiz.getResults(item, start_day, function(err, results) {
-                if (results != null) {
-                    getUsernameFromId(item, function(err, username) {
-                        userscore_array.push([results['total_points'], username, results['avg_response_time']]);
+                quiz.getResults(item, start_day, function(err, results) {
+                    if (results != null) {
+                        getUsernameFromId(item, function(err, username) {
+                            userscore_array.push([results['total_points'], username, results['avg_response_time']]);
+                            return callback();
+                        });
+                    } else {
                         return callback();
-                    });
-                } else {
-                    return callback();
-                }
+                    }
+                });
+            },
+            function() {
+                rank_limit = rank_limit || 5;
+                userscore_array.sort(misc.rankByScoreAndResTime);
+                return fn(null, userscore_array.slice(0, rank_limit));
             });
-        },
-        function() {
-            rank_limit = rank_limit || 5;
-            userscore_array.sort(misc.rankByScoreAndResTime);
-            return fn(null, userscore_array.slice(0, rank_limit));
-        });
     });
 }
 
@@ -447,8 +466,8 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
 function getPersonalRank(username, fn) {
     var rank = -1;
     getTopRanks('alltime', null, function(err, ranks) {
-        for(var i = 0; i < ranks.length; i++) {
-            if(ranks[i][1] == username) {
+        for (var i = 0; i < ranks.length; i++) {
+            if (ranks[i][1] == username) {
                 rank = i + 1;
                 break;
             }
@@ -470,7 +489,7 @@ function getUserDataForAdmin(fn) {
         async.eachSeries(results, function(item, callback) {
             getLastQuizDate(item[1], function(err, result) {
                 //Format to ISU-8601 so that the timeago plugin can format this.
-                results[index].push(result[0]['date'].format('isoUtcDateTime') );
+                results[index].push(result[0]['date'].format('isoUtcDateTime'));
                 index++;
                 return callback();
             });
@@ -487,6 +506,7 @@ function getUserDataForAdmin(fn) {
 module.exports = {
     getTopRanks: getTopRanks,
     getTotalUserCount: getTotalUserCount,
+    getTotalQuestionCount: getTotalQuestionCount,
     getAllDailyBasicStats: getAllDailyBasicStats,
     getTodaysToughestAndEasiestQuestion: getTodaysToughestAndEasiestQuestion,
     getPersonalScoreHistory: getPersonalScoreHistory,

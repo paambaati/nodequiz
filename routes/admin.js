@@ -48,9 +48,12 @@ module.exports = function(app) {
         config.logger.info('QUIZ ADMIN - USER DATA - PAGE GET', {
             username: req.session.user.username
         });
-        stats.getUserDataForAdmin(function(err, results) {
-            res.render(config.TEMPL_QUIZ_ADMIN_DATA, {
-                'user_data': results
+        stats.getTotalQuestionCount(function(err, total_questions) {
+            stats.getUserDataForAdmin(function(err, results) {
+                res.render(config.TEMPL_QUIZ_ADMIN_DATA, {
+                    'user_data': results,
+                    'total_questions': total_questions
+                });
             });
         });
     });
