@@ -1,8 +1,8 @@
 /**
  * Admin routes.
  * Author: GP.
- * Version: 1.0
- * Release Date: 08-May-2014
+ * Version: 1.1.1
+ * Release Date: 11-May-2014
  */
 
 /**
@@ -32,10 +32,13 @@ module.exports = function(app) {
             username: req.session.user.username,
             is_admin: req.session.is_admin
         });
-        quiz.getAllQuestions(function(err, questions) {
-            config.logger.info('QUIZ ADMIN - PAGE GET - RENDERING %s QUESTIONS.', questions.length);
-            res.render(config.TEMPL_QUIZ_ADMIN, {
-                questions: questions
+        user.getUnreadFeedbackCount(req.session.last_seen, function(err, unread_count) {
+            req.session.unread_count = unread_count;
+            quiz.getAllQuestions(function(err, questions) {
+                config.logger.info('QUIZ ADMIN - PAGE GET - RENDERING %s QUESTIONS.', questions.length);
+                res.render(config.TEMPL_QUIZ_ADMIN, {
+                    questions: questions
+                });
             });
         });
     });
@@ -53,6 +56,26 @@ module.exports = function(app) {
                 res.render(config.TEMPL_QUIZ_ADMIN_DATA, {
                     'user_data': results,
                     'total_questions': total_questions
+                });
+            });
+        });
+    });
+
+    /*
+     * GET '/quiz/admin/feedback'
+     */
+
+    app.get(config.URL.QUIZ_ADMIN_FEEDBACK, user.requiredAuthentication, user.requiredAdmin, function(req, res) {
+        var username = req.session.user.username;
+        config.logger.info('QUIZ ADMIN - FEEDBACK DATA - PAGE GET', {
+            username: username
+        });
+        user.saveLastSeen(username, function(err, record) {
+            req.session.unread_count = 0;
+            user.getFeedbackData(function(err, feedback_data) {
+                res.render(config.TEMPL_QUIZ_ADMIN_FEEDBACK, {
+                    'feedback_data': feedback_data,
+                    'FEEDBACK_UNREAD': req.session.unread_count
                 });
             });
         });
