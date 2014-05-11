@@ -1,8 +1,8 @@
 /**
  * User+authentication utilities.
  * Author: GP.
- * Version: 1.0
- * Release Date: 29-Apr-2014
+ * Version: 1.1
+ * Release Date: 11-May-2014
  */
 
 /**
@@ -298,6 +298,28 @@ function resetPassword(reset_key, new_password, fn) {
 }
 
 /**
+ * Saves feedback data in DB.
+ *
+ * @param {String} username.
+ * @param {Object} feedback data as JSON.
+ * @param {Function} callback.
+ */
+
+function saveFeedback(username, feedback_data, fn) {
+    require('./stats').getUserIdFromName(username, function(err, user_id) {
+        var feedback = new models.Feedback({
+            user_id: user_id,
+            feedback_data: feedback_data
+        }).save(function(err, saved_data) {
+            config.logger.info('FEEDBACK - FORM POST - DATA SAVED IN DB', {
+                username: username,
+                saved_data: saved_data
+            });
+        });
+    });
+}
+
+/**
  * Module exports.
  */
 
@@ -310,5 +332,6 @@ module.exports = {
     activateUser: activateUser,
     validateResetKey: validateResetKey,
     sendResetKey: sendResetKey,
-    resetPassword: resetPassword
+    resetPassword: resetPassword,
+    saveFeedback: saveFeedback
 }
