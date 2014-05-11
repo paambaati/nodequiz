@@ -1,8 +1,8 @@
 /**
  * Quiz statistics & ranking utilities.
  * Author: GP.
- * Version: 1.4.4
- * Release Date: 09-May-2014
+ * Version: 1.4.5
+ * Release Date: 11-May-2014
  */
 
 /**
@@ -35,7 +35,7 @@ function getUsernameFromId(user_id, fn) {
  * Gets the user's _id from his/her username.
  *
  * @param {Function} callback.
- * @api private
+ * @api public
  */
 
 function getUserIdFromName(username, fn) {
@@ -504,6 +504,7 @@ function getUserDataForAdmin(fn) {
  */
 
 module.exports = {
+    getUserIdFromName: getUserIdFromName,
     getTopRanks: getTopRanks,
     getTotalUserCount: getTotalUserCount,
     getTotalQuestionCount: getTotalQuestionCount,
