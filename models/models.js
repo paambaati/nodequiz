@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.1
- * Release Date: 05-May-2014
+ * Version: 1.4.2
+ * Release Date: 11-May-2014
  */
 
 /**
@@ -149,10 +149,25 @@ QuizHistorySchema.index({
     date: 1
 });
 
+var FeedbackSchema = new Schema({
+    date: {
+        type: Date,
+        required: true,
+        default: new Date()
+    },
+    user_id: {
+        type: ObjectId,
+        required: true,
+        ref: config.DB_AUTH_TABLE
+    },
+    feedback_data: {}
+});
+
 var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);
 var PasswordReset = mongoose.model(config.DB_AUTH_PASSWORD_RESET, PasswordResetSchema);
 var Question = mongoose.model(config.DB_QUESTIONS_TABLE, QuestionSchema);
 var QuizHistory = mongoose.model(config.DB_QUIZ_HISTORY, QuizHistorySchema);
+var Feedback = mongoose.model(config.DB_USER_FEEDBACK, FeedbackSchema);
 
 /**
  * Module exports.
@@ -164,8 +179,10 @@ module.exports = {
     PasswordResetSchema: PasswordResetSchema,
     QuestionSchema: QuestionSchema,
     QuizHistorySchema: QuizHistorySchema,
+    FeedbackSchema: FeedbackSchema,
     User: User,
     PasswordReset: PasswordReset,
     Question: Question,
-    QuizHistory: QuizHistory
+    QuizHistory: QuizHistory,
+    Feedback: Feedback
 }
