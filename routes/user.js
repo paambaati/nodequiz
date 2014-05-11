@@ -1,7 +1,7 @@
 /**
  * User routes.
  * Author: GP.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Release Date: 11-May-2014
  */
 
@@ -65,8 +65,10 @@ module.exports = function(app) {
                     config.logger.info('LOGIN - SESSION REGENERATED SUCCESSFULLY', {
                         username: username
                     });
+                    //Custom session variables.
                     req.session.user = user;
                     req.session.is_admin = user.admin;
+                    req.session.last_seen = user.last_seen;
                     req.session.success = 'Authenticated as ' + user.username;
                     res.redirect(config.URL.QUIZ_MAIN);
                 });
