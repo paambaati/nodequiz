@@ -1,7 +1,7 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.3
+ * Version: 1.4.4
  * Release Date: 11-May-2014
  */
 
@@ -165,6 +165,10 @@ var FeedbackSchema = new Schema({
         ref: config.DB_AUTH_TABLE
     },
     feedback_data: {}
+});
+
+FeedbackSchema.index({
+    date: -1
 });
 
 var User = mongoose.model(config.DB_AUTH_TABLE, UserSchema);
