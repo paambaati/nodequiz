@@ -1,7 +1,7 @@
 /**
  * User routes.
  * Author: GP.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Release Date: 11-May-2014
  */
 
@@ -14,7 +14,8 @@ var config = require('../config/config'),
     user = require('../utils/user'),
     crypt = require('../utils/pass'),
     misc = require('../utils/misc'),
-    mailer = require('../utils/mail');
+    mailer = require('../utils/mail'),
+    ua_parser = require('ua-parser');
 
 /*
  * Module exports.
@@ -59,7 +60,6 @@ module.exports = function(app) {
             username: username
         });
         user.authenticate(username, req.body.password, function(err, user) {
-            console.log(user);
             if (user) {
                 req.session.regenerate(function() {
                     config.logger.info('LOGIN - SESSION REGENERATED SUCCESSFULLY', {
@@ -399,8 +399,15 @@ module.exports = function(app) {
      */
 
     app.post(config.URL.FEEDBACK, user.requiredAuthentication, function(req, res) {
-        var username = req.session.user.username,
-            form_data = req.body;
+        var ua = req.headers['user-agent'],
+            username = req.session.user.username,
+            form_data = req.body,
+            user_agent = ua_parser.parseUA(ua).toString(),
+            os = ua_parser.parseOS(ua).toString(),
+            device = ua_parser.parseDevice(ua).toString();
+        device = (device == 'Other') ? 'Desktop' : device;
+        var platform = [user_agent, os, device].join(' - ');
+        form_data['platform'] = platform;
         config.logger.info('FEEDBACK - FORM POST', {
             username: username,
             form_data: form_data

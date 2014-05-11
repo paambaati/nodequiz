@@ -24,6 +24,7 @@
         "nodemailer": "*",
         "winston": "*",
         "date": "*",
-        "date-format-lite": "*"
+        "date-format-lite": "*",
+        "ua-parser": "*"
     }
 }

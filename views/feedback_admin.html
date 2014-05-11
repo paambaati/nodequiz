@@ -191,6 +191,7 @@
                                                 <th>Mood</th>
                                                 <th>Feedback</th>
                                                 <th>Submitted</th>
+                                                <th>Platform</th>
                                             </tr>
                                         </thead>
                                         <!-- <tfoot>
@@ -199,6 +200,7 @@
                                                 <th>Mood</th>
                                                 <th>Feedback</th>
                                                 <th>Submitted</th>
+                                                <th>Platform</th>
                                             </tr>
                                         </tfoot> -->
                                         <tbody>
@@ -208,6 +210,7 @@
                                                 <td><i class="fa fa-{{ row.feedback_data.mood }}-o"></i><span class="hidden">{{ row.feedback_data.mood }}</span></td>
                                                 <td>{{ row.feedback_data.text|striptags }}</td>
                                                 <td><abbr class="timeago" title="{{ row.date }}">{{ row.date }}</abbr></td>
+                                                <td>{{ row.feedback_data.platform }}</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
