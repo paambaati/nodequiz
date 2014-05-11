@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    ░░░░░░░░░▄░░░░░░░░░░░░░░▄ 
+    ░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌ 
+    ░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐ wow
+    ░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐ 
+    ░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐ 
+    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so quiz
+    ░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌ 
+    ░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐ 
+    ░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌ much nodejs
+    ░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌ 
+    ▌▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐ 
+    ▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌ 
+    ▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐ very hidden source
+    ░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌ 
+    ░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐
+    ░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌ 
+    ░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀ 
+    ░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀ such interface
+    ░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀
+    -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{{ app_title }} | Feedback</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="{{ app_title }} - User Feedback">
+    <meta name="author" content="GP">
+    <!-- JAVASCRIPTS -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/excanvas.min.js"></script>
+    <script src="/javascripts/html5.js"></script>
+    <script src="/javascripts/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <!-- /JAVASCRIPTS -->
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
+    <!-- /STYLESHEETS -->
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <!-- /FAVICON -->
+<style type="text/css"></style>
+</head>
+<body style="">
+    <!-- HEADER -->
+    <header class="navbar clearfix" id="header">
+        <div class="container">
+                <div class="navbar-brand">
+                    <!-- LOGO -->
+                    <a href="/">
+                        <img src="/images/logo.png" alt="Quiz Logo" class="img-responsive" height="30" width="120">
+                    </a>
+                    <!-- /LOGO -->
+                </div>
+                <!-- NAVBAR LEFT -->
+                <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-cog"></i>
+                            <span class="name">Skins</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu skins">
+                            <li class="dropdown-title">
+                                <span><i class="fa fa-leaf"></i> Skins</span>
+                            </li>
+                            <li><a href="#" data-skin="default">Default</a></li>
+                            <li><a href="#" data-skin="night">Night</a></li>
+                            <li><a href="#" data-skin="earth">Earth</a></li>
+                            <li><a href="#" data-skin="utopia">Utopia</a></li>
+                            <li><a href="#" data-skin="nature">Nature</a></li>
+                            <li><a href="#" data-skin="graphite">Graphite</a></li>
+                         </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" target="_blank" href="{{ URL.FAQ }}"><span><i class="fa fa-question-circle"></i>FAQs</span></a>
+                    </li>
+                </ul>
+                <!-- /NAVBAR LEFT -->
+                <!-- BEGIN TOP NAVIGATION MENU -->                  
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown" id="header-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="username"><i class="fa fa-user"></i>&nbsp;{{username}}&nbsp;</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ URL.QUIZ_STANDINGS }}"><i class="fa fa-sort-amount-desc"></i> Standings</a></li>
+                            <li><a href="{{ URL.FEEDBACK }}"><i class="fa fa-bullhorn"></i> Feedback</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ URL.LOGOUT }}"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+                <!-- END TOP NAVIGATION MENU -->
+        </div>
+    </header>
+    <!--/HEADER -->
+    <!-- PAGE -->
+    <section id="page">
+        <div id="main-content">
+            <div class="container">
+                <div class="row">
+                    <div id="content" class="col-lg-12" style="min-height:1063px !important">
+                        <!-- PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="page-header">
+                                    <!-- BREADCRUMBS -->
+                                    <ul class="breadcrumb">
+                                        <li>
+                                            <i class="fa fa-home"></i>
+                                        </li>
+                                        <li><a href="{{ URL.QUIZ_MAIN }}">Welcome</a></li>
+                                        <li>Feedback</li>
+                                    </ul>
+                                    <!-- /BREADCRUMBS -->
+                                    <div class="clearfix">
+                                        <h3 class="content-title pull-left">User Feedback</h3>
+                                    </div>
+                                    <div class="description">We love feedback. It's what keeps us going!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /PAGE HEADER -->
+                        <div class="row">
+                            <div class="col-md-12 box-container ui-sortable">
+                                <!-- BOX -->
+                                <div class="box border primary">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-star"></i>What do you think of {{ app_title }}?</h4>
+                                        <div class="tools">
+                                            <a class="collapse" href="javascript:;">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        {% if form_submitted %}
+                                        <div class="alert alert-block alert-success fade in" style="margin-bottom: 3px;">
+                                          <a aria-hidden="true" href="#" data-dismiss="alert" class="close">×</a>
+                                            <p></p><h4><i class="fa fa-heart"></i> Successful!</h4> Your feedback has been recorded and also forwarded to the admins and the quizmasters.<p></p>
+                                        </div>
+                                        {% else %}
+                                        <label class="control-label" for="radio">What does your face look like when you're using this app?</label>
+                                        <form role="form" method="POST" class="form">
+                                          <div class="form-group">
+                                           <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-success">
+                                              <input type="radio" id="radio" name="mood" value="smile"><i class="fa fa-2x fa-smile-o"></i>
+                                            </label>
+                                            <label class="btn btn-warning">
+                                              <input type="radio" name="mood" value="meh"><i class="fa fa-2x fa-meh-o"></i>
+                                            </label>
+                                            <label class="btn btn-danger">
+                                              <input type="radio" name="mood" value="frown"><i class="fa fa-2x fa-frown-o"></i>
+                                            </label>
+                                           </div>
+                                          </div>
+                                          <div class="form-group">
+                                           <label class="control-label" for="textarea">Got any suggestions/questions/ideas/praise?</label>
+                                           <textarea id="textarea" class="autosize form-control textarea-transitionl" name="text" rows="3"></textarea>
+                                          </div>
+                                          <button class="btn btn-primary" type="submit">Submit</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- /BOX -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/PAGE -->
+    <!-- JAVASCRIPTS -->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.autosize.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/javascripts/script.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {     
+            App.setPage('feedback');  //Set current page
+            App.init(); //Initialise plugins and elements
+        });
+    </script>
+    <!-- /JAVASCRIPTS -->
+</body>
+</html>
