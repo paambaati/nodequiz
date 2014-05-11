@@ -1,8 +1,8 @@
 /**
  * User routes.
  * Author: GP.
- * Version: 1.0.1
- * Release Date: 08-May-2014
+ * Version: 1.0.2
+ * Release Date: 11-May-2014
  */
 
 /**
@@ -381,6 +381,31 @@ module.exports = function(app) {
             username: (req.session.user) ? req.session.user.username : null,
             start_time: config.QUIZ_START_TIME,
             stop_time: config.QUIZ_STOP_TIME
+        });
+    });
+
+    /**
+     * GET '/feedback'
+     */
+
+    app.get(config.URL.FEEDBACK, user.requiredAuthentication, function(req, res) {
+        res.render(config.TEMPL_FEEDBACK);
+    });
+
+    /**
+     * POST '/feedback'
+     */
+
+    app.post(config.URL.FEEDBACK, user.requiredAuthentication, function(req, res) {
+        var username = req.session.user.username,
+            form_data = req.body;
+        config.logger.info('FEEDBACK - FORM POST', {
+            username: username,
+            form_data: form_data
+        });
+        user.saveFeedback(username, form_data);
+        res.render(config.TEMPL_FEEDBACK, {
+            'form_submitted': true
         });
     });
 };
