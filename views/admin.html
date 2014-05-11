@@ -131,6 +131,11 @@
                                     <span class="sub-menu-text">User Data</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_FEEDBACK }}">
+                                    <span class="sub-menu-text">Feedback{% if FEEDBACK_UNREAD > 0%}<span class="badge pull-right" style="margin-right: 10px; background-color: #DD5A43;">{{ FEEDBACK_UNREAD }}</span>{% endif %}</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
