@@ -440,6 +440,7 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
                 date_exists = (map_length) ? (result_map.scores[map_length - 1][0] == timestamp) : false;
                 correct_answer = (item.question.answer == item.choice_id);
                 if (date_exists) {
+                    result_map.questions[array_counter][1]++;
                     if (correct_answer) {
                         result_map.scores[array_counter][1]++;
                     }
@@ -450,6 +451,7 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
                     } else {
                         result_map.scores.push([timestamp, 0]);
                     }
+                    result_map.questions.push([timestamp, 1]);
                     result_map.times.push([timestamp, item.response_time]);
                     array_counter++;
                 }
