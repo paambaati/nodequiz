@@ -397,7 +397,8 @@ function getTodaysToughestAndEasiestQuestion(fn) {
  * starting from a particular date and returns a dictionary object of the form
  * {
  *  'scores': [[timestamp1, total score], [timestamp2, total score], ...],
- *  'times':  [[timestamp1, average response time], [timestamp2, average response time], ...]
+ *  'times':  [[timestamp1, average response time], [timestamp2, average response time], ...],
+ *  'questions': [[timestamp1, total # of questions that day], ...]
  * }
  *
  * @param {String} user ID.
