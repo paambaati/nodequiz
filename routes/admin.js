@@ -210,8 +210,8 @@ module.exports = function(app) {
             var old_path = files.file.path,
                 image_size = files.file.size,
                 file_ext = files.file.name.split('.').pop(),
-                index = files.file.path.lastIndexOf('/') + 1,
-                file_name = files.file.path.substr(index),
+                index = old_path.lastIndexOf('/') + 1,
+                file_name = old_path.substr(index),
                 new_path = path.join(config.APP_BASE_PATH, '/public/', config.UPLOAD_DIR, file_name + '.' + file_ext);
 
             config.logger.info('QUIZ ADMIN - UPLOAD IMAGE POST - PARSED PARAMETERS', {
