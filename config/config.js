@@ -36,6 +36,7 @@ config.URL = {
     ACTIVATE: '/activate',
     LOGOUT: '/logout',
     FAQ: '/faq',
+    FEEDBACK: '/feedback',
     TIMECLOSED: '/timeclosed',
     QUIZ_MAIN: '/quiz',
     QUIZ_ADMIN: '/quiz/admin',
@@ -57,6 +58,7 @@ config.TEMPL_404 = '404.html';
 config.TEMPL_200 = '200.html';
 config.TEMPL_TIMECLOSED = 'timeclosed.html';
 config.TEMPL_FAQ = 'faq.html';
+config.TEMPL_FEEDBACK = 'feedback.html';
 config.TEMPL_QUIZ_MAIN = 'quiz.html';
 config.TEMPL_QUIZ_START = 'question.html';
 config.TEMPL_QUIZ_END = 'completed.html';
@@ -78,6 +80,7 @@ config.DB_AUTH_SESSIONS = 'quiz_sessions';
 config.DB_AUTH_PASSWORD_RESET = 'quiz_resets';
 config.DB_QUESTIONS_TABLE = 'quiz_questions';
 config.DB_QUIZ_HISTORY = 'quiz_history';
+config.DB_USER_FEEDBACK = 'quiz_feedback';
 config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
 
 //Mail configuration.
