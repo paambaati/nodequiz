@@ -1,7 +1,7 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.2
+ * Version: 1.4.3
  * Release Date: 11-May-2014
  */
 
@@ -46,6 +46,10 @@ var UserSchema = new Schema({
     admin: {
         type: Boolean,
         default: false
+    },
+    last_seen: {
+        type: Date,
+        default: null
     }
 });
 
