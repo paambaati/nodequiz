@@ -409,7 +409,8 @@ function getTodaysToughestAndEasiestQuestion(fn) {
 function getPersonalScoreHistory(user_id, start_day, fn) {
     var result_map = {
         'scores': [],
-        'times': []
+        'times': [],
+        'questions': []
     };
     start_day.setHours(0, 0, 0, 0);
     var to_find = {
@@ -432,20 +433,25 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
             map_length = 0;
         if (questions !== undefined) {
             questions.forEach(function(item, index, array) {
-                if (item.question.answer == item.choice_id) {
-                    timestamp = item.date;
-                    map_length = result_map.scores.length;
-                    timestamp.setHours(0, 0, 0, 0);
-                    timestamp = timestamp.getTime();
-                    date_exists = (map_length) ? (result_map.scores[map_length - 1][0] == timestamp) : false;
-                    if (date_exists) {
+                timestamp = item.date;
+                map_length = result_map.scores.length;
+                timestamp.setHours(0, 0, 0, 0);
+                timestamp = timestamp.getTime();
+                date_exists = (map_length) ? (result_map.scores[map_length - 1][0] == timestamp) : false;
+                correct_answer = (item.question.answer == item.choice_id);
+                if (date_exists) {
+                    if (correct_answer) {
                         result_map.scores[array_counter][1]++;
-                        result_map.times[array_counter][1] = (result_map.times[array_counter][1] + item.response_time) / 2;
-                    } else {
-                        result_map.scores.push([timestamp, 1]);
-                        result_map.times.push([timestamp, item.response_time]);
-                        array_counter++;
                     }
+                    result_map.times[array_counter][1] = (result_map.times[array_counter][1] + item.response_time) / 2;
+                } else {
+                    if (correct_answer) {
+                        result_map.scores.push([timestamp, 1]);
+                    } else {
+                        result_map.scores.push([timestamp, 0]);
+                    }
+                    result_map.times.push([timestamp, item.response_time]);
+                    array_counter++;
                 }
             });
         } else {
