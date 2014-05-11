@@ -477,16 +477,19 @@
                     }).appendTo('body').fadeIn(200);
             }
 
-            function plotHistoryChart(scores, times) {
+            function plotHistoryChart(scores, times, questions) {
+                var line_options = { show: !0, lineWidth: 2, fill: !0, fillColor: { colors: [{ opacity: .05 }, { opacity: .01 }] } };
                 var dataset = [
-                            { label: 'Total Points', data: scores, color: '#DB5E8C' },
-                            { label: 'Average Response Time', data: times, color: '#F0AD4E' }
+                            { label: 'Total Questions', data: questions, color: '#70AFC4', bars: { show: !0, align: 'center', barWidth: 20, lineWidth: 15, /*fill: !0,*/ fillColor: { colors: [{ opacity: .05 }, { opacity: .01 }] } }, points: { show: !0 }
+                            },
+                            { label: 'Average Response Time', data: times, color: '#F0AD4E', lines: line_options, points: { show: !0 } },
+                            { label: 'Total Points', data: scores, color: '#DB5E8C', lines: line_options, points: { show: !0 } }
                 ];
 
                 var options = {
                     xaxis: { mode: 'time', tickSize: [1, 'day'], axisLabelUseCanvas: !0, axisLabelFontSizePixels: 12 },
                     yaxis: { axisLabelUseCanvas: !0, axisLabelFontSizePixels: 12 },
-                    series: { lines: { show: !0, lineWidth: 2, fill: !0, fillColor: { colors: [{ opacity: .05 }, { opacity: .01 }] } }, points: { show: !0 }, shadowSize: 2 },
+                    series: { points: { show: !0 }, shadowSize: 2 },
                     grid: { hoverable: !0, clickable: !0, tickColor: '#eee', borderWidth: 0 },
                     legend: { show: 1 }
                 };
@@ -497,9 +500,7 @@
                         if ((previousPoint != item.dataIndex) || (previousLabel != item.series.label)) {
                             previousPoint = item.dataIndex;
                             previousLabel = item.series.label;
-             
                             $('#tooltip').remove();
-             
                             var x = new XDate(item.datapoint[0]).toString('MMM d'),
                                 y = item.datapoint[1];
                             y = (y % 1 == 0) ? y : y.toFixed(2);
@@ -550,7 +551,7 @@
             function getMyHistory() {
                 $.getJSON('{{URL.QUIZ_STAT_AJAX}}?stat=myhistory', function(data) {
                     if(data != null) {
-                        plotHistoryChart(data['scores'], data['times']);
+                        plotHistoryChart(data['scores'], data['times'], data['questions']);
                     }
                 });
             }
