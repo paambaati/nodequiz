@@ -1,7 +1,7 @@
 /**
  * User+authentication utilities.
  * Author: GP.
- * Version: 1.1
+ * Version: 1.1.1
  * Release Date: 11-May-2014
  */
 
@@ -320,6 +320,59 @@ function saveFeedback(username, feedback_data, fn) {
 }
 
 /**
+ * Gets feedback data from DB.
+ *
+ * @param {Function} callback.
+ */
+
+function getFeedbackData(fn) {
+    var query = models.Feedback.find({});
+    query.populate('user_id', 'username');
+    query.exec(function(err, feedback_data) {
+        return fn(null, feedback_data);
+    });
+}
+
+/**
+ * Upserts the 'last_seen' item for a user.
+ *
+ * @param {String} username.
+ * @param {Function} callback.
+ */
+
+function saveLastSeen(username, fn) {
+    require('./stats').getUserIdFromName(username, function(err, user_id) {
+        var last_seen = {
+            'last_seen': new Date()
+        };
+        models.User.findByIdAndUpdate(user_id, last_seen, {
+            upsert: true
+        }, function(err, upserted_record) {
+            if (err) return fn(err.message, null);
+            return fn(null, upserted_record._id);
+        });
+    });
+}
+
+/**
+ * Gets the count of Feedback docs created since `last_seen`.
+ *
+ * @param {Date} last seen timestamp of user.
+ * @param {Function} callback.
+ */
+
+function getUnreadFeedbackCount(last_seen, fn) {
+    var to_find = {
+        date: {
+            $gte: last_seen
+        }
+    };
+    models.Feedback.count(to_find, function(err, unread_count) {
+        unread_count = unread_count || 0;
+        return fn(null, unread_count);
+    });
+}
+/**
  * Module exports.
  */
 
@@ -333,5 +386,8 @@ module.exports = {
     validateResetKey: validateResetKey,
     sendResetKey: sendResetKey,
     resetPassword: resetPassword,
-    saveFeedback: saveFeedback
+    saveFeedback: saveFeedback,
+    getFeedbackData: getFeedbackData,
+    saveLastSeen: saveLastSeen,
+    getUnreadFeedbackCount: getUnreadFeedbackCount
 }
