@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    ░░░░░░░░░▄░░░░░░░░░░░░░░▄ 
+    ░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌ 
+    ░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐ wow
+    ░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐ 
+    ░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐ 
+    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so admin
+    ░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌ 
+    ░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐ 
+    ░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌ much nodejs
+    ░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌ 
+    ▌▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐ 
+    ▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌ 
+    ▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐ very hidden source
+    ░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌ 
+    ░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐
+    ░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌ 
+    ░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀ 
+    ░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀ such interface
+    ░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀
+    -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{{ app_title }} | Quiz Administration - Feedback Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maxitmum-scale=1, user-scalable=no">
+    <meta name="description" content="{{ app_title }} - Quiz Administration - Feedback Data">
+    <meta name="author" content="GP">
+    <!-- JAVASCRIPTS -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/excanvas.min.js"></script>
+    <script src="/javascripts/html5.js"></script>
+    <script src="/javascripts/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <!-- /JAVASCRIPTS -->
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/TableTools.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
+    <!-- /STYLESHEETS -->
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <!-- /FAVICON -->
+<style type="text/css"></style>
+</head>
+<body style="">
+    <!-- HEADER -->
+    <header class="navbar clearfix" id="header">
+        <div class="container">
+                <div class="navbar-brand mini-menu">
+                    <!-- LOGO -->
+                    <a href="{{ URL.MAIN }}">
+                        <img src="/images/logo.png" alt="Quiz Logo" class="img-responsive" height="30" width="120">
+                    </a>
+                    <!-- /LOGO -->
+                    <!-- SIDEBAR COLLAPSE -->
+                    <div class="sidebar-collapse btn" id="sidebar-collapse">
+                        <i data-icon2="fa fa-bars" data-icon1="fa fa-bars" class="fa fa-bars"></i>
+                    </div>
+                    <!-- /SIDEBAR COLLAPSE -->
+                </div>
+                <!-- NAVBAR LEFT -->
+                <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-cog"></i>
+                            <span class="name">Skins</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu skins">
+                            <li class="dropdown-title">
+                                <span><i class="fa fa-leaf"></i> Skins</span>
+                            </li>
+                            <li><a href="#" data-skin="default">Default</a></li>
+                            <li><a href="#" data-skin="night">Night</a></li>
+                            <li><a href="#" data-skin="earth">Earth</a></li>
+                            <li><a href="#" data-skin="utopia">Utopia</a></li>
+                            <li><a href="#" data-skin="nature">Nature</a></li>
+                            <li><a href="#" data-skin="graphite">Graphite</a></li>
+                         </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" target="_blank" href="{{ URL.FAQ }}"><span><i class="fa fa-question-circle"></i>FAQs</span></a>
+                    </li>
+                </ul>
+                <!-- /NAVBAR LEFT -->
+                <!-- BEGIN TOP NAVIGATION MENU -->                  
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown" id="header-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="username"><i class="fa fa-user"></i>&nbsp;{{username}}&nbsp;</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ URL.LOGOUT }}"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+                <!-- END TOP NAVIGATION MENU -->
+        </div>
+    </header>
+    <!--/HEADER -->
+    <!-- PAGE -->
+    <section id="page">
+        <!-- SIDEBAR -->
+        <div class="sidebar mini-menu" id="sidebar" style="">
+            <div class="sidebar-menu nav-collapse">
+                <div class="divide-20"></div>
+                <!-- SIDEBAR MENU -->
+                <ul>
+                    <li>
+                        <a href="{{ URL.QUIZ_ADMIN }}">
+                            <i class="fa fa-list fa-fw"></i> <span class="menu-text">Quiz</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a class="" href="javascript:;">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">Data</span>
+                        <span class="arrow"></span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_DATA }}">
+                                    <span class="sub-menu-text">User Data</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_FEEDBACK }}">
+                                    <span class="sub-menu-text">Feedback{% if FEEDBACK_UNREAD > 0%}<span class="badge pull-right" style="margin-right: 10px; background-color: #DD5A43;">{{ FEEDBACK_UNREAD }}</span>{% endif %}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /SIDEBAR MENU -->
+            </div>
+        </div>
+        <!-- /SIDEBAR -->
+        <div id="main-content" class="margin-left-50">
+            <div class="container">
+                <div class="row">
+                    <div id="content" class="col-lg-12" style="min-height:1063px !important">
+                        <!-- PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="page-header">
+                                    <!-- BREADCRUMBS -->
+                                    <ul class="breadcrumb">
+                                        <li>
+                                            <i class="fa fa-home"></i>
+                                        </li>
+                                        <li>Administration</li>
+                                        <li>Data</li>
+                                        <li>Feedback</li>
+                                    </ul>
+                                    <!-- /BREADCRUMBS -->
+                                    <div class="clearfix">
+                                        <h3 class="content-title pull-left">Feedback Data</h3>
+                                    </div>
+                                    <div class="description">What our users think of me.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /PAGE HEADER -->
+                        <div class="col-md-12 box-container box-question">
+                            <!-- BOX COLLAPSED-->
+                            <div class="box border green">
+                                <div class="box-title">
+                                    <h4><i class="fa fa-bullhorn"></i>User Feedback</h4>
+                                    <div class="tools">
+                                        <a class="collapse" href="javascript:;">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <!-- DATA TABLE -->
+                                    <table id="datatable1" class="datatable table table-striped table-bordered table-hover dataTable feedback" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Mood</th>
+                                                <th>Feedback</th>
+                                                <th>Submitted</th>
+                                            </tr>
+                                        </thead>
+                                        <!-- <tfoot>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Mood</th>
+                                                <th>Feedback</th>
+                                                <th>Submitted</th>
+                                            </tr>
+                                        </tfoot> -->
+                                        <tbody>
+                                            {% for row in feedback_data %}
+                                            <tr>
+                                                <td>{{ row.user_id.username }}</td>
+                                                <td><i class="fa fa-{{ row.feedback_data.mood }}-o"></i><span class="hidden">{{ row.feedback_data.mood }}</span></td>
+                                                <td>{{ row.feedback_data.text|striptags }}</td>
+                                                <td><abbr class="timeago" title="{{ row.date }}">{{ row.date }}</abbr></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!-- /DATA TABLE -->
+                                </div>
+                            </div>
+                            <!-- /BOX COLLAPSED-->
+                        </div>
+                        </div>
+                        <div class="footer-tools">
+                            <span class="go-top">
+                                <i class="fa fa-chevron-up"></i> Top
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/PAGE -->
+    <!-- JAVASCRIPTS -->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/javascripts/datatables.min.js"></script>
+    <script type="text/javascript" src="/javascripts/TableTools.min.js"></script>
+    <script type="text/javascript" src="/javascripts/ZeroClipboard.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.timeago.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/javascripts/script.js"></script>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function() {     
+            App.setPage('user_data');  //Set current page
+            App.init(); //Initialise plugins and elements
+        });
+    </script>
+    <!-- /JAVASCRIPTS -->
+</body>
+</html>
