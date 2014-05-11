@@ -1,7 +1,7 @@
 /**
  * User+authentication utilities.
  * Author: GP.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Release Date: 11-May-2014
  */
 
@@ -320,13 +320,16 @@ function saveFeedback(username, feedback_data, fn) {
 }
 
 /**
- * Gets feedback data from DB.
+ * Gets feedback data from DB sorted by latest first.
  *
  * @param {Function} callback.
  */
 
 function getFeedbackData(fn) {
     var query = models.Feedback.find({});
+    query.sort({
+        date: -1
+    });
     query.populate('user_id', 'username');
     query.exec(function(err, feedback_data) {
         return fn(null, feedback_data);
