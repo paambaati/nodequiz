@@ -128,7 +128,7 @@ config.SECURITY_QUESTIONS = [
     'What is the meaning of life?',
     'What is the average velocity of an unladen swallow?',
     'Who let the dogs out?'
-];
+]; //Make sure you don't remove any item after deployment.
 
 
 //Uploads configuration.
