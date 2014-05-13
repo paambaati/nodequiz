@@ -121,6 +121,15 @@ config.RESET_PASSWORD_SALT = 'loln00b';
 config.COMPANY_SHORT_NAME = 'FBI';
 config.COMPANY_LONG_NAME = 'Federal Bureau of Investigation';
 config.RESET_VALIDITY = 3; //Hours
+config.SECURITY_QUESTIONS = [
+    'What is your mother\'s maiden name?',
+    'What is the name of your first pet?',
+    'What is the name of your first boyfriend/girlfriend?',
+    'What is the meaning of life?',
+    'What is the average velocity of an unladen swallow?',
+    'Who let the dogs out?'
+];
+
 
 //Uploads configuration.
 config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/

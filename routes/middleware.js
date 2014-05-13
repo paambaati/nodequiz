@@ -1,8 +1,8 @@
 /**
  * Middleware routes.
  * Author: GP.
- * Version: 1.1
- * Release Date: 11-May-2014
+ * Version: 1.1.1
+ * Release Date: 13-May-2014
  */
 
 /**
@@ -60,6 +60,7 @@ module.exports = function(app) {
         res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
         res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;
         res.locals.MAIL_USER_DOMAIN = config.MAIL_USER_DOMAIN;
+        res.locals.SECURITY_QUESTIONS = config.SECURITY_QUESTIONS;
         next();
     });
 

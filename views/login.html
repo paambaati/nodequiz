@@ -166,12 +166,9 @@
                                   <div class="form-group"> 
                                     <label class="control-label" for="security_question">Security Question</label>
                                     <select class="form-control select2-field" id="security_question" name="security_question" required >
-                                        <option>What is your mother's maiden name?</option>
-                                        <option>What is the name of your first pet?</option>
-                                        <option>What is the name of your first boyfriend/girlfriend?</option>
-                                        <option>What is the meaning of life?</option>
-                                        <option>What is the average velocity of an unladen swallow?</option>
-                                        <option>Who let the dogs out?</option>
+                                        {% for question in SECURITY_QUESTIONS %}
+                                        <option>{{ question }}</option>
+                                        {% endfor %}
                                     </select>
                                   </div>
                                   <div class="form-group">
@@ -213,12 +210,9 @@
                                   <div class="form-group"> 
                                     <label class="control-label" for="security_question">Security Question</label>
                                     <select class="form-control select2-field" id="security_question" name="security_question" required >
-                                        <option>What is your mother's maiden name?</option>
-                                        <option>What is the name of your first pet?</option>
-                                        <option>What is the name of your first boyfriend/girlfriend?</option>
-                                        <option>What is the meaning of life?</option>
-                                        <option>What is the average velocity of an unladen swallow?</option>
-                                        <option>Who let the dogs out?</option>
+                                        {% for question in SECURITY_QUESTIONS %}
+                                        <option>{{ question }}</option>
+                                        {% endfor %}
                                     </select>
                                   </div>
                                   <div class="form-group">
