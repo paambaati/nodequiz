@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.4
- * Release Date: 11-May-2014
+ * Version: 1.4.5
+ * Release Date: 14-May-2014
  */
 
 /**
@@ -15,6 +15,15 @@ var Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId;
 
 mongoose.connect(config.DB_MONGO_CONNECT_STRING);
+
+// Log connection errors. This doesn't help much though.
+// mongoose.connection.on('error', function(err) {
+//     console.log(err.message.red);
+//     config.logger.error('DATABASE ERROR! Could not to the MongoDB database.', {
+//         error_message: err.message,
+//         stacktrace: err.stack
+//     });
+// });
 
 var UserSchema = new Schema({
     username: {
