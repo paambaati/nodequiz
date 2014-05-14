@@ -26,7 +26,7 @@ config.APP_TITLE = 'TheQuiz';
 config.APP_PORT = 3000;
 config.APP_BASE_PATH = process.env.PWD;
 
-//Basic URL configuration.
+//URL configuration.
 config.URL = {
     MAIN: '/',
     LOGIN: '/login',
@@ -50,7 +50,7 @@ config.URL = {
     QUIZ_ADMIN_FEEDBACK: '/quiz/admin/feedback'
 };
 
-//Basic template configuration.
+//Template configuration.
 config.TEMPL_LOGIN = 'login.html';
 config.TEMPL_RESET = 'reset.html';
 config.TEMPL_500 = '500.html';
@@ -76,6 +76,8 @@ config.QUIZ_STOP_TIME = [16, 0];
 //Database configuration.
 config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
+config.DB_USERNAME = '';
+config.DB_PASSWORD = '';
 config.DB_NAME = 'quiz_db';
 config.DB_AUTH_TABLE = 'quiz_users';
 config.DB_AUTH_SESSIONS = 'quiz_sessions';
@@ -83,7 +85,7 @@ config.DB_AUTH_PASSWORD_RESET = 'quiz_resets';
 config.DB_QUESTIONS_TABLE = 'quiz_questions';
 config.DB_QUIZ_HISTORY = 'quiz_history';
 config.DB_USER_FEEDBACK = 'quiz_feedback';
-config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
+config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_USERNAME + ':' + config.DB_PASSWORD + '@' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
 
 //Mail configuration.
 config.MAIL_DEBUG = false;
@@ -94,7 +96,7 @@ config.MAIL_USE_TLS = true; //TLS
 config.MAIL_USERNAME = 'username@example.com';
 config.MAIL_PASSWORD = '******';
 config.MAIL_SENDER = 'Quiz Master <quiz@example.com>'; //From address
-config.MAIL_USER_DOMAIN = '@example.com';
+config.MAIL_USER_DOMAIN = '@example.com'; //Auto-appended to username
 config.MAIL_TEMPLATE = path.join(config.APP_BASE_PATH, './views/mailer.html');
 config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
