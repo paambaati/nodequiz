@@ -45,6 +45,9 @@ All other app-specific configuration is present in `config/config.js`.
  6. Templates are all plain and are not structured into base/inherited templates.
  7. Could probably use a Grunt or Gulp task runner script for continuous deployment.
 
+### Credits
+All versions of the NodeQuiz icon were designed from the wonderful vector icon set from [Brankic1979](http://brankic1979.com/icons/ "Free Icons Set designed by Brankic1979").
+
 
   [1]: http://dropzonejs.com/
   [2]: http://paularmstrong.github.io/swig/ "Swig - A Node.js and Browser JavaScript Template Engine"
