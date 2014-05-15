@@ -53,9 +53,9 @@ module.exports = function(app) {
             res.locals.message = msg;
             res.locals.message_type = 'success';
         }
-        res.locals.app_title = config.APP_TITLE;
+        res.locals.APP_TITLE = config.APP_TITLE;
         res.locals.URL = config.URL;
-        res.locals.username = (req.session.user) ? req.session.user.username : '';
+        res.locals.USERNAME = (req.session.user) ? req.session.user.username : '';
         res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
         res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
         res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;

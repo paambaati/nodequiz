@@ -24,9 +24,9 @@
     -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>{{ app_title }} | Quiz Standings</title>
+    <title>{{ APP_TITLE }} | Quiz Standings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="{{ app_title }} - Quiz Standings">
+    <meta name="description" content="{{ APP_TITLE }} - Quiz Standings">
     <meta name="author" content="GP">
     <!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
@@ -89,7 +89,7 @@
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <li class="dropdown" id="header-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="username"><i class="fa fa-user"></i>&nbsp;{{username}}&nbsp;</span>
+                            <span class="username"><i class="fa fa-user"></i>&nbsp;{{ USERNAME }}&nbsp;</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -526,7 +526,7 @@
                             table_html = '';
                         for(var j = 0; j < length; j++) {
                             table_html += '<tr><td><span class="badge badge-' + badge_colors[j] + '">' + (j + 1) + '</span></td><td>' + data[j][1] + '</td><td>' + data[j][0] + '</td><td>' + data[j][2] + '</tr>';
-                            if(data[j][1] == "{{ username }}") {
+                            if(data[j][1] == "{{ USERNAME }}") {
                               notify(top5_periods[i]);
                               if(top5_periods[i] == 'alltime') {
                                 fetch_rank = false;
