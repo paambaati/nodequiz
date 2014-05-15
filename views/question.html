@@ -31,6 +31,12 @@
 	<meta http-equiv="refresh" content="{{ question.allowed_time }}">
 	<meta http-equiv="Expires" content="0">
 	<meta http-equiv="Cache-Control" content="no-cache">
+    <!-- IE PINNED SITE SUPPORT -->
+    <meta name="msapplication-tooltip" content="{{ APP_TITLE }} - The most amazeballs quizzing app ever!" />
+    <meta name="msapplication-starturl" content="{{ IE_START_URL }}" />
+    <meta name="msapplication-task" content="name={{ APP_TITLE }}; action-uri={{ IE_START_URL}}; icon-uri={{ IE_FAVICON_URL }}"/>
+    <meta name="msapplication-task" content="name=FAQ; action-uri={{ IE_FAQ_URL}}; icon-uri={{ IE_FAVICON_URL }}"/>
+    <!-- /IE PINNED SITE SUPPORT -->
 	<!-- JAVASCRIPTS -->
     <!--[if lt IE 9]>
     <script src="/javascripts/excanvas.min.js"></script>
@@ -45,9 +51,14 @@
 	<link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
 	<!-- /STYLESHEETS -->
-	<!-- FAVICON -->
+	<!-- ICONS -->
     <link rel="shortcut icon" href="/images/favicon.ico" />
-    <!-- /FAVICON -->
+    <link rel="icon" sizes="196x196" href="/images/icon-196.png" />
+    <link rel="icon" sizes="128x128" href="/images/icon-128.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icon-76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icon-120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icon-152.png" />
+    <!-- /ICONS -->
 <style type="text/css"></style>
 </head>
 <body style="">
