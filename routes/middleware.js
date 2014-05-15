@@ -61,6 +61,9 @@ module.exports = function(app) {
         res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;
         res.locals.MAIL_USER_DOMAIN = config.MAIL_USER_DOMAIN;
         res.locals.SECURITY_QUESTIONS = config.SECURITY_QUESTIONS;
+        res.locals.IE_START_URL = config.IE_START_URL;
+        res.locals.IE_FAVICON_URL = config.IE_FAVICON_URL;
+        res.locals.IE_FAQ_URL = config.IE_FAQ_URL;
         next();
     });
 

@@ -132,6 +132,10 @@ config.SECURITY_QUESTIONS = [
     'Who let the dogs out?'
 ]; //Make sure you don't remove any item after deployment.
 
+// Internet Explorer 9+ Pinned sites configuration.
+config.IE_START_URL = 'http://quiz_homepage.com';
+config.IE_FAVICON_URL = 'http://quiz_homepage.com/images/favicon.ico';
+config.IE_FAQ_URL = config.IE_START_URL + config.URL.FAQ;
 
 //Uploads configuration.
 config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/
