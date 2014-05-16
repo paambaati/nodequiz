@@ -24,7 +24,7 @@ var config = require('../config/config'),
 
 function authenticate(name, pass, fn) {
     models.User.findOne({
-        username: name
+        username: name.toLowerCase()
     }, function(err, user) {
         if (user) {
             if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
@@ -107,7 +107,7 @@ function requiredAdmin(req, res, next) {
 
 function isUsernameValid(name, fn) {
     models.User.findOne({
-        username: name
+        username: name.toLowerCase()
     }, function(err, user) {
         if (user) {
             if (err) {
@@ -136,7 +136,7 @@ function isUsernameValid(name, fn) {
 
 function userExist(req, res, next) {
     models.User.count({
-        username: req.body.username
+        username: req.body.username.toLowerCase()
     }, function(err, count) {
         if (count === 0) {
             next();
@@ -224,7 +224,7 @@ function validateResetKey(reset_key, fn) {
 
 function sendResetKey(name, security_question, security_answer, domain, ip, user_cookie, fn) {
     models.User.findOne({
-        username: name,
+        username: name.toLowerCase(),
         security_question: security_question,
         security_answer: security_answer
     }, function(err, user) {
