@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.5
- * Release Date: 14-May-2014
+ * Version: 1.4.6
+ * Release Date: 16-May-2014
  */
 
 /**
@@ -30,6 +30,7 @@ var UserSchema = new Schema({
         type: String,
         unique: true,
         trim: true,
+        lowercase: true,
         required: true
     },
     salt: {
