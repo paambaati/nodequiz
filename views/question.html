@@ -50,6 +50,7 @@
 	<link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
 	<link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/icheck-skins/flat/aero.css" />
 	<!-- /STYLESHEETS -->
 	<!-- ICONS -->
     <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -59,7 +60,11 @@
     <link rel="apple-touch-icon" sizes="120x120" href="/images/icon-120.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="/images/icon-152.png" />
     <!-- /ICONS -->
-<style type="text/css"></style>
+<style type="text/css">
+	.skin-flat .skin-section .list li, .skin-line .skin-section label {
+    padding-left: 40px;
+}
+</style>
 </head>
 <body style="">
 	<!-- HEADER -->
@@ -173,7 +178,7 @@
 													<div class="radio">
 														<span style="vertical-align: middle">
 															<input type="radio" value="{{ loop.index }}" name="choice" class="uniform">
-															{{ choice.choice_text|striptags }}
+															<label for="choice" style="padding-left:5px;"><strong>{{ choice.choice_text|striptags }}</strong></label>
 														</span>
 													</div>
 												</label>
@@ -197,6 +202,7 @@
 	<script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
 	<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/javascripts/icheck.min.js"></script>
 	<script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
 	<script type="text/javascript" src="/javascripts/script.js"></script>
 	<script type="text/javascript">
@@ -215,6 +221,10 @@
 			App.setPage('widgets_box');  //Set current page
 			App.init(); //Initialise plugins and elements
 
+			$('input').iCheck({
+				radioClass: 'iradio_flat-aero'
+			});
+
 			var count = '{{ question.allowed_time }}' || 10;
 			var counter = setInterval(function(){timer()}, 1000); //1000 will run it every 1 second.
 			var progress_percent = 100 / count;
@@ -230,7 +240,7 @@
 				progress_percent = progress_percent + 100 / '{{ question.allowed_time }}';
 			}
 
-			$('input.uniform').on('click', function() {
+			$('input').on('ifChecked', function(event){
 				$('div.radio').addClass('disabled');
 				$('form').submit();
 			});
