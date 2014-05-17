@@ -1,8 +1,8 @@
 /**
  * Quiz routes.
  * Author: GP.
- * Version: 1.1
- * Release Date: 08-May-2014
+ * Version: 1.2
+ * Release Date: 17-May-2014
  */
 
 /**
@@ -97,20 +97,23 @@ module.exports = function(app) {
      */
 
     app.post(config.URL.QUIZ_START, function(req, res) {
-        var response_time = (new Date() - req.session.question_render_time.toString().date()) / 1000;
-        var answer_choice = req.body.choice;
+        var response_time = (new Date() - req.session.question_render_time.toString().date()) / 1000,
+            answer_choice = req.body.choice,
+            is_fraud = false;
+        if (response_time > req.session.question_allowed_time) {
+            is_fraud = true;
+            config.logger.warn('FRAUD DETECTED - RESPONSE TIME > ALLOWED TIME', {
+                allowed_time: req.session.question_allowed_time,
+                response_time: response_time
+            });
+        }
+        answer_choice = (is_fraud) ? -99 : answer_choice;
         config.logger.info('START QUIZ - FORM POST - SAVING ANSWER DOC IN DB', {
             username: req.session.user.username,
             question_id: req.session.question_id,
             answer_chosen: answer_choice,
             response_time: response_time
         });
-        if (response_time > req.session.question_allowed_time) {
-            config.logger.warn('FRAUD DETECTED - RESPONSE TIME > ALLOWED TIME', {
-                allowed_time: req.session.question_allowed_time,
-                response_time: response_time
-            });
-        }
         quiz.saveAnswer(req.session.user._id, req.session.question_id, answer_choice, response_time, function(err, record) {
             res.redirect(req.originalUrl);
         });
@@ -162,7 +165,7 @@ module.exports = function(app) {
             stats.getPersonalScoreHistory(req.session.user._id, start_day, function(err, results) {
                 res.json(results);
             });
-        } else if(req.query.stat == 'myrank') {
+        } else if (req.query.stat == 'myrank') {
             stats.getPersonalRank(req.session.user.username, function(err, result) {
                 res.json(result);
             });
