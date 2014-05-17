@@ -10,6 +10,7 @@ A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run
  4. Custom admin interface complete with image upload functionality (for questions) using [DropzoneJS][1] and detailed userbase statistics using [DataTables](http://datatables.net/ "DataTables | Table plug-in for jQuery").
  5. Uses the [`swig`][2] template engine instead of the default `jade`. (That's because I come from Django).
  6. Well-designed responsive templates for all email communication, thanks to [Antwort](http://internations.github.io/antwort/).
+ 7. Tons of interesting fraud counter-measures.
 
 ### Deployment
 
@@ -35,7 +36,7 @@ pm2 start app.js -i x
 
 where `x` is the maximum number of processor cores available to the app.
 
-For a ridiculously speedy app, also setup `nginx` as a reverse proxy on top of the pm2/node process. Refer the `nginx.conf` file in `config/` for a highly optimized nginx deployment setup.
+For a ridiculously speedy app, also setup `nginx` as a reverse proxy on top of the `pm2` process. Refer the `nginx.conf` file in `config/` for a highly optimized nginx deployment setup.
 
 All other app-specific configuration is present in `config/config.js`.
 
