@@ -1,8 +1,8 @@
 /**
  * User routes.
  * Author: GP.
- * Version: 1.0.4
- * Release Date: 11-May-2014
+ * Version: 1.0.5
+ * Release Date: 17-May-2014
  */
 
 /**
@@ -14,8 +14,7 @@ var config = require('../config/config'),
     user = require('../utils/user'),
     crypt = require('../utils/pass'),
     misc = require('../utils/misc'),
-    mailer = require('../utils/mail'),
-    ua_parser = require('ua-parser');
+    mailer = require('../utils/mail');
 
 /*
  * Module exports.
@@ -399,15 +398,9 @@ module.exports = function(app) {
      */
 
     app.post(config.URL.FEEDBACK, user.requiredAuthentication, function(req, res) {
-        var ua = req.headers['user-agent'],
-            username = req.session.user.username,
-            form_data = req.body,
-            user_agent = ua_parser.parseUA(ua).toString(),
-            os = ua_parser.parseOS(ua).toString(),
-            device = ua_parser.parseDevice(ua).toString();
-        device = (device == 'Other') ? 'Desktop' : device;
-        var platform = [user_agent, os, device].join(' - ');
-        form_data['platform'] = platform;
+        var username = req.session.user.username,
+            form_data = req.body;
+        form_data['user_agent'] = req.headers['user-agent'];
         config.logger.info('FEEDBACK - FORM POST', {
             username: username,
             form_data: form_data
