@@ -67,7 +67,7 @@
 }
 </style>
 </head>
-<body style="">
+<body style="" oncontextmenu="return false">
 	<!-- HEADER -->
 	<header class="navbar clearfix" id="header">
 		<div class="container">
@@ -209,13 +209,19 @@
 	<script type="text/javascript">
 		window.location.hash = 'no-back-button';
 		window.location.hash = 'again-no-back-button';
-		window.onhashchange = function(){
+		window.onhashchange = function() {
 			if (typeof history.pushState !== 'undefined') {
 				history.pushState(null, '', '#no-back-button');
 			} else {
 				window.location.hash='no-back-button';
 			}
 		}
+		document.onkeypress = function(event) {
+	        event = (event || window.event);
+	        if (event.keyCode == 123) {
+	            return false;
+	        }
+	    }
 	</script>
 	<script type="text/javascript">
 		jQuery(document).ready(function() {		
