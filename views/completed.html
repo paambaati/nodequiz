@@ -197,7 +197,7 @@
                                                 <td>{{ loop.index }}</td>
                                                 <td>{{ result.question_title|striptags }}</td>
                                                 <td>{{ result.answer_title|striptags }}</td><td>{% if result.response_time == 0 %}<span data-toggle="popover" data-trigger="hover focus" title="" data-content="No response time has been recorded. This means you did not choose an answer in time." data-title="Wait, what?" data-original-title="" title="" class="label label-danger pop-hover"><i class="fa fa-question"></i></span>{% else %}{{ result.response_time }}{% endif %}</td>
-                                                <td>{% if result.correct_answer %}<span class="label label-success"><i class="fa fa-check-square"></i></span>{% else %}<span class="label label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                                <td>{% if result.correct_answer %}<span class="label label-success"><i class="fa fa-check-square"></i></span>{% else %}{% if result.answer_chosen == -99 %}<span data-toggle="popover" data-trigger="hover focus" title="" data-content="The answer was submitted after the allowed time limit." data-title="Fraud detected!" data-original-title="" title="" class="label label-warning pop-hover"><i class="fa fa-exclamation-circle"></i></span>{% else %}<span class="label label-danger"><i class="fa fa-times"></i></span>{% endif %}{% endif %}</td>
                                               </tr>
                                             {% endfor %}
                                             </tbody>
