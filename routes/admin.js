@@ -1,8 +1,8 @@
 /**
  * Admin routes.
  * Author: GP.
- * Version: 1.1.2
- * Release Date: 11-May-2014
+ * Version: 1.1.3
+ * Release Date: 17-May-2014
  */
 
 /**
@@ -16,7 +16,8 @@ var config = require('../config/config'),
     path = require('path'),
     fs = require('fs'),
     date = require('date'),
-    formidable = require('formidable');
+    formidable = require('formidable'),
+    ua_parser = require('ua-parser');
 
 /*
  * Module exports.
@@ -70,6 +71,14 @@ module.exports = function(app) {
         user.saveLastSeen(username, function(err, record) {
             req.session.last_seen = new Date();
             user.getFeedbackData(function(err, feedback_data) {
+                feedback_data.forEach(function(item, index, array) {
+                    var ua = item.feedback_data.user_agent,
+                        user_agent = ua_parser.parseUA(ua).toString(),
+                        os = ua_parser.parseOS(ua).toString(),
+                        device = ua_parser.parseDevice(ua).toString();
+                    device = (device == 'Other') ? 'Desktop' : device;
+                    item.feedback_data['platform'] = [user_agent, os, device].join(' - ');
+                });
                 res.render(config.TEMPL_QUIZ_ADMIN_FEEDBACK, {
                     'feedback_data': feedback_data,
                     'UNREAD_COUNT': 0
