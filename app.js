@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.8.4
- * Release Date: 08-May-2014
+ * Version: 1.8.5
+ * Release Date: 19-May-2014
  */
 
 /**
@@ -34,7 +34,7 @@ app.use(cookieparser(config.APP_TITLE));
 app.use(session({
     secret: config.MASTER_SALT,
     store: new mongostore({
-        url: config.DB_MONGO_CONNECT_STRING ,
+        url: config.DB_MONGO_CONNECT_STRING,
         cookie: {
             maxAge: 86400
         }, //1-day cookie.
