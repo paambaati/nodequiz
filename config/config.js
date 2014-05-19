@@ -76,8 +76,8 @@ config.QUIZ_STOP_TIME = [16, 0];
 //Database configuration.
 config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
-config.DB_USERNAME = '';
-config.DB_PASSWORD = '';
+config.DB_USERNAME = 'quiz_db_admin';
+config.DB_PASSWORD = 'local!23';
 config.DB_NAME = 'quiz_db';
 config.DB_AUTH_TABLE = 'quiz_users';
 config.DB_AUTH_SESSIONS = 'quiz_sessions';
