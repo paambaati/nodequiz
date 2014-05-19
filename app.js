@@ -34,12 +34,10 @@ app.use(cookieparser(config.APP_TITLE));
 app.use(session({
     secret: config.MASTER_SALT,
     store: new mongostore({
-        db: config.DB_NAME,
+        url: config.DB_MONGO_CONNECT_STRING ,
         cookie: {
             maxAge: 86400
         }, //1-day cookie.
-        host: config.DB_HOST,
-        port: config.DB_PORT,
         collection: config.DB_AUTH_SESSIONS,
         auto_reconnect: true
     })
