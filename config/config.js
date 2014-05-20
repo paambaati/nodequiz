@@ -74,6 +74,7 @@ config.QUIZ_START_TIME = [14, 0];
 config.QUIZ_STOP_TIME = [16, 0];
 
 //Database configuration.
+config.DB_SERVER_NOAUTH = false; //Set to true if you're using plain localhost mail.
 config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
 config.DB_USERNAME = 'quiz_db_admin';

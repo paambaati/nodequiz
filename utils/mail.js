@@ -1,8 +1,8 @@
 /**
  * Email utilities.
  * Author: GP.
- * Version: 1.2.1
- * Release Date: 30-Apr-2014
+ * Version: 1.2.2
+ * Release Date: 20-May-2014
  */
 
 /**
@@ -18,17 +18,21 @@ var config = require('../config/config'),
  */
 
 // SMTP transport object.
-var transport = nodemailer.createTransport('SMTP', {
+var mail_options = {
     host: config.MAIL_HOST,
-    port: config.MAIL_PORT,
-    secureConnection: config.MAIL_SECURE,
-    ignoreTLS: !config.MAIL_USE_TLS,
-    debug: config.MAIL_DEBUG,
-    auth: {
+    debug: config.MAIL_DEBUG
+}
+
+if (!config.DB_SERVER_NOAUTH) {
+    mail_options[port] = config.MAIL_PORT;
+    mail_options[secureConnection] = config.MAIL_SECURE;
+    mail_options[ignoreTLS] = !config.MAIL_USE_TLS;
+    mail_options[auth] = {
         user: config.MAIL_USERNAME,
         pass: config.MAIL_PASSWORD
     }
-});
+}
+var transport = nodemailer.createTransport('SMTP', mail_options);
 
 //Mailer logo.
 var attachment = [{
