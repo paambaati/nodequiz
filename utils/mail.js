@@ -63,7 +63,7 @@ var sendActivationLink = function(domain, username, activate_key, err) {
         html: swig.renderFile(config.MAIL_TEMPLATE, {
             app_title: config.APP_TITLE,
             main_link: domain,
-            faq_link: domain + config.URL.FAQ.slice(1),
+            faq_link: domain + config.URL.FAQ,
             mail_mode: 'activation',
             activation_link: activation_link
         })
@@ -109,7 +109,7 @@ var mailResetKey = function(domain, ip, user_cookie, username, reset_key, err) {
         html: swig.renderFile(config.MAIL_TEMPLATE, {
             app_title: config.APP_TITLE,
             main_link: domain,
-            faq_link: domain + config.URL.FAQ.slice(1),
+            faq_link: domain + config.URL.FAQ,
             mail_mode: 'reset_password',
             reset_link: reset_link,
             validity_period: config.RESET_VALIDITY,
