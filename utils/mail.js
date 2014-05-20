@@ -24,10 +24,10 @@ var mail_options = {
 }
 
 if (!config.MAIL_SERVER_NOAUTH) {
-    mail_options[port] = config.MAIL_PORT;
-    mail_options[secureConnection] = config.MAIL_SECURE;
-    mail_options[ignoreTLS] = !config.MAIL_USE_TLS;
-    mail_options[auth] = {
+    mail_options['port'] = config.MAIL_PORT;
+    mail_options['secureConnection'] = config.MAIL_SECURE;
+    mail_options['ignoreTLS'] = !config.MAIL_USE_TLS;
+    mail_options['auth'] = {
         user: config.MAIL_USERNAME,
         pass: config.MAIL_PASSWORD
     }
