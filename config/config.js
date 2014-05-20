@@ -74,7 +74,6 @@ config.QUIZ_START_TIME = [14, 0];
 config.QUIZ_STOP_TIME = [16, 0];
 
 //Database configuration.
-config.DB_SERVER_NOAUTH = false; //Set to true if you're using plain localhost mail.
 config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
 config.DB_USERNAME = 'quiz_db_admin';
@@ -89,6 +88,7 @@ config.DB_USER_FEEDBACK = 'quiz_feedback';
 config.DB_MONGO_CONNECT_STRING = 'mongodb://' + config.DB_USERNAME + ':' + config.DB_PASSWORD + '@' + config.DB_HOST + ':' + config.DB_PORT + '/' + config.DB_NAME;
 
 //Mail configuration.
+config.MAIL_SERVER_NOAUTH = false; //Set to true if you're using plain localhost mail.
 config.MAIL_DEBUG = false;
 config.MAIL_HOST = 'smtp.example.com'; //SMTP mail server
 config.MAIL_PORT = 587; //SMTP port

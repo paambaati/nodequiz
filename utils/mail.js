@@ -23,7 +23,7 @@ var mail_options = {
     debug: config.MAIL_DEBUG
 }
 
-if (!config.DB_SERVER_NOAUTH) {
+if (!config.MAIL_SERVER_NOAUTH) {
     mail_options[port] = config.MAIL_PORT;
     mail_options[secureConnection] = config.MAIL_SECURE;
     mail_options[ignoreTLS] = !config.MAIL_USE_TLS;
