@@ -114,7 +114,10 @@
                                   <div class="form-group">
                                     <label for="username" class="control-label">{{ COMPANY_SHORT_NAME }} Username</label>
                                     <i class="fa fa-envelope"></i>
-                                    <input type="text" autofocus="autofocus" class="form-control" id="username" name="username" maxlength="40" required>
+                                    <div class="input-group">
+                                        <input type="text" maxlength="40" name="username" id="username" class="form-control" autofocus="autofocus" required>
+                                        <span class="input-group-addon">{{ MAIL_USER_DOMAIN }}</span>
+                                    </div>
                                   </div>
                                   <div class="form-group"> 
                                     <label class="control-label" for="password">Password</label>
@@ -217,7 +220,10 @@
                                   <div class="form-group">
                                     <label class="control-label" for="username">{{ COMPANY_SHORT_NAME }} Username</label>
                                     <i class="fa fa-envelope"></i>
-                                    <input type="text" class="form-control" id="username" name="username" maxlength="40" required >
+                                    <div class="input-group">
+                                        <input type="text" maxlength="40" name="username" id="username" class="form-control" required>
+                                        <span class="input-group-addon"><abbr title="" data-trigger="hover" data-original-title="" class="pop-hover" data-title="Why my {{ COMPANY_SHORT_NAME }} username?" data-toggle="popover" data-content="All emails from the app are sent to your {{ COMPANY_SHORT_NAME }} email ID. Just enter your username here, and we'll automatically add {{ MAIL_USER_DOMAIN }}">{{ MAIL_USER_DOMAIN }}</abbr></span> 
+                                    </div>
                                   </div>
                                   <div class="form-group"> 
                                     <label class="control-label" for="security_question">Security Question</label>
