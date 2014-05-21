@@ -104,10 +104,12 @@
                         <div class="login-box-plain">
                             <h2 class="bigintro">Sign In</h2>
                             <div class="divide-40"></div>
-                            <div class="alert alert-{{message_type}} display-none" style="display: none;">
+                            {% if message %}
+                            <div class="alert alert-{{message_type}}">
                                 <a class="close" aria-hidden="true" href="#" data-dismiss="alert">×</a>
-                                <p id="login-message"></p>
+                                <p><i class="fa fa-exclamation-circle">&nbsp;&nbsp;</i>{{ message }}</p>
                             </div>
+                            {% endif %}
                             <form role="form" id="form-login" method="POST" action="{{ URL.LOGIN }}">
                               <div class="form-group">
                                 <label for="username" class="control-label">{{ COMPANY_SHORT_NAME }} Username</label>
@@ -148,12 +150,6 @@
             var page = 'login';
             App.setPage(page);
             App.init();
-
-            var message = "{{message}}";
-            if (message && message != 'null') {
-                $('#login-message').html("{{message}}");
-                $('#login-message').parent().show();
-            }
         });
     </script>
     <!-- /JAVASCRIPTS -->
