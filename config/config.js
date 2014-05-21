@@ -26,6 +26,18 @@ config.APP_TITLE = 'TheQuiz';
 config.APP_PORT = 3000;
 config.APP_BASE_PATH = process.env.PWD;
 
+//Authentication configuration.
+config.AUTH_USE_LDAP = true;
+config.AUTH_LDAP_CONFIG = {
+    url: 'ldap://example.com',
+    adminDn: 'uid=admin_username',
+    adminPassword: '******',
+    searchBase: 'ou=People,l=California,dc=example.com',
+    searchFilter: '(uid={{username}})',
+    timeout: 500,
+    cache: true
+};
+
 //URL configuration.
 config.URL = {
     MAIN: '/',
@@ -76,10 +88,11 @@ config.QUIZ_STOP_TIME = [16, 0];
 //Database configuration.
 config.DB_HOST = '127.0.0.1';
 config.DB_PORT = 27017;
-config.DB_USERNAME = 'quiz_db_admin';
-config.DB_PASSWORD = 'local!23';
+config.DB_USERNAME = '';
+config.DB_PASSWORD = '';
 config.DB_NAME = 'quiz_db';
 config.DB_AUTH_TABLE = 'quiz_users';
+config.DB_AUTHLDAP_TABLE = 'quiz_ldap_users';
 config.DB_AUTH_SESSIONS = 'quiz_sessions';
 config.DB_AUTH_PASSWORD_RESET = 'quiz_resets';
 config.DB_QUESTIONS_TABLE = 'quiz_questions';
@@ -97,12 +110,13 @@ config.MAIL_USE_TLS = true; //TLS
 config.MAIL_USERNAME = 'username@example.com';
 config.MAIL_PASSWORD = '******';
 config.MAIL_SENDER = 'Quiz Master <quiz@example.com>'; //From address
-config.MAIL_USER_DOMAIN = '@example.com'; //Auto-appended to username
+config.MAIL_USER_DOMAIN = '@gmail.com'; //Auto-appended to username
 config.MAIL_TEMPLATE = path.join(config.APP_BASE_PATH, './views/mailer.html');
 config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
 //Error messages.
 config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';
+config.ERR_AUTH_LDAP_SERVER_DOWN = 'Could not connect to the authentication server!';
 config.ERR_AUTH_INVALID_USERNAME = 'Username is invalid!';
 config.ERR_AUTH_INVALID_PASSWORD = 'Invalid password!';
 config.ERR_AUTH_NOT_LOGGED_IN = 'You must be logged in to view that page!';
@@ -121,8 +135,8 @@ config.MASTER_SALT = 'cycle_la_illayam_kaathu_ernakulathula_illayam_vaathu';
 config.RESET_PASSWORD_SALT = 'loln00b';
 
 //Miscellaneous configuration.
-config.COMPANY_SHORT_NAME = 'FBI';
-config.COMPANY_LONG_NAME = 'Federal Bureau of Investigation';
+config.COMPANY_SHORT_NAME = 'CIA';
+config.COMPANY_LONG_NAME = 'Central Investigation Agency';
 config.RESET_VALIDITY = 3; //Hours
 config.SECURITY_QUESTIONS = [
     'What is your mother\'s maiden name?',

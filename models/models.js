@@ -1,8 +1,8 @@
 /**
  * Database models.
  * Author: GP.
- * Version: 1.4.6
- * Release Date: 16-May-2014
+ * Version: 1.4.7
+ * Release Date: 21-May-2014
  */
 
 /**
@@ -62,6 +62,26 @@ var UserSchema = new Schema({
         default: null
     }
 });
+
+if (config.AUTH_USE_LDAP) {
+    UserSchema = new Schema({
+        username: {
+            type: String,
+            unique: true,
+            trim: true,
+            lowercase: true,
+            required: true
+        },
+        admin: {
+            type: Boolean,
+            default: false
+        },
+        last_seen: {
+            type: Date,
+            default: null
+        }
+    });
+};
 
 UserSchema.index({
     username: -1

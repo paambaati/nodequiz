@@ -1,8 +1,8 @@
 /**
  * Middleware routes.
  * Author: GP.
- * Version: 1.1.1
- * Release Date: 13-May-2014
+ * Version: 1.1.2
+ * Release Date: 21-May-2014
  */
 
 /**
@@ -56,6 +56,7 @@ module.exports = function(app) {
         res.locals.APP_TITLE = config.APP_TITLE;
         res.locals.URL = config.URL;
         res.locals.USERNAME = (req.session.user) ? req.session.user.username : '';
+        res.locals.IS_LDAP = config.AUTH_USE_LDAP;
         res.locals.UPLOAD_DIR = config.UPLOAD_DIR;
         res.locals.IS_ADMIN = (req.session.is_admin) ? true : false;
         res.locals.COMPANY_SHORT_NAME = config.COMPANY_SHORT_NAME;

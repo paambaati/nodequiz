@@ -56,7 +56,8 @@ module.exports = function(app) {
     app.post(config.URL.LOGIN, function(req, res) {
         var username = req.body.username;
         config.logger.info('LOGIN - FORM POST', {
-            username: username
+            username: username,
+            auth_ldap: config.AUTH_USE_LDAP
         });
         user.authenticate(username, req.body.password, function(err, user) {
             if (user) {

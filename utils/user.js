@@ -1,8 +1,8 @@
 /**
  * User+authentication utilities.
  * Author: GP.
- * Version: 1.1.2
- * Release Date: 11-May-2014
+ * Version: 1.2
+ * Release Date: 21-May-2014
  */
 
 /**
@@ -12,7 +12,8 @@
 var config = require('../config/config'),
     models = require('../models/models'),
     crypt = require('./pass'),
-    mailer = require('./mail');
+    mailer = require('./mail'),
+    ldapauth = require('ldapauth-fork');
 
 /**
  * Authenticates a user by looking up the database.
@@ -23,33 +24,63 @@ var config = require('../config/config'),
  */
 
 function authenticate(name, pass, fn) {
-    models.User.findOne({
-        username: name.toLowerCase()
-    }, function(err, user) {
-        if (user) {
-            if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
-            if (!user.activated) {
-                config.logger.warn('AUTHENTICATION - ACTIVATION PENDING', {
-                    username: name
+    if (config.AUTH_USE_LDAP) {
+        var ldap = new ldapauth({
+            url: config.AUTH_LDAP_CONFIG.url,
+            adminDn: config.AUTH_LDAP_CONFIG.adminDn,
+            adminPassword: config.AUTH_LDAP_CONFIG.adminPassword,
+            searchBase: config.AUTH_LDAP_CONFIG.searchBase,
+            searchFilter: config.AUTH_LDAP_CONFIG.searchFilter,
+            cache: config.AUTH_LDAP_CONFIG.cache
+        });
+        ldap.authenticate(name, pass, function(err, user) {
+            if (err && err.name === 'ConnectionError') {
+                config.logger.error('LDAP AUTHENTICATION FAILED - LDAP SERVER DOWN', {
+                    ldap_server: config.AUTH_LDAP_CONFIG.url
                 });
-                return fn(new Error(config.ERR_AUTH_ACTIVATION_PENDING));
-            } else {
-                crypt.hash(pass, user.salt, function(err, hash) {
-                    if (err) return fn(err);
-                    if (hash == user.hash) return fn(null, user);
-                    config.logger.warn('AUTHENTICATION - INVALID PASSWORD', {
+                return fn(new Error(config.ERR_AUTH_LDAP_SERVER_DOWN));
+            }
+            if (err) {
+                config.logger.warn('LDAP AUTHENTICATION FAILED', {
+                    ldap_error: err.name
+                });
+                return fn(new Error(config.ERR_AUTH_FAILED));
+            }
+            //Authentication succeeded.
+            createLDAPUser(name, function(err, user) {
+                console.log('--->', user);
+                return fn(null, user);
+            });
+        });
+    } else {
+        models.User.findOne({
+            username: name.toLowerCase()
+        }, function(err, user) {
+            if (user) {
+                if (err) return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
+                if (!user.activated) {
+                    config.logger.warn('AUTHENTICATION - ACTIVATION PENDING', {
                         username: name
                     });
-                    fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
+                    return fn(new Error(config.ERR_AUTH_ACTIVATION_PENDING));
+                } else {
+                    crypt.hash(pass, user.salt, function(err, hash) {
+                        if (err) return fn(err);
+                        if (hash == user.hash) return fn(null, user);
+                        config.logger.warn('AUTHENTICATION - INVALID PASSWORD', {
+                            username: name
+                        });
+                        fn(new Error(config.ERR_AUTH_INVALID_PASSWORD));
+                    });
+                }
+            } else {
+                config.logger.warn('AUTHENTICATION - INVALID USERNAME', {
+                    username: name
                 });
+                return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
             }
-        } else {
-            config.logger.warn('AUTHENTICATION - INVALID USERNAME', {
-                username: name
-            });
-            return fn(new Error(config.ERR_AUTH_INVALID_USERNAME));
-        }
-    });
+        });
+    }
 }
 
 /**
@@ -146,6 +177,37 @@ function userExist(req, res, next) {
         }
     });
 }
+
+/**
+ * For LDAP authentication, checks if username
+ * exists and if it doesn't, creates a record.
+ *
+ * Returns user record.
+ *
+ * @param {String} username.
+ * @param {Function} callback.
+ */
+
+function createLDAPUser(username, fn) {
+    isUsernameValid(username, function(err, valid) {
+        if (err) return fn(err, null);
+        if (valid) {
+            models.User.findOne({
+                username: username.toLowerCase()
+            }, function(err, user) {
+                return fn(null, user);
+            });
+        } else {
+            var user_ldap = new models.User({
+                username: username
+            }).save(function(err, new_user) {
+                return fn(null, new_user);
+            });
+        }
+    });
+}
+
+
 
 /**
  * Activates user by setting `activated` = `true` in DB docs.

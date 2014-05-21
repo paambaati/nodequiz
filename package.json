@@ -17,6 +17,7 @@
         "swig": "*",
         "mongoose": "*",
         "connect-mongo": "*",
+        "ldapauth-fork": "~2.2.0",
         "async": "*",
         "formidable": "~1.0.0",
         "crypto": "0.0.3",
