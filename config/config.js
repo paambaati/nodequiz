@@ -27,12 +27,12 @@ config.APP_PORT = 3000;
 config.APP_BASE_PATH = process.env.PWD;
 
 //Authentication configuration.
-config.AUTH_USE_LDAP = true;
+config.AUTH_USE_LDAP = false; //Set to `true` if you want to use LDAP.
 config.AUTH_LDAP_CONFIG = {
     url: 'ldap://example.com',
     adminDn: 'uid=admin_username',
     adminPassword: '******',
-    searchBase: 'ou=People,l=California,dc=example.com',
+    searchBase: 'ou=People,l=Kannamapettai,dc=example.com',
     searchFilter: '(uid={{username}})',
     timeout: 500,
     cache: true
