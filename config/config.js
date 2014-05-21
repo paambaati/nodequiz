@@ -155,4 +155,9 @@ config.IE_FAQ_URL = config.IE_START_URL + config.URL.FAQ;
 //Uploads configuration.
 config.UPLOAD_DIR = '/uploads/'; //Ensure this directory is inside app_dir/public/
 
+//Overrides.
+if (config.AUTH_USE_LDAP) {
+    config.TEMPL_LOGIN = 'login_ldap.html'
+}
+
 module.exports = config;
