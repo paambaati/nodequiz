@@ -150,7 +150,9 @@
 									<i class="fa fa-smile-o"></i> General
 								  </a>
 								  <a href="#tab2" data-toggle="tab" class="list-group-item"><i class="fa fa-gamepad"></i> Quiz</a>
+								  {% if !IS_LDAP %}
 								  <a href="#tab3" data-toggle="tab" class="list-group-item"><i class="fa fa-eye"></i> Privacy</a>
+								  {% endif %}
 								  <a href="#tab4" data-toggle="tab" class="list-group-item"><i class="fa fa-bug"></i> Bugs &amp; Problems</a>
 								</div>
 							</div>
@@ -246,6 +248,7 @@
 										  </div>
 									   </div>
 								   </div>
+								   {% if !IS_LDAP %}
 								   <div class="tab-pane" id="tab3">
 									  <div class="panel-group" id="accordion">
 										  <div class="panel panel-default">
@@ -258,6 +261,7 @@
 										  </div>
 									   </div>
 								   </div>
+								   {% endif %}
 								   <div class="tab-pane" id="tab4">
 									  <div class="panel-group" id="accordion">
 										  <div class="panel panel-danger">
