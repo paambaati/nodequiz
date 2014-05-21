@@ -1,8 +1,8 @@
 /**
  * TheQuiz
  * Author: GP.
- * Version: 1.8.5
- * Release Date: 19-May-2014
+ * Version: 1.8.6
+ * Release Date: 21-May-2014
  */
 
 /**
@@ -56,7 +56,8 @@ app.engine('.html', swig.renderFile);
  */
 
 require('./routes/middleware')(app);
-require('./routes/user')(app);
+require('./routes/basic')(app);
+if (!config.AUTH_USE_LDAP) require('./routes/user')(app);
 require('./routes/quiz')(app);
 require('./routes/admin')(app);
 require('./routes/errors')(app);
