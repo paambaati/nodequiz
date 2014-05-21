@@ -16,7 +16,10 @@ var config = require('../config/config'),
     ldapauth = require('ldapauth-fork');
 
 /**
- * Authenticates a user by looking up the database.
+ * Authenticates a user by looking up the LDAP server
+ * or our own database, depending on configuration.
+ *
+ * Returns user object.
  *
  * @param {String} username.
  * @param {String} password.
@@ -25,14 +28,7 @@ var config = require('../config/config'),
 
 function authenticate(name, pass, fn) {
     if (config.AUTH_USE_LDAP) {
-        var ldap = new ldapauth({
-            url: config.AUTH_LDAP_CONFIG.url,
-            adminDn: config.AUTH_LDAP_CONFIG.adminDn,
-            adminPassword: config.AUTH_LDAP_CONFIG.adminPassword,
-            searchBase: config.AUTH_LDAP_CONFIG.searchBase,
-            searchFilter: config.AUTH_LDAP_CONFIG.searchFilter,
-            cache: config.AUTH_LDAP_CONFIG.cache
-        });
+        var ldap = new ldapauth(config.AUTH_LDAP_CONFIG);
         ldap.authenticate(name, pass, function(err, user) {
             if (err && err.name === 'ConnectionError') {
                 config.logger.error('LDAP AUTHENTICATION FAILED - LDAP SERVER DOWN', {
@@ -46,9 +42,7 @@ function authenticate(name, pass, fn) {
                 });
                 return fn(new Error(config.ERR_AUTH_FAILED));
             }
-            //Authentication succeeded.
-            createLDAPUser(name, function(err, user) {
-                console.log('--->', user);
+            findOrCreateLDAPUser(name, function(err, user) {
                 return fn(null, user);
             });
         });
@@ -188,14 +182,14 @@ function userExist(req, res, next) {
  * @param {Function} callback.
  */
 
-function createLDAPUser(username, fn) {
+function findOrCreateLDAPUser(username, fn) {
     isUsernameValid(username, function(err, valid) {
         if (err) return fn(err, null);
         if (valid) {
             models.User.findOne({
                 username: username.toLowerCase()
-            }, function(err, user) {
-                return fn(null, user);
+            }, function(err, existing_user) {
+                return fn(null, existing_user);
             });
         } else {
             var user_ldap = new models.User({
