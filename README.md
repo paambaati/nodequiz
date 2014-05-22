@@ -5,7 +5,7 @@ A kickass Quiz app built using NodeJS, Express 4 and MongoDB; designed to be run
 ### Features
 
  1. Fully built using the latest stable versions of Node.JS, Express (4.x) and MongoDB.
- 2. LDAP authentication support - upcoming (See [ldap_support](https://github.com/paambaati/nodequiz/tree/ldap_support) branch).
+ 2. **NEW!** LDAP authentication support.
  3. Beautiful responsive frontend using Bootstrap 3.x and jQuery, including skins.
  4. Standings/Rankings page that shows detailed organization-wide statistics, along with fancy graph charts built using [Flot](http://www.flotcharts.org/ "Flot: Attractive JavaScript plotting for jQuery").
  5. Custom admin interface complete with image upload functionality (for questions) using [DropzoneJS][1] and detailed userbase statistics using [DataTables](http://datatables.net/ "DataTables | Table plug-in for jQuery").
