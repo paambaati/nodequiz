@@ -1,8 +1,8 @@
 /**
  * Quiz question/answer-related utilities.
  * Author: GP.
- * Version: 1.3.3
- * Release Date: 07-May-2014
+ * Version: 1.3.4
+ * Release Date: 23-May-2014
  */
 
 /**
@@ -199,6 +199,37 @@ function getAllQuestions(fn) {
 }
 
 /**
+ * Gets the last N questions, skipping M questions.
+ * Additionally, can also take a search string to
+ * perform MongoDB $text search.
+ *
+ * For example, for N = 10 and M = 10 in a collection
+ * of 30 documents, this method will fetch records 10 to 20.
+ *
+ * @param {Number} Number of questions to fetch.
+ * @param {Number} Number of questions to skip.
+ * @api public
+ */
+
+function getLastNtoMQuestions(last_n, skip_m, fn) {
+    models.Question.count({}, function(err, count) {
+        var query = models.Question.find({});
+        query.sort({
+            date: -1
+        });
+        last_n = (last_n < 0) ? 0 : last_n;
+        skip_m = (skip_m < 0) ? 0 : skip_m;
+        query.limit(last_n);
+        query.skip(skip_m);
+        query.exec(function(err, questions) {
+            if (err) throw err;
+            return fn(null, questions);
+        });
+    });
+}
+
+
+/**
  * Returns a user's final results as a JSON object.
  *
  * @param {String} user ID.
@@ -269,5 +300,6 @@ module.exports = {
     getResults: getResults,
     saveQuestion: saveQuestion,
     deleteQuestion: deleteQuestion,
-    getAllQuestions: getAllQuestions
+    getAllQuestions: getAllQuestions,
+    getLastNtoMQuestions: getLastNtoMQuestions
 }
