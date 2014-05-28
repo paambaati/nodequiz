@@ -265,51 +265,31 @@
                 'aaSorting': [],
                 'sDom': "<'row'<'dataTables_header clearfix'<'col-md-4'l><'col-md-8'Tf>r>>t<'row'<'dataTables_footer clearfix'<'col-md-6'i><'col-md-6'p>>>",
                 'oTableTools': {
-                    'aButtons': ["copy", "print", "csv", "xls", "pdf"],
-                    'sSwfPath': "/swf/copy_csv_xls_pdf.swf"
+                    'aButtons': ['copy', 'print', 'csv', 'xls', 'pdf'],
+                    'sSwfPath': '/swf/copy_csv_xls_pdf.swf'
                 },
                 'oLanguage': {
-                    'sProcessing': '<img src="/images/loader.gif"></img>'
+                    'sProcessing': '<img src="/images/fetching.gif"></img>'
+                },
+                'fnCreatedRow': function(row, data, index) {
+                    $('td', row).eq(2).html('<abbr class="timeago" title="' + data[2] + '">' + data[2] + '</abbr>');
+                    if(data[4]) {
+                        $('td', row).eq(4).html('<a rel="popover" href="{{UPLOAD_DIR}}' + data[4] + '" target="_blank">' + data[4] + '</a>');
+                    }
+                },
+                'fnDrawCallback': function(settings) {
+                    $('abbr.timeago').timeago();
+                    $('a[rel=popover]').popover({
+                        title:'Preview',
+                        html: true,
+                        trigger:'hover',
+                        placement:'left',
+                        content: function() {
+                            return '<img src="' + this.href + '"></img>';
+                        }
+                    });
                 }
             });
-
-            /*$.getJSON('{{URL.QUIZ_ADMIN_DATA_AJAX}}?archive=15&skip=10', function(data) {
-                $.each(data, function(k, v) {
-                    tr = document.createElement('tr');
-                    td = document.createElement('td');
-                    td_t = document.createTextNode(v.title);
-                    td.appendChild(td_t);
-                    tr.appendChild(td);
-                    td = document.createElement('td');
-                    td_t = document.createTextNode(v.choices[v.answer].choice_text);
-                    td.appendChild(td_t);
-                    tr.appendChild(td);
-                    td = document.createElement('td');
-                    td_t = document.createTextNode(v.date);
-                    abr = document.createElement('abbr');
-                    abrat = document.createAttribute('title');
-                    abrat.value = v.date;
-                    abr.setAttributeNode(abrat);
-                    abrcl = document.createAttribute('class');
-                    abrcl.value = 'timeago';
-                    abr.setAttributeNode(abrcl);
-                    td.appendChild(abr);
-                    abr.appendChild(td_t);
-                    tr.appendChild(td);
-                    td = document.createElement('td');
-                    td_t = document.createTextNode(v.allowed_time);
-                    td.appendChild(td_t);
-                    tr.appendChild(td);
-                    td = document.createElement('td');
-                    td_t = document.createTextNode(v.image);
-                    td.appendChild(td_t);
-                    tr.appendChild(td);
-                    tbody = document.getElementsByTagName('tbody')[0];
-                    tbody.appendChild(tr);
-                });
-            }).always(function() {
-                $('abbr.timeago').timeago()
-            });*/
         });
     </script>
     <!-- /JAVASCRIPTS -->
