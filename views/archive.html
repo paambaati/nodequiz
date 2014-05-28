@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    ░░░░░░░░░▄░░░░░░░░░░░░░░▄ 
+    ░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌ 
+    ░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐ wow
+    ░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐ 
+    ░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐ 
+    ░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌ so admin
+    ░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌ 
+    ░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐ 
+    ░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌ much nodejs
+    ░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌ 
+    ▌▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐ 
+    ▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌ 
+    ▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐ very hidden source
+    ░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌ 
+    ░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐
+    ░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌ 
+    ░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀ 
+    ░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀ such interface
+    ░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀
+    -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>{{ APP_TITLE }} | Quiz Administration - Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maxitmum-scale=1, user-scalable=no" />
+    <meta name="description" content="{{ APP_TITLE }} - Quiz Administration - Archive" />
+    <meta name="author" content="GP" />
+    <!-- IE PINNED SITE SUPPORT -->
+    <meta name="msapplication-tooltip" content="{{ APP_TITLE }} - The most amazeballs quizzing app ever!" />
+    <meta name="msapplication-starturl" content="{{ IE_START_URL }}" />
+    <meta name="msapplication-task" content="name={{ APP_TITLE }}; action-uri={{ IE_START_URL}}; icon-uri={{ IE_FAVICON_URL }}"/>
+    <meta name="msapplication-task" content="name=FAQ; action-uri={{ IE_FAQ_URL}}; icon-uri={{ IE_FAVICON_URL }}"/>
+    <!-- /IE PINNED SITE SUPPORT -->
+    <!-- JAVASCRIPTS -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/excanvas.min.js"></script>
+    <script src="/javascripts/html5.js"></script>
+    <script src="/javascripts/css3-mediaqueries.min.js"></script>
+    <![endif]-->
+    <!-- /JAVASCRIPTS -->
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" id="skin-switcher" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/TableTools.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/opensans.css" />
+    <!-- /STYLESHEETS -->
+    <!-- ICONS -->
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="icon" sizes="196x196" href="/images/icon-196.png" />
+    <link rel="icon" sizes="128x128" href="/images/icon-128.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icon-76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icon-120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icon-152.png" />
+    <!-- /ICONS -->
+<style type="text/css"></style>
+</head>
+<body style="">
+    <!-- HEADER -->
+    <header class="navbar clearfix" id="header">
+        <div class="container">
+                <div class="navbar-brand mini-menu">
+                    <!-- LOGO -->
+                    <a href="{{ URL.MAIN }}">
+                        <img src="/images/logo.png" alt="Quiz Logo" class="img-responsive" height="30" width="120">
+                    </a>
+                    <!-- /LOGO -->
+                    <!-- SIDEBAR COLLAPSE -->
+                    <div class="sidebar-collapse btn" id="sidebar-collapse">
+                        <i data-icon2="fa fa-bars" data-icon1="fa fa-bars" class="fa fa-bars"></i>
+                    </div>
+                    <!-- /SIDEBAR COLLAPSE -->
+                </div>
+                <!-- NAVBAR LEFT -->
+                <ul class="nav navbar-nav pull-left hidden-xs" id="navbar-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-cog"></i>
+                            <span class="name">Skins</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu skins">
+                            <li class="dropdown-title">
+                                <span><i class="fa fa-leaf"></i> Skins</span>
+                            </li>
+                            <li><a href="#" data-skin="default">Default</a></li>
+                            <li><a href="#" data-skin="night">Night</a></li>
+                            <li><a href="#" data-skin="earth">Earth</a></li>
+                            <li><a href="#" data-skin="utopia">Utopia</a></li>
+                            <li><a href="#" data-skin="nature">Nature</a></li>
+                            <li><a href="#" data-skin="graphite">Graphite</a></li>
+                         </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" target="_blank" href="{{ URL.FAQ }}"><span><i class="fa fa-question-circle"></i>FAQs</span></a>
+                    </li>
+                </ul>
+                <!-- /NAVBAR LEFT -->
+                <!-- BEGIN TOP NAVIGATION MENU -->                  
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown" id="header-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="username"><i class="fa fa-user-md"></i>&nbsp;{{ USERNAME }}&nbsp;</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ URL.LOGOUT }}"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+                <!-- END TOP NAVIGATION MENU -->
+        </div>
+    </header>
+    <!--/HEADER -->
+    <!-- PAGE -->
+    <section id="page">
+        <!-- SIDEBAR -->
+        <div class="sidebar mini-menu" id="sidebar" style="">
+            <div class="sidebar-menu nav-collapse">
+                <div class="divide-20"></div>
+                <!-- SIDEBAR MENU -->
+                <ul>
+                    <li>
+                        <a href="{{ URL.QUIZ_ADMIN }}">
+                            <i class="fa fa-list fa-fw"></i> <span class="menu-text">Quiz</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a class="" href="javascript:;">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">Data</span>
+                        <span class="arrow"></span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_DATA }}">
+                                    <span class="sub-menu-text">User Data</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_ARCHIVE }}">
+                                    <span class="sub-menu-text">Archive</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ URL.QUIZ_ADMIN_FEEDBACK }}">
+                                    <span class="sub-menu-text">Feedback{% if FEEDBACK_UNREAD > 0%}<span class="badge pull-right" style="margin-right: 10px; background-color: #DD5A43;">{{ FEEDBACK_UNREAD }}</span>{% endif %}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /SIDEBAR MENU -->
+            </div>
+        </div>
+        <!-- /SIDEBAR -->
+        <div id="main-content" class="margin-left-50">
+            <div class="container">
+                <div class="row">
+                    <div id="content" class="col-lg-12" style="min-height:1063px !important">
+                        <!-- PAGE HEADER-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="page-header">
+                                    <!-- BREADCRUMBS -->
+                                    <ul class="breadcrumb">
+                                        <li>
+                                            <i class="fa fa-home"></i>
+                                        </li>
+                                        <li>Administration</li>
+                                        <li>Data</li>
+                                        <li>Archive</li>
+                                    </ul>
+                                    <!-- /BREADCRUMBS -->
+                                    <div class="clearfix">
+                                        <h3 class="content-title pull-left">Archive</h3>
+                                    </div>
+                                    <div class="description">All the questions from quizzes past.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /PAGE HEADER -->
+                        <div class="col-md-12 box-container box-question">
+                            <!-- BOX COLLAPSED-->
+                            <div class="box border green">
+                                <div class="box-title">
+                                    <h4><i class="fa fa-table"></i>Past Questions</h4>
+                                    <div class="tools">
+                                        <a class="collapse" href="javascript:;">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <!-- DATA TABLE -->
+                                    <table id="datatable" class="datatable table table-striped table-bordered table-hover dataTable userdata" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Question</th>
+                                                <th>Answer</th>
+                                                <th>Appeared on</th>
+                                                <th>Allowed Time</th>
+                                                <th>Image</th>
+                                            </tr>
+                                        </thead>
+                                        <!-- <tfoot>
+                                            <tr>
+                                                <th>Question</th>
+                                                <th>Answer</th>
+                                                <th>Appeared on</th>
+                                                <th>Allowed Time</th>
+                                                <th>Image</th>
+                                            </tr>
+                                        </tfoot> -->
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <!-- /DATA TABLE -->
+                                </div>
+                            </div>
+                            <!-- /BOX COLLAPSED-->
+                        </div>
+                        </div>
+                        <div class="footer-tools">
+                            <span class="go-top">
+                                <i class="fa fa-chevron-up"></i> Top
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/PAGE -->
+    <!-- JAVASCRIPTS -->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/javascripts/datatables.min.js"></script>
+    <script type="text/javascript" src="/javascripts/TableTools.min.js"></script>
+    <script type="text/javascript" src="/javascripts/ZeroClipboard.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.timeago.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/javascripts/script.js"></script>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function() {     
+            App.setPage('widgets_box');  //Set current page
+            App.init(); //Initialise plugins and elements
+
+            $('#datatable').dataTable({
+                'bProcessing': true,
+                'sAjaxSource': '{{URL.QUIZ_ADMIN_DATA_AJAX}}?archive=0',
+                'sPaginationType': 'bs_full',
+                'aaSorting': [],
+                'sDom': "<'row'<'dataTables_header clearfix'<'col-md-4'l><'col-md-8'Tf>r>>t<'row'<'dataTables_footer clearfix'<'col-md-6'i><'col-md-6'p>>>",
+                'oTableTools': {
+                    'aButtons': ["copy", "print", "csv", "xls", "pdf"],
+                    'sSwfPath': "/swf/copy_csv_xls_pdf.swf"
+                },
+                'oLanguage': {
+                    'sProcessing': '<img src="/images/loader.gif"></img>'
+                }
+            });
+
+            /*$.getJSON('{{URL.QUIZ_ADMIN_DATA_AJAX}}?archive=15&skip=10', function(data) {
+                $.each(data, function(k, v) {
+                    tr = document.createElement('tr');
+                    td = document.createElement('td');
+                    td_t = document.createTextNode(v.title);
+                    td.appendChild(td_t);
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td_t = document.createTextNode(v.choices[v.answer].choice_text);
+                    td.appendChild(td_t);
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td_t = document.createTextNode(v.date);
+                    abr = document.createElement('abbr');
+                    abrat = document.createAttribute('title');
+                    abrat.value = v.date;
+                    abr.setAttributeNode(abrat);
+                    abrcl = document.createAttribute('class');
+                    abrcl.value = 'timeago';
+                    abr.setAttributeNode(abrcl);
+                    td.appendChild(abr);
+                    abr.appendChild(td_t);
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td_t = document.createTextNode(v.allowed_time);
+                    td.appendChild(td_t);
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td_t = document.createTextNode(v.image);
+                    td.appendChild(td_t);
+                    tr.appendChild(td);
+                    tbody = document.getElementsByTagName('tbody')[0];
+                    tbody.appendChild(tr);
+                });
+            }).always(function() {
+                $('abbr.timeago').timeago()
+            });*/
+        });
+    </script>
+    <!-- /JAVASCRIPTS -->
+</body>
+</html>
