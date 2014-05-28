@@ -1,8 +1,8 @@
 /**
  * Admin routes.
  * Author: GP.
- * Version: 1.1.3
- * Release Date: 17-May-2014
+ * Version: 1.1.4
+ * Release Date: 23-May-2014
  */
 
 /**
@@ -13,6 +13,7 @@ var config = require('../config/config'),
     user = require('../utils/user'),
     quiz = require('../utils/quiz'),
     stats = require('../utils/stats'),
+    misc = require('../utils/misc'),
     path = require('path'),
     fs = require('fs'),
     date = require('date'),
@@ -86,6 +87,48 @@ module.exports = function(app) {
             });
         });
     });
+
+    /*
+     * GET '/quiz/admin/archive'
+     */
+
+    app.get(config.URL.QUIZ_ADMIN_ARCHIVE, user.requiredAuthentication, user.requiredAdmin, function(req, res) {
+        res.render(config.TEMPL_QUIZ_ADMIN_ARCHIVE);
+    });
+
+    /*
+     * GET '/quiz/admin/get?xxx=yyy'
+     * AJAX
+     */
+
+    app.get(config.URL.QUIZ_ADMIN_DATA_AJAX, user.requiredAuthentication, user.requiredAdmin, function(req, res) {
+        var username = req.session.user.username;
+        config.logger.info('QUIZ ADMIN - ARCHIVE - PAGE GET', {
+            username: username,
+            query_params: req.query
+        });
+        if (req.query.archive) {
+            var table_data = [];
+            /*//Sleep for 5 seconds
+            var stop = new Date().getTime();
+            while (new Date().getTime() < stop + 5000) {;
+            }
+            //End sleep*/
+            quiz.getLastNtoMQuestions(0, 0, function(err, data) {
+                data.forEach(function(item, index, array) {
+                    item.title = misc.stripHTMLTags(item.title);
+                    table_data.push([item.title, item.choices[item.answer].choice_text, item.date, item.allowed_time, item.image]);
+                });
+                res.json({
+                    'sEcho': parseInt(req.query.sEcho),
+                    'iTotalRecords': data.length,
+                    'iTotalDisplayRecords': data.length,
+                    'aaData': table_data
+                });
+            });
+        }
+    });
+
 
     /*
      * POST '/quiz/admin/save'
