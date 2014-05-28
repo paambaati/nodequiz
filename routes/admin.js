@@ -1,8 +1,8 @@
 /**
  * Admin routes.
  * Author: GP.
- * Version: 1.1.4
- * Release Date: 23-May-2014
+ * Version: 1.1.5
+ * Release Date: 28-May-2014
  */
 
 /**
@@ -200,7 +200,7 @@ module.exports = function(app) {
      * AJAX
      */
 
-    app.del(config.URL.QUIZ_ADMIN_SAVE_AJAX, user.requiredAuthentication, user.requiredAdmin, quiz.timeCheck('outside'), function(req, res) {
+    app.delete(config.URL.QUIZ_ADMIN_SAVE_AJAX, user.requiredAuthentication, user.requiredAdmin, quiz.timeCheck('outside'), function(req, res) {
         config.logger.info('QUIZ ADMIN - FORM DELETE - DELETE QUESTION', {
             username: req.session.user.username,
             request_params: req.body
@@ -235,7 +235,7 @@ module.exports = function(app) {
      * AJAX
      */
 
-    app.del(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, user.requiredAuthentication, user.requiredAdmin, quiz.timeCheck('outside'), function(req, res) {
+    app.delete(config.URL.QUIZ_ADMIN_SAVE_UPLOAD, user.requiredAuthentication, user.requiredAdmin, quiz.timeCheck('outside'), function(req, res) {
         var file_name = path.join(__dirname, '/public/', config.UPLOAD_DIR, req.body.file_name);
         fs.unlink(file_name, function(err) {
             if (err) {
