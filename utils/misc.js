@@ -1,8 +1,8 @@
 /**
  * Miscellaneous utilities.
  * Author: GP.
- * Version: 1.4
- * Release Date: 09-May-2014
+ * Version: 1.4.1
+ * Release Date: 27-May-2014
  */
 
 /**
@@ -91,12 +91,16 @@ var validateSignUpForm = function(request_body, fn) {
  * @api public
  */
 
-var sanitizeText = function(input_text, fn) {
+var sanitizeText = function(input_text) {
     input_text = input_text.replace(/&/g, '&amp;').
     replace(/</g, '&lt;'). // it's not neccessary to escape >
     replace(/"/g, '&quot;').
     replace(/'/g, '&#039;');
-    return fn(input_text);
+    return input_text;
+}
+
+var stripHTMLTags = function(input_text) {
+    return input_text.toString().replace(/(<([^>]+)>)/ig, '');
 }
 
 /**
@@ -139,5 +143,6 @@ module.exports = {
     getMonday: getMonday,
     validateSignUpForm: validateSignUpForm,
     sanitizeText: sanitizeText,
+    stripHTMLTags: stripHTMLTags,
     rankByScoreAndResTime: rankByScoreAndResTime
 }
