@@ -88,7 +88,7 @@ module.exports = function(app) {
                                 res.render(config.TEMPL_200, {
                                     message_title: 'Done!',
                                     message_1: 'We\'ve sent you an email with the activation link!',
-                                    message_2: 'Check your mailbox yo!'
+                                    message_2: 'Check your mailbox yo! If you don\'t see anything, check your Spam/Junk folder yo!'
                                 });
                             });
                         });
