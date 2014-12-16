@@ -29,7 +29,8 @@ var app = express();
  */
 
 app.use(morgan('dev'));
-app.use(bodyparser());
+app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyparser.json({extended: true}));
 app.use(cookieparser(config.APP_TITLE));
 app.use(session({
     secret: config.MASTER_SALT,
