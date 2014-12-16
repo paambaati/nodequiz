@@ -22,7 +22,7 @@
         "formidable": "~1.0.0",
         "crypto": "0.0.3",
         "hashids": "0.3.3",
-        "nodemailer": "*",
+        "nodemailer": "0.7.1",
         "winston": "*",
         "date": "*",
         "date-format-lite": "*",
