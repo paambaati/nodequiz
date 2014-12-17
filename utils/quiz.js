@@ -56,6 +56,7 @@ function findNextQuestion(index, fn) {
     query.sort({
         date: 1
     });
+    query.lean();
     query.exec(function(err, questions) {
         if (err) throw err;
         if (questions.length == 0) {
@@ -192,6 +193,7 @@ function getAllQuestions(fn) {
     query.sort({
         date: 1
     });
+    query.lean();
     query.exec(function(err, questions) {
         if (err) throw err;
         return fn(null, questions);
@@ -221,6 +223,7 @@ function getLastNtoMQuestions(last_n, skip_m, fn) {
         skip_m = (skip_m < 0) ? 0 : skip_m;
         query.limit(last_n);
         query.skip(skip_m);
+	query.lean();
         query.exec(function(err, questions) {
             if (err) throw err;
             return fn(null, questions);
@@ -257,6 +260,7 @@ function getResults(user_id, start_day, fn) {
     });
     history_query.populate('question'); //Mongo equivalent of a RDBMS JOIN. Isn't she beautiful?!
     history_query.select('question choice_id response_time');
+    history_query.lean();
     history_query.exec(function(err, questions) {
         var correct_answer = false;
         if (questions !== undefined) {
