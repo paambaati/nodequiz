@@ -35,16 +35,24 @@ function authenticate(name, pass, fn) {
                     ldap_server: config.AUTH_LDAP_CONFIG.url
                 });
                 return fn(new Error(config.ERR_AUTH_LDAP_SERVER_DOWN));
-            }
-            if (err) {
-                config.logger.warn('LDAP AUTHENTICATION FAILED', {
-                    ldap_error: err.name
+            } else if (err && err.name === 'InvalidCredentialsError') {
+		config.logger.error('LDAP AUTHENTICATION FAILED - INVALID CREDENTIALS', {
+		    name: name,
+                    error: err
                 });
-                return fn(new Error(config.ERR_AUTH_FAILED));
-            }
-            findOrCreateLDAPUser(name, function(err, user) {
-                return fn(null, user);
-            });
+		return fn(new Error(config.ERR_AUTH_FAILED));
+	    } else if (err) {
+                config.logger.warn('LDAP AUTHENTICATION FAILED - UNKNOWN ERROR', {
+		    name: name,
+                    ldap_error: err.name,
+		    error: err
+                });
+                return fn(new Error(config.ERR_AUTH_LDAP_ERROR));
+            } else {
+                findOrCreateLDAPUser(name, function(err, user) {
+                    return fn(null, user);
+                });
+	    }
         });
     } else {
         models.User.findOne({
