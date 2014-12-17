@@ -85,6 +85,7 @@ function getLastQuizDate(username, fn) {
         });
         query.select('date');
         query.limit(1);
+	query.lean();
         query.exec(function(err, results) {
             return fn(null, results);
         });
@@ -140,6 +141,7 @@ function getDailyAttendees(fn) {
             $ne: true
         }
     });
+    query.lean();
     query.exec(function(err, results) {
         return fn(null, results);
     });
@@ -234,7 +236,7 @@ function getDailyQuickestQuiz(fn) {
  * ]
  *
  * @param {String} time period for which the data is required. Allowed values are 'weekly', 'monthly', 'alltime'.
- * @param {Number} `n` number of top scorers to be fetched - optional, default = 5.
+ * @param {Number} `n` number of top scorers to be fetched - optional, default = 50.
  * @param {Function} callback.
  * @api public
  */
@@ -280,7 +282,7 @@ function getTopRanks(time_period, rank_limit, fn) {
                 });
             },
             function() {
-                rank_limit = rank_limit || 5;
+                rank_limit = rank_limit || 50;
                 userscore_array.sort(misc.rankByScoreAndResTime);
                 return fn(null, userscore_array.slice(0, rank_limit));
             });
@@ -357,6 +359,7 @@ function getTodaysToughestAndEasiestQuestion(fn) {
     });
     history_query.populate('question'); //Mongo equivalent of a RDBMS JOIN. Isn't she beautiful?!
     history_query.select('question choice_id response_time');
+    history_query.lean();
     history_query.exec(function(err, questions) {
         var correct_answer = false,
             question_id = null;
@@ -426,6 +429,7 @@ function getPersonalScoreHistory(user_id, start_day, fn) {
     });
     history_query.populate('question');
     history_query.select('question choice_id response_time date');
+    history_query.lean();
     history_query.exec(function(err, questions) {
         var correct_answer = false,
             timestamp = null,
