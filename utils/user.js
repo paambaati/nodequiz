@@ -395,6 +395,7 @@ function getFeedbackData(fn) {
         date: -1
     });
     query.populate('user_id', 'username');
+    query.lean();
     query.exec(function(err, feedback_data) {
         return fn(null, feedback_data);
     });
