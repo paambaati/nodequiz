@@ -120,6 +120,7 @@ config.MAIL_LOGO = path.join(config.APP_BASE_PATH, './public/images/logo.png');
 
 //Error messages.
 config.ERR_AUTH_FAILED = 'Authentication failed, please check your username and password.';
+config.ERR_AUTH_LDAP_ERROR = 'Could not authenticate properly with LDAP server. Ask your administrator to check the LDAP configuration!';
 config.ERR_AUTH_LDAP_SERVER_DOWN = 'Could not connect to the authentication server!';
 config.ERR_AUTH_INVALID_USERNAME = 'Username is invalid!';
 config.ERR_AUTH_INVALID_PASSWORD = 'Invalid password!';
