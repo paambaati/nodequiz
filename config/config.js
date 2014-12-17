@@ -34,7 +34,8 @@ config.AUTH_LDAP_CONFIG = {
     adminPassword: '******',
     searchBase: 'ou=People,l=Kannamapettai,dc=example.com',
     searchFilter: '(uid={{username}})',
-    timeout: 500,
+    timeout: 1000,
+    connectTimeout: 1500,
     cache: true
 };
 
